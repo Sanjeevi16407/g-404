@@ -1,0 +1,523 @@
+/**
+ * Unified Theme System - CSS Custom Variable Tokens
+ * Implements 6 visual personalities: Spatial (Default), Liquid Glass, Aurora, Dark, Light, System.
+ */
+
+/* ====================================================
+   1. SPATIAL THEME (Default: Apple VisionOS Glassmorphism)
+   ==================================================== */
+html[data-theme="Spatial"], :root {
+    --bg-primary: linear-gradient(180deg, #111111 0%, #0A0A0A 40%, #050505 100%);
+    --body-bg-image: none;
+    --bg-secondary: #0A0A0A;
+    
+    /* Card Backgrounds */
+    --bg-glass: #111214;
+    --bg-glass-hover: #18191C;
+    --bg-glass-btn: #111214;
+    --bg-glass-btn-hover: #18191C;
+    
+    /* Borders */
+    --border-glass: rgba(210, 210, 210, 0.15);
+    --border-glass-hover: rgba(255, 255, 255, 0.25);
+    --border-light: rgba(255, 255, 255, 0.08);
+    --border-medium: rgba(210, 210, 210, 0.12);
+    
+    /* Accents & Glows (Electric Blue Highlights) */
+    --glow-primary: #4F8DFF;
+    --glow-secondary: #66A5FF;
+    --glow-tertiary: #C0C0C0;
+    --glow-primary-alpha: rgba(79, 141, 255, 0.15);
+    --glow-hover-color: rgba(79, 141, 255, 0.15);
+    
+    /* Typography */
+    --text-primary: #F2F2F2;
+    --text-secondary: #C8C8C8;
+    --text-tertiary: #8E8E8E;
+    
+    /* Shadow & Effects */
+    --box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 255, 255, 0.08);
+    --shadow-spatial: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 255, 255, 0.08);
+    --shadow-spatial-hover: 0 35px 80px rgba(0, 0, 0, 0.6), 0 0 45px rgba(255, 255, 255, 0.15);
+    --glass-blur: none;
+}
+
+/* ====================================================
+   2. LIQUID GLASS THEME (High Gloss & Cyan Saturation)
+   ==================================================== */
+html[data-theme="Liquid Glass"] {
+    --bg-primary: linear-gradient(135deg, #020914 0%, #0b1a30 100%);
+    --body-bg-image: url('../images/space_nebula_bg.png');
+    --bg-secondary: rgba(0, 242, 254, 0.04);
+    
+    /* Card Backgrounds */
+    --bg-glass: rgba(11, 26, 48, 0.55);
+    --bg-glass-hover: rgba(11, 26, 48, 0.7);
+    --bg-glass-btn: rgba(0, 242, 254, 0.08);
+    --bg-glass-btn-hover: rgba(0, 242, 254, 0.15);
+    
+    /* Borders */
+    --border-glass: rgba(0, 242, 254, 0.25);
+    --border-glass-hover: rgba(0, 242, 254, 0.4);
+    --border-light: rgba(0, 242, 254, 0.1);
+    --border-medium: rgba(0, 242, 254, 0.18);
+    
+    /* Accents & Glows */
+    --glow-primary: #00f2fe;
+    --glow-secondary: #0072ff;
+    --glow-tertiary: #00e676;
+    --glow-primary-alpha: rgba(0, 242, 254, 0.3);
+    --glow-hover-color: rgba(0, 242, 254, 0.2);
+    
+    /* Typography */
+    --text-primary: #ffffff;
+    --text-secondary: #80deea;
+    --text-tertiary: #006064;
+    
+    /* Shadow & Effects */
+    --box-shadow: 0 35px 80px rgba(0, 242, 254, 0.25), inset 0 2px 4px rgba(0, 242, 254, 0.35);
+    --shadow-spatial: 0 35px 80px rgba(0, 242, 254, 0.25);
+    --shadow-spatial-hover: 0 45px 95px rgba(0, 242, 254, 0.35);
+    --glass-blur: blur(20px) saturate(220%);
+}
+
+/* ====================================================
+   3. AURORA THEME (Purple / Green Shifting Glows)
+   ==================================================== */
+html[data-theme="Aurora"] {
+    --bg-primary: radial-gradient(circle at 10% 20%, #1a0b2e 0%, #0d0517 90%);
+    --body-bg-image: url('../images/space_nebula_bg.png');
+    --bg-secondary: rgba(127, 0, 255, 0.04);
+    
+    /* Card Backgrounds */
+    --bg-glass: rgba(26, 11, 46, 0.5);
+    --bg-glass-hover: rgba(26, 11, 46, 0.65);
+    --bg-glass-btn: rgba(127, 0, 255, 0.08);
+    --bg-glass-btn-hover: rgba(127, 0, 255, 0.15);
+    
+    /* Borders */
+    --border-glass: rgba(127, 0, 255, 0.2);
+    --border-glass-hover: rgba(127, 0, 255, 0.35);
+    --border-light: rgba(127, 0, 255, 0.08);
+    --border-medium: rgba(127, 0, 255, 0.15);
+    
+    /* Accents & Glows */
+    --glow-primary: #7f00ff;
+    --glow-secondary: #e040fb;
+    --glow-tertiary: #00e5ff;
+    --glow-primary-alpha: rgba(127, 0, 255, 0.3);
+    --glow-hover-color: rgba(127, 0, 255, 0.2);
+    
+    /* Typography */
+    --text-primary: #ffffff;
+    --text-secondary: #d1c4e9;
+    --text-tertiary: #5e35b1;
+    
+    /* Shadow & Effects */
+    --box-shadow: 0 40px 90px rgba(127, 0, 255, 0.3), inset 0 1px 3px rgba(224, 64, 251, 0.3);
+    --shadow-spatial: 0 40px 90px rgba(127, 0, 255, 0.3);
+    --shadow-spatial-hover: 0 50px 105px rgba(127, 0, 255, 0.4);
+    --glass-blur: blur(22px) saturate(180%);
+}
+
+/* ====================================================
+   4. DARK THEME (Minimal Matte Dark Space Mode)
+   ==================================================== */
+html[data-theme="Dark"] {
+    --bg-primary: #0a0b0d;
+    --body-bg-image: none;
+    --bg-secondary: rgba(30, 32, 38, 0.4);
+    
+    /* Card Backgrounds */
+    --bg-glass: #15171e;
+    --bg-glass-hover: #1e212b;
+    --bg-glass-btn: #1a1c24;
+    --bg-glass-btn-hover: #222630;
+    
+    /* Borders */
+    --border-glass: rgba(255, 255, 255, 0.06);
+    --border-glass-hover: rgba(255, 255, 255, 0.12);
+    --border-light: rgba(255, 255, 255, 0.03);
+    --border-medium: rgba(255, 255, 255, 0.05);
+    
+    /* Accents & Glows */
+    --glow-primary: #1e88e5;
+    --glow-secondary: #00bcd4;
+    --glow-tertiary: #ffb300;
+    --glow-primary-alpha: rgba(30, 136, 229, 0.2);
+    --glow-hover-color: rgba(255, 255, 255, 0.05);
+    
+    /* Typography */
+    --text-primary: #e0e0e0;
+    --text-secondary: #9e9e9e;
+    --text-tertiary: #424242;
+    
+    /* Shadow & Effects */
+    --box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+    --shadow-spatial: 0 15px 35px rgba(0, 0, 0, 0.4);
+    --shadow-spatial-hover: 0 25px 45px rgba(0, 0, 0, 0.5);
+    --glass-blur: blur(8px);
+}
+
+/* ====================================================
+   5. LIGHT THEME (Frosted Bright Day Mode)
+   ==================================================== */
+html[data-theme="Light"] {
+    --bg-primary: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    --body-bg-image: none;
+    --bg-secondary: rgba(255, 255, 255, 0.45);
+    
+    /* Card Backgrounds */
+    --bg-glass: rgba(255, 255, 255, 0.65);
+    --bg-glass-hover: rgba(255, 255, 255, 0.85);
+    --bg-glass-btn: rgba(255, 255, 255, 0.5);
+    --bg-glass-btn-hover: rgba(255, 255, 255, 0.7);
+    
+    /* Borders */
+    --border-glass: rgba(0, 0, 0, 0.08);
+    --border-glass-hover: rgba(0, 0, 0, 0.15);
+    --border-light: rgba(0, 0, 0, 0.04);
+    --border-medium: rgba(0, 0, 0, 0.06);
+    
+    /* Accents & Glows */
+    --glow-primary: #0072ff;
+    --glow-secondary: #00c6ff;
+    --glow-tertiary: #7f00ff;
+    --glow-primary-alpha: rgba(0, 114, 255, 0.15);
+    --glow-hover-color: rgba(0, 114, 255, 0.1);
+    
+    /* Typography */
+    --text-primary: #1c202e;
+    --text-secondary: #4e5d78;
+    --text-tertiary: #8c9ba5;
+    
+    /* Shadow & Effects */
+    --box-shadow: 0 20px 45px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    --shadow-spatial: 0 20px 45px rgba(0, 0, 0, 0.06);
+    --shadow-spatial-hover: 0 30px 60px rgba(0, 0, 0, 0.1);
+    --glass-blur: blur(30px) saturate(190%);
+}
+
+/* ====================================================
+   6. SYSTEM THEME (Auto OS Dark/Light media parser)
+   ==================================================== */
+@media (prefers-color-scheme: dark) {
+    html[data-theme="System"] {
+        --bg-primary: radial-gradient(circle at 50% 50%, #0d1222 0%, #05070d 100%);
+        --body-bg-image: url('../images/space_nebula_bg.png');
+        --bg-secondary: rgba(255, 255, 255, 0.04);
+        
+        /* Card Backgrounds */
+        --bg-glass: rgba(255, 255, 255, 0.04);
+        --bg-glass-hover: rgba(255, 255, 255, 0.08);
+        --bg-glass-btn: rgba(255, 255, 255, 0.05);
+        --bg-glass-btn-hover: rgba(255, 255, 255, 0.12);
+        
+        /* Borders */
+        --border-glass: rgba(255, 255, 255, 0.1);
+        --border-glass-hover: rgba(255, 255, 255, 0.2);
+        --border-light: rgba(255, 255, 255, 0.05);
+        --border-medium: rgba(255, 255, 255, 0.08);
+        
+        /* Accents & Glows */
+        --glow-primary: #00f2fe;
+        --glow-secondary: #0072ff;
+        --glow-tertiary: #7f00ff;
+        --glow-primary-alpha: rgba(0, 242, 254, 0.25);
+        --glow-hover-color: rgba(0, 242, 254, 0.15);
+        
+        /* Typography */
+        --text-primary: #ffffff;
+        --text-secondary: #b0c4de;
+        --text-tertiary: #677b93;
+        
+        /* Shadow & Effects */
+        --box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+        --shadow-spatial: 0 40px 100px rgba(0, 0, 0, 0.5);
+        --shadow-spatial-hover: 0 50px 110px rgba(0, 0, 0, 0.6);
+        --glass-blur: blur(25px) saturate(190%);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    html[data-theme="System"] {
+        --bg-primary: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+        --body-bg-image: none;
+        --bg-secondary: rgba(255, 255, 255, 0.45);
+        
+        /* Card Backgrounds */
+        --bg-glass: rgba(255, 255, 255, 0.65);
+        --bg-glass-hover: rgba(255, 255, 255, 0.85);
+        --bg-glass-btn: rgba(255, 255, 255, 0.5);
+        --bg-glass-btn-hover: rgba(255, 255, 255, 0.7);
+        
+        /* Borders */
+        --border-glass: rgba(0, 0, 0, 0.08);
+        --border-glass-hover: rgba(0, 0, 0, 0.15);
+        --border-light: rgba(0, 0, 0, 0.04);
+        --border-medium: rgba(0, 0, 0, 0.06);
+        
+        /* Accents & Glows */
+        --glow-primary: #0072ff;
+        --glow-secondary: #00c6ff;
+        --glow-tertiary: #7f00ff;
+        --glow-primary-alpha: rgba(0, 114, 255, 0.15);
+        --glow-hover-color: rgba(0, 114, 255, 0.1);
+        
+        /* Typography */
+        --text-primary: #1c202e;
+        --text-secondary: #4e5d78;
+        --text-tertiary: #8c9ba5;
+        
+        /* Shadow & Effects */
+        --box-shadow: 0 20px 45px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        --shadow-spatial: 0 20px 45px rgba(0, 0, 0, 0.06);
+        --shadow-spatial-hover: 0 30px 60px rgba(0, 0, 0, 0.1);
+        --glass-blur: blur(30px) saturate(190%);
+    }
+}
+
+/* ====================================================
+   7. CYBERPUNK NEON THEME
+   ==================================================== */
+html[data-theme="Cyberpunk"] {
+    --bg-primary: #000000;
+    --body-bg-image: none;
+    --bg-secondary: #0a0a0a;
+    
+    /* Card Backgrounds */
+    --bg-glass: #0d0d0d;
+    --bg-glass-hover: #141414;
+    --bg-glass-btn: #0d0d0d;
+    --bg-glass-btn-hover: #141414;
+    
+    /* Borders */
+    --border-glass: rgba(255, 0, 127, 0.25);
+    --border-glass-hover: rgba(255, 235, 59, 0.4);
+    --border-light: rgba(255, 0, 127, 0.12);
+    --border-medium: rgba(255, 0, 127, 0.18);
+    
+    /* Accents & Glows (Magenta & Yellow) */
+    --glow-primary: #ff007f;
+    --glow-secondary: #ffeb3b;
+    --glow-tertiary: #00e5ff;
+    --glow-primary-alpha: rgba(255, 0, 127, 0.2);
+    --glow-hover-color: rgba(255, 0, 127, 0.2);
+    
+    /* Typography */
+    --text-primary: #ffffff;
+    --text-secondary: #e0e0e0;
+    --text-tertiary: #ffeb3b;
+    
+    /* Shadow & Effects */
+    --box-shadow: 0 20px 50px rgba(255, 0, 127, 0.15);
+    --shadow-spatial: 0 20px 50px rgba(255, 0, 127, 0.15);
+    --shadow-spatial-hover: 0 30px 60px rgba(255, 0, 127, 0.25), 0 0 20px rgba(255, 235, 59, 0.15);
+    --glass-blur: none;
+}
+
+/* ====================================================
+   8. NORD ICE THEME
+   ==================================================== */
+html[data-theme="Nord"] {
+    --bg-primary: #2e3440;
+    --body-bg-image: none;
+    --bg-secondary: #242933;
+    
+    /* Card Backgrounds */
+    --bg-glass: #3b4252;
+    --bg-glass-hover: #434c5e;
+    --bg-glass-btn: #3b4252;
+    --bg-glass-btn-hover: #434c5e;
+    
+    /* Borders */
+    --border-glass: rgba(143, 188, 187, 0.2);
+    --border-glass-hover: rgba(136, 192, 208, 0.4);
+    --border-light: rgba(143, 188, 187, 0.1);
+    --border-medium: rgba(143, 188, 187, 0.15);
+    
+    /* Accents & Glows (Nord Ice Blue) */
+    --glow-primary: #88c0d0;
+    --glow-secondary: #8fbcbb;
+    --glow-tertiary: #5e81ac;
+    --glow-primary-alpha: rgba(136, 192, 208, 0.15);
+    --glow-hover-color: rgba(136, 192, 208, 0.15);
+    
+    /* Typography */
+    --text-primary: #eceff4;
+    --text-secondary: #d8dee9;
+    --text-tertiary: #81a1c1;
+    
+    /* Shadow & Effects */
+    --box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+    --shadow-spatial: 0 20px 45px rgba(0, 0, 0, 0.2);
+    --shadow-spatial-hover: 0 30px 55px rgba(0, 0, 0, 0.3), 0 0 15px rgba(136, 192, 208, 0.15);
+    --glass-blur: none;
+}
+
+/* ====================================================
+   9. DRACULA VIBE THEME
+   ==================================================== */
+html[data-theme="Dracula"] {
+    --bg-primary: #1e1f29;
+    --body-bg-image: none;
+    --bg-secondary: #181920;
+    
+    /* Card Backgrounds */
+    --bg-glass: #282a36;
+    --bg-glass-hover: #343746;
+    --bg-glass-btn: #282a36;
+    --bg-glass-btn-hover: #343746;
+    
+    /* Borders */
+    --border-glass: rgba(189, 147, 249, 0.25);
+    --border-glass-hover: rgba(255, 121, 198, 0.4);
+    --border-light: rgba(189, 147, 249, 0.12);
+    --border-medium: rgba(189, 147, 249, 0.18);
+    
+    /* Accents & Glows (Dracula Purple & Pink) */
+    --glow-primary: #bd93f9;
+    --glow-secondary: #ff79c6;
+    --glow-tertiary: #50fa7b;
+    --glow-primary-alpha: rgba(189, 147, 249, 0.2);
+    --glow-hover-color: rgba(189, 147, 249, 0.2);
+    
+    /* Typography */
+    --text-primary: #f8f8f2;
+    --text-secondary: #e2e2dc;
+    --text-tertiary: #6272a4;
+    
+    /* Shadow & Effects */
+    --box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
+    --shadow-spatial: 0 20px 45px rgba(0, 0, 0, 0.3);
+    --shadow-spatial-hover: 0 30px 55px rgba(0, 0, 0, 0.4), 0 0 15px rgba(189, 147, 249, 0.15);
+    --glass-blur: none;
+}
+
+/* ====================================================
+   10. CONSTELLATION THEME (Stardust Amber & Cosmic Gold)
+   ==================================================== */
+html[data-theme="Constellation"] {
+    --bg-primary: radial-gradient(circle at 20% 30%, rgba(255, 184, 0, 0.04) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 70%, rgba(0, 229, 255, 0.04) 0%, transparent 50%),
+                  linear-gradient(180deg, #050811 0%, #080c16 50%, #030408 100%);
+    --body-bg-image: url('../images/space_nebula_bg.png');
+    --bg-secondary: rgba(255, 184, 0, 0.03);
+    
+    /* Card Backgrounds */
+    --bg-glass: rgba(7, 10, 22, 0.78);
+    --bg-glass-hover: rgba(12, 17, 34, 0.88);
+    --bg-glass-btn: rgba(255, 184, 0, 0.06);
+    --bg-glass-btn-hover: rgba(255, 184, 0, 0.14);
+    
+    /* Borders */
+    --border-glass: rgba(255, 184, 0, 0.35);
+    --border-glass-hover: rgba(255, 184, 0, 0.6);
+    --border-light: rgba(255, 255, 255, 0.06);
+    --border-medium: rgba(255, 184, 0, 0.2);
+    
+    /* Accents & Glows (Amber Star & Cosmic Gold Highlights) */
+    --glow-primary: #ffb800;
+    --glow-secondary: #d4af37;
+    --glow-tertiary: #00e5ff;
+    --glow-primary-alpha: rgba(255, 184, 0, 0.22);
+    --glow-hover-color: rgba(255, 184, 0, 0.15);
+    
+    /* Typography */
+    --text-primary: #ffffff;
+    --text-secondary: #cdd6e4;
+    --text-tertiary: #ffb800;
+    
+    /* Shadow & Effects */
+    --box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 184, 0, 0.12);
+    --shadow-spatial: 0 15px 35px rgba(0, 0, 0, 0.7);
+    --shadow-spatial-hover: 0 25px 45px rgba(0, 0, 0, 0.8), 0 0 35px rgba(255, 184, 0, 0.22);
+    --glass-blur: blur(12px);
+}
+
+/* Constellation Theme Custom Overrides - No Spatial Design */
+html[data-theme="Constellation"] body {
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+/* Glowing Star prefix for titles and headers */
+html[data-theme="Constellation"] h3::before {
+    content: "✦ ";
+    color: var(--glow-primary);
+    margin-right: 6px;
+    text-shadow: 0 0 8px rgba(255, 184, 0, 0.8);
+    font-weight: bold;
+}
+
+html[data-theme="Constellation"] .panel-title::before,
+html[data-theme="Constellation"] .page-title::before {
+    content: "✧ ";
+    color: var(--glow-primary);
+    margin-right: 8px;
+    text-shadow: 0 0 10px rgba(255, 184, 0, 0.9);
+}
+
+/* Sidebar links path styling */
+html[data-theme="Constellation"] .sidebar-link.active {
+    background: rgba(255, 184, 0, 0.1) !important;
+    border-left: 3px solid var(--glow-primary) !important;
+    color: var(--glow-primary) !important;
+    box-shadow: 0 0 15px rgba(255, 184, 0, 0.15) !important;
+}
+
+/* Form input focus gold glow */
+html[data-theme="Constellation"] .form-control:focus {
+    border-color: var(--glow-primary) !important;
+    box-shadow: 0 0 12px rgba(255, 184, 0, 0.3) !important;
+    background-color: rgba(7, 10, 22, 0.9) !important;
+}
+
+/* Custom stardust scrollbar styling */
+html[data-theme="Constellation"] ::-webkit-scrollbar-thumb {
+    background: rgba(255, 184, 0, 0.25) !important;
+    border: 1px solid rgba(255, 184, 0, 0.1);
+}
+html[data-theme="Constellation"] ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 184, 0, 0.45) !important;
+}
+
+/* ====================================================
+   11. LIVE THEME (Deep Dark with LineWaves background)
+   ==================================================== */
+html[data-theme="Live"] {
+    --bg-primary: #000000;
+    --body-bg-image: none;
+    --bg-secondary: #080808;
+    
+    /* Card Backgrounds */
+    --bg-glass: rgba(18, 18, 18, 0.7);
+    --bg-glass-hover: rgba(26, 26, 26, 0.8);
+    --bg-glass-btn: rgba(255, 255, 255, 0.05);
+    --bg-glass-btn-hover: rgba(255, 255, 255, 0.1);
+    
+    /* Borders */
+    --border-glass: rgba(255, 255, 255, 0.15);
+    --border-glass-hover: rgba(255, 255, 255, 0.25);
+    --border-light: rgba(255, 255, 255, 0.08);
+    --border-medium: rgba(255, 255, 255, 0.12);
+    
+    /* Accents & Glows (Clean White Glows) */
+    --glow-primary: #ffffff;
+    --glow-secondary: #e0e0e0;
+    --glow-tertiary: #a0a0a0;
+    --glow-primary-alpha: rgba(255, 255, 255, 0.15);
+    --glow-hover-color: rgba(255, 255, 255, 0.15);
+    
+    /* Typography */
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --text-tertiary: #888888;
+    
+    /* Shadow & Effects */
+    --box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    --shadow-spatial: 0 20px 50px rgba(0, 0, 0, 0.6);
+    --shadow-spatial-hover: 0 35px 80px rgba(0, 0, 0, 0.8);
+    --glass-blur: blur(20px);
+}
+
