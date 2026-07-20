@@ -15,7 +15,8 @@ $student = $db->prepare("
 ");
 $student->execute([$student_id]);
 $profile = $student->fetch();
-
+// Set Indian Time Zone
+date_default_timezone_set('Asia/Kolkata');
 // 2. Daily Buddy Card Greeting based on current time
 // Time: 05:00-11:59 (Morning), 12:00-16:59 (Afternoon), 17:00-21:59 (Evening), 22:00-04:59 (Night)
 $hour = (int)date('G');
