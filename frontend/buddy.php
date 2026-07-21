@@ -115,6 +115,29 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         box-shadow: 0 5px 15px rgba(0, 114, 255, 0.3);
     }
     
+    /* Thinking Indicator Animation */
+    .thinking-dots {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+    }
+    .thinking-dots span {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--text-primary);
+        opacity: 0.4;
+        animation: bounce 1.4s infinite ease-in-out both;
+    }
+    .thinking-dots span:nth-child(1) { animation-delay: -0.32s; }
+    .thinking-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes bounce {
+        0%, 80%, 100% { transform: scale(0.2); opacity: 0.2; }
+        40% { transform: scale(1.0); opacity: 1.0; }
+    }
+    
     .chat-input {
         flex: 1;
         padding: 12px 20px;
@@ -471,7 +494,10 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         toggleSpeakerOutput(); // double call triggers default check styling correctly
     });
 
+    let isTyping = false;
+
     function triggerSuggestion(text) {
+        if (isTyping) return;
         document.getElementById('hub-user-input').value = text;
         sendHubMessage();
     }
@@ -485,6 +511,106 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         feed.scrollTop = feed.scrollHeight;
     }
 
+    function showThinkingIndicator() {
+        const feed = document.getElementById('hub-conversation-feed');
+        const indicator = document.createElement('div');
+        indicator.className = `msg-bubble msg-bubble-buddy thinking-bubble`;
+        indicator.id = "buddy-thinking-indicator";
+        indicator.innerHTML = `
+            <div class="thinking-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        `;
+        feed.appendChild(indicator);
+        feed.scrollTop = feed.scrollHeight;
+    }
+
+    function removeThinkingIndicator() {
+        const indicator = document.getElementById('buddy-thinking-indicator');
+        if (indicator) {
+            indicator.remove();
+        }
+    }
+
+    function updateSuggestionsPanel(suggestions) {
+        const container = document.querySelector('.suggested-list');
+        if (!container || !suggestions) return;
+        container.innerHTML = "";
+        suggestions.forEach(item => {
+            const btn = document.createElement('a');
+            btn.className = "suggested-item";
+            btn.innerHTML = `${item} <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; opacity: 0.5;"></i>`;
+            btn.setAttribute('onclick', `triggerSuggestion('${item.replace(/'/g, "\\'")}')`);
+            container.appendChild(btn);
+        });
+    }
+
+    function checkQuickAction(query) {
+        const q = query.toLowerCase().trim();
+        if (q.includes("show bus timing") || q.includes("open bus page") || q.includes("bus timing") || q.includes("bus timings")) {
+            showQuickActionMessage("Opening Bus Routes Guide...", "campus.php");
+            return true;
+        }
+        if (q.includes("show events") || q.includes("events page") || q.includes("open events")) {
+            showQuickActionMessage("Opening Campus Events Portal...", "events.php");
+            return true;
+        }
+        if (q.includes("faculty") || q.includes("teachers") || q.includes("cabin")) {
+            showQuickActionMessage("Opening Faculty Cabin Directory...", "faculty.php");
+            return true;
+        }
+        if (q.includes("timetable") || q.includes("class schedule") || q.includes("schedule")) {
+            showQuickActionMessage("Opening Weekly Timetable...", "timetable.php");
+            return true;
+        }
+        return false;
+    }
+
+    function showQuickActionMessage(text, targetUrl) {
+        addHubBubble(`🤖 Buddy says:<br>${text}`, 'buddy');
+        setTimeout(() => {
+            window.location.href = targetUrl;
+        }, 1500);
+    }
+
+    function typeWriterEffect(text, sender, suggestions) {
+        isTyping = true;
+        const feed = document.getElementById('hub-conversation-feed');
+        const bubble = document.createElement('div');
+        bubble.className = `msg-bubble msg-bubble-${sender}`;
+        feed.appendChild(bubble);
+
+        // Standardized Prefix
+        bubble.innerHTML = "<strong>🤖 Buddy says:</strong><br>";
+
+        // Clean out any formatting artifacts from model
+        const cleanText = text.replace(/^🤖 Buddy says:?/i, '').trim();
+
+        const words = cleanText.split(" ");
+        let wordIndex = 0;
+
+        function typeWord() {
+            if (wordIndex < words.length) {
+                bubble.innerHTML += (wordIndex === 0 ? "" : " ") + words[wordIndex];
+                feed.scrollTop = feed.scrollHeight;
+                wordIndex++;
+                setTimeout(typeWord, 45); // 45ms per word typing animation
+            } else {
+                isTyping = false;
+                feed.scrollTop = feed.scrollHeight;
+                if (speakOutput && cleanText) {
+                    speakHubOutput(cleanText);
+                }
+                if (suggestions) {
+                    updateSuggestionsPanel(suggestions);
+                }
+            }
+        }
+        typeWord();
+    }
+
     function handleHubKey(e) {
         if (e.key === 'Enter') {
             sendHubMessage();
@@ -492,12 +618,20 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
     }
 
     function sendHubMessage() {
+        if (isTyping) return;
         const input = document.getElementById('hub-user-input');
         const query = input.value.trim();
         if (query === "") return;
 
         addHubBubble(query, 'user');
         input.value = "";
+
+        // Check for quick actions redirects
+        if (checkQuickAction(query)) {
+            return;
+        }
+
+        showThinkingIndicator();
 
         fetch('../api/buddy.php', {
             method: 'POST',
@@ -506,23 +640,23 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         })
         .then(res => res.json())
         .then(data => {
-            addHubBubble(data.answer, 'buddy');
-            if (speakOutput && data.answer) {
-                speakHubOutput(data.answer);
-            }
+            removeThinkingIndicator();
+            typeWriterEffect(data.answer, 'buddy', data.suggestions);
         })
         .catch(() => {
-            addHubBubble("Sorry, I had trouble reaching my AI Senior brain servers. Please check your connection.", 'buddy');
+            removeThinkingIndicator();
+            addHubBubble("🤖 Buddy says:<br>Sorry, I had trouble reaching my AI Senior brain servers. Please check your connection.", 'buddy');
         });
     }
 
     function clearChatHistory() {
+        if (isTyping) return;
         if (confirm("Are you sure you want to reset Buddy's session memory?")) {
             fetch('../api/buddy.php?clear=1')
             .then(res => res.json())
             .then(data => {
                 document.getElementById('hub-conversation-feed').innerHTML = "";
-                addHubBubble("Conversation memory reset. 👋 How can I help you now?", 'buddy');
+                addHubBubble("🤖 Buddy says:<br>Conversation memory reset. 👋 How can I help you now?", 'buddy');
             });
         }
     }

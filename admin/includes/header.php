@@ -415,7 +415,7 @@ $active_page = basename($_SERVER['PHP_SELF']);
             
             <!-- Buddy AI Section -->
             <li>
-                <div class="menu-item-link <?php echo ($active_page === 'knowledge.php' || $active_page === 'buddy_settings.php') ? 'active' : ''; ?>" style="cursor: pointer;">
+                <div class="menu-item-link <?php echo ($active_page === 'knowledge.php' || $active_page === 'buddy_settings.php' || $active_page === 'buddy_analytics.php') ? 'active' : ''; ?>" style="cursor: pointer;">
                     <i class="fa-solid fa-brain"></i> Buddy AI
                 </div>
                 <ul class="submenu">
@@ -427,6 +427,11 @@ $active_page = basename($_SERVER['PHP_SELF']);
                     <li>
                         <a href="buddy_settings.php" class="submenu-link <?php echo $active_page === 'buddy_settings.php' ? 'active' : ''; ?>">
                             Buddy Settings
+                        </a>
+                    </li>
+                    <li>
+                        <a href="buddy_analytics.php" class="submenu-link <?php echo $active_page === 'buddy_analytics.php' ? 'active' : ''; ?>">
+                            AI Analytics
                         </a>
                     </li>
                 </ul>
