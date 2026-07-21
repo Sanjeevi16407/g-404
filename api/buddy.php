@@ -329,6 +329,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                          "Always respond as Buddy.\n" .
                                          "Support English, Tamil, and Tanglish.\n" .
                                          "Maintain a friendly senior-like personality.\n" .
+                                         "Do not address the student by their name in every response, and do not repeat greetings (like 'Hi [Name]') in ongoing conversation turns. Only greet them if they greet you first.\n" .
                                          "If appropriate, end with a related suggestion that may help the student.\n\n" .
                                          "IMPORTANT: You MUST format your response as a valid JSON object ONLY. Do NOT wrap it in ```json ... ``` code blocks. Output raw JSON plain text only. The JSON structure MUST contain:\n" .
                                          "{\n" .
