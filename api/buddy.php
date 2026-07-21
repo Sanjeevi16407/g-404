@@ -317,7 +317,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $buddy_name = $buddy_settings['buddy_name'] ?? 'Buddy';
 
                 if (!empty($api_key)) {
-                    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $api_key;
+                    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=" . $api_key;
                     
                     $system_instruction = "You are Buddy, the Digital Senior of Saranathan College of Engineering.\n" .
                                          "Your primary responsibility is to help students.\n" .
@@ -373,8 +373,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $result = json_decode($curl_response, true);
                         $raw_answer = $result['candidates'][0]['content']['parts'][0]['text'] ?? '';
                         
-                        // Parse JSON from model
-                        $parsed_json = json_decode(trim($raw_answer), true);
+                        // Parse JSON from model, stripping markdown brackets if returned
+                        $clean_raw = trim($raw_answer);
+                        if (strpos($clean_raw, '```') === 0) {
+                            $clean_raw = preg_replace('/^```(?:json)?\s+/', '', $clean_raw);
+                            $clean_raw = preg_replace('/\s+```$/', '', $clean_raw);
+                        }
+                        
+                        $parsed_json = json_decode(trim($clean_raw), true);
                         if ($parsed_json && isset($parsed_json['response'])) {
                             $response["answer"] = trim($parsed_json['response']);
                             $response["category"] = $parsed_json['category'] ?? $localCategory;
