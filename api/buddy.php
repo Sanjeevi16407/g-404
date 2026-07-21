@@ -344,6 +344,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $payload = [
                         "contents" => array_values($_SESSION['buddy_history']),
+                        "tools" => [
+                            ["googleSearch" => new stdClass()]
+                        ],
                         "systemInstruction" => [
                             "parts" => [
                                 ["text" => $system_instruction]

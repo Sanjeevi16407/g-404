@@ -52,6 +52,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
     
     /* Center Column: Immersive chat panel */
     .chat-hub-workspace {
+        position: relative;
         display: flex;
         flex-direction: column;
         border-radius: 20px;
@@ -63,6 +64,8 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         -webkit-backdrop-filter: blur(25px);
     }
     .chat-hub-header {
+        position: relative;
+        z-index: 2;
         padding: 20px 24px;
         border-bottom: 1px solid var(--border-light);
         display: flex;
@@ -71,6 +74,8 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         background: rgba(255, 255, 255, 0.01);
     }
     .chat-hub-body {
+        position: relative;
+        z-index: 2;
         flex: 1;
         overflow-y: auto;
         padding: 24px;
@@ -81,6 +86,8 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         min-height: 460px;
     }
     .chat-hub-footer {
+        position: relative;
+        z-index: 2;
         padding: 20px 24px;
         border-top: 1px solid var(--border-light);
         display: flex;
@@ -363,6 +370,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
     
     <!-- 1. Center Panel: Immersive chat panel -->
     <div class="chat-hub-workspace">
+        <canvas id="chat-bg-canvas"></canvas>
         <header class="chat-hub-header">
             <div style="display: flex; align-items: center; gap: 12px;">
                 <div style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981;"></div>
@@ -380,7 +388,6 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
 
         <!-- Conversational Feed Grid -->
         <div class="chat-hub-body" id="hub-conversation-feed">
-            <canvas id="chat-bg-canvas"></canvas>
             <!-- Initial Greeting -->
             <div class="msg-bubble msg-bubble-buddy">
                 👋 Hello! I am <?php echo sanitize_input($buddy_name); ?>, your digital senior. You can ask me any questions about our college blocks, exam regulations, syllabus, timetable or cafeteria, in English, Tamil, or Tanglish. I remember our conversation, so ask away!
