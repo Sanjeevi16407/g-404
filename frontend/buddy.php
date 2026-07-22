@@ -1048,7 +1048,6 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         };
         animate();
     });
-    });
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
