@@ -24,9 +24,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
     }
 }
 
-// Fetch Mapbox token from settings
-$buddy_settings = $db->query("SELECT mapbox_token FROM buddy_settings WHERE id = 1 LIMIT 1")->fetch();
-$mapbox_token = $buddy_settings['mapbox_token'] ?? getenv('MAPBOX_TOKEN') ?? '';
+// Fetch Mapbox token with robust version-independent self-healing migration
+$mapbox_token = '';
+try {
+    $buddy_settings = $db->query("SELECT mapbox_token FROM buddy_settings WHERE id = 1 LIMIT 1")->fetch();
+    $mapbox_token = $buddy_settings['mapbox_token'] ?? '';
+} catch (PDOException $e) {
+    if ($e->getCode() == '42S22' || strpos($e->getMessage(), '1054') !== false) {
+        try {
+            $db->exec("ALTER TABLE buddy_settings ADD COLUMN mapbox_token VARCHAR(255) DEFAULT NULL");
+            $buddy_settings = $db->query("SELECT mapbox_token FROM buddy_settings WHERE id = 1 LIMIT 1")->fetch();
+            $mapbox_token = $buddy_settings['mapbox_token'] ?? '';
+        } catch (PDOException $ex) {}
+    }
+}
+if (empty($mapbox_token)) {
+    $mapbox_token = getenv('MAPBOX_TOKEN') ?? '';
+}
 
 // Check if user submitted a temporary token for session testing
 if (isset($_POST['temp_mapbox_token'])) {
