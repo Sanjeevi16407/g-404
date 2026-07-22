@@ -312,11 +312,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
 
                 <!-- Horizontal Suggestions Scroll -->
                 <div style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none;">
-                    <div class="suggestion-chip" onclick="askBuddyDrawer('Where is library?')">Where is Library?</div>
+                    <div class="suggestion-chip" onclick="askBuddyDrawer('Where is KS Block?')">Where is KS Block?</div>
                     <div class="suggestion-chip" onclick="askBuddyDrawer('Take me to RV Block')">Take me to RV Block</div>
                     <div class="suggestion-chip" onclick="askBuddyDrawer('Show canteen')">Show Canteen</div>
-                    <div class="suggestion-chip" onclick="askBuddyDrawer('Navigate to Admin Block')">Navigate to Admin Block</div>
-                    <div class="suggestion-chip" onclick="askBuddyDrawer('Where to park?')">Where to park?</div>
+                    <div class="suggestion-chip" onclick="askBuddyDrawer('Navigate to BD and JS Block')">Navigate to BD and JS Block</div>
+                    <div class="suggestion-chip" onclick="askBuddyDrawer('Where is Mech Block?')">Where is Mech Block?</div>
                 </div>
 
                 <div style="display: flex; gap: 8px; border-top: 1px solid var(--border-light); padding-top: 10px; align-items: center;">
@@ -332,93 +332,102 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
     const locations = {
         main_gate: {
             name: "Main Gate",
-            coords: [10.757302, 78.651586], // Leaflet uses [lat, lng]
+            coords: [10.7552, 78.6523], // Leaflet uses [lat, lng]
             details: "College Entrance Gate",
             hours: "24 Hours Open",
-            description: "The primary entry and exit gate of Saranathan College of Engineering. Security checks and visitor registrations are handled here.",
+            description: "The primary entry and exit gate of Saranathan College of Engineering on the Trichy-Madurai Highway. Security checks and visitor registrations are handled here.",
             photo: "assets/images/default-campus.jpg",
             icon: "fa-solid fa-door-open"
         },
-        admin_block: {
-            name: "Admin Block",
-            coords: [10.756091, 78.651228],
-            details: "Main Building, Ground & First Floor",
-            hours: "9:00 AM - 5:00 PM",
-            description: "Houses the offices of the Principal, Director, administrative staff, student service counters, and accounts department.",
-            photo: "assets/images/default-campus.jpg",
-            icon: "fa-solid fa-building-columns"
-        },
-        rv_block: {
-            name: "RV Block",
-            coords: [10.755820, 78.650630],
-            details: "Academic Block (West Side)",
-            hours: "8:30 AM - 6:00 PM",
-            description: "Contains classrooms, advanced labs for CSE and IT departments, faculty cabins, and department seminar halls.",
-            photo: "assets/images/default-campus.jpg",
-            icon: "fa-solid fa-laptop-code"
-        },
-        js_block: {
-            name: "JS Block",
-            coords: [10.755850, 78.651810],
-            details: "Academic Block (East Side)",
-            hours: "8:30 AM - 6:00 PM",
-            description: "Dedicated academic building housing classrooms and state-of-the-art labs for ECE and EEE branches.",
-            photo: "assets/images/default-campus.jpg",
-            icon: "fa-solid fa-microchip"
-        },
-        library: {
-            name: "Library",
-            coords: [10.755500, 78.651150],
-            details: "Central Library Building",
-            hours: "9:00 AM - 5:30 PM",
-            description: "Central repository containing over 50,000 physical volumes, research journals, e-learning terminals, and quiet study zones.",
-            photo: "assets/images/default-campus.jpg",
-            icon: "fa-solid fa-book-open"
-        },
-        canteen: {
-            name: "Canteen",
-            coords: [10.754800, 78.650800],
-            details: "Cafeteria & Dining Hall",
-            hours: "8:00 AM - 4:30 PM",
-            description: "Serves hygiene vegetarian meals, quick lunches, fresh juices, tea, coffee, and snacks for students and faculty.",
-            photo: "assets/images/default-campus.jpg",
-            icon: "fa-solid fa-utensils"
-        },
-        auditorium: {
-            name: "Auditorium",
-            coords: [10.755100, 78.651600],
-            details: "Central Indoor Auditorium",
-            hours: "Event-based Open",
-            description: "Air-conditioned indoor seating venue hosting college convocations, cultural fests, workshops, and international symposiums.",
-            photo: "assets/images/default-campus.jpg",
-            icon: "fa-solid fa-masks-theater"
-        },
-        bus_stop: {
-            name: "Bus Stop",
-            coords: [10.757000, 78.652050],
-            details: "College Bus Bay",
-            hours: "7:30 AM - 9:00 AM, 4:00 PM - 6:00 PM",
-            description: "Boarding point for all college buses connecting to various parts of Tiruchirappalli and nearby districts.",
-            photo: "assets/images/default-campus.jpg",
-            icon: "fa-solid fa-bus"
-        },
         parking: {
             name: "Parking Area",
-            coords: [10.756800, 78.652250],
-            details: "Student & Faculty Parking Lot",
+            coords: [10.7554, 78.6521],
+            details: "Visitor & Student Parking Lot",
             hours: "7:00 AM - 7:00 PM",
-            description: "Secure parking space for two-wheelers and four-wheelers, equipped with CCTV surveillance.",
+            description: "Secure parking space for two-wheelers and four-wheelers located right near the main entrance highway road.",
             photo: "assets/images/default-campus.jpg",
             icon: "fa-solid fa-square-parking"
         },
+        ks_block: {
+            name: "KS Block",
+            coords: [10.7562, 78.6510],
+            details: "Kamaraj Academic Block",
+            hours: "8:30 AM - 6:00 PM",
+            description: "Contains classrooms and state-of-the-art laboratories for EEE, ECE, and ICE departments.",
+            photo: "assets/images/default-campus.jpg",
+            icon: "fa-solid fa-microchip"
+        },
+        rv_block: {
+            name: "RV Block",
+            coords: [10.7563, 78.6515],
+            details: "Shri R.V. Block (CSE & IT)",
+            hours: "8:30 AM - 6:00 PM",
+            description: "Major block housing class sessions, advanced programming labs for CSE and IT departments, faculty cabins, and the main office.",
+            photo: "assets/images/default-campus.jpg",
+            icon: "fa-solid fa-laptop-code"
+        },
+        bd_js_block: {
+            name: "BD and JS Block",
+            coords: [10.7567, 78.6513],
+            details: "BD & JS Academic Block",
+            hours: "8:30 AM - 6:00 PM",
+            description: "Academic building housing classrooms and research labs for Civil Engineering, AI&DS, and CSBS departments.",
+            photo: "assets/images/default-campus.jpg",
+            icon: "fa-solid fa-building-columns"
+        },
+        canteen: {
+            name: "Canteen",
+            coords: [10.7567, 78.6508],
+            details: "Main Dining & Cafeteria",
+            hours: "8:00 AM - 4:30 PM",
+            description: "Serves hygiene vegetarian meals, hot snacks, tea, and beverages, featuring separate dining halls for students and faculty.",
+            photo: "assets/images/default-campus.jpg",
+            icon: "fa-solid fa-utensils"
+        },
+        staff_parking: {
+            name: "Staff Parking",
+            coords: [10.7571, 78.6511],
+            details: "Faculty Vehicle Parking Lot",
+            hours: "7:30 AM - 6:30 PM",
+            description: "Exclusive reserved parking spaces for staff members, teachers, and directors.",
+            photo: "assets/images/default-campus.jpg",
+            icon: "fa-solid fa-car"
+        },
+        mech_block: {
+            name: "Mech Block",
+            coords: [10.7571, 78.6506],
+            details: "Mechanical Engineering Block",
+            hours: "8:30 AM - 6:00 PM",
+            description: "Dedicated to the Mechanical Engineering department, housing advanced thermodynamic, design, and CAD labs.",
+            photo: "assets/images/default-campus.jpg",
+            icon: "fa-solid fa-gears"
+        },
+        bus_parking: {
+            name: "Bus Parking",
+            coords: [10.7574, 78.6509],
+            details: "College Bus Transit Depot",
+            hours: "7:30 AM - 9:00 AM, 4:00 PM - 6:00 PM",
+            description: "Transit zone where college buses arrive and park, connecting students to various zones of Tiruchirappalli.",
+            photo: "assets/images/default-campus.jpg",
+            icon: "fa-solid fa-bus"
+        },
         hostel: {
-            name: "Campus Hostel",
-            coords: [10.754100, 78.650100],
-            details: "Boys & Girls Hostel Blocks",
+            name: "Boys Hostel",
+            coords: [10.7578, 78.6508],
+            details: "Student Hostels & Residence",
             hours: "Residence Facility",
-            description: "Comfortable residential blocks providing accommodation, multi-sport grounds, high-speed Wi-Fi, and 24/7 warden guidance.",
+            description: "Residential hostels for male students, complete with study halls, sports grounds, and dining mess operations.",
             photo: "assets/images/default-campus.jpg",
             icon: "fa-solid fa-hotel"
+        },
+        ground_main: {
+            name: "Main Ground",
+            coords: [10.7565, 78.6501],
+            details: "Sports & Athletic Field",
+            hours: "Open Play",
+            description: "Large open playground for cricket, football, athletic practice, and annual collegiate sports events.",
+            photo: "assets/images/default-campus.jpg",
+            icon: "fa-solid fa-circle-play"
         }
     };
 
@@ -430,8 +439,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
 
         // Initialize Free Leaflet Satellite Map (ArcGIS Esri Satellite Imagery - No tokens required!)
         map = L.map('map', {
-            center: [10.756091, 78.651228],
-            zoom: 17,
+            center: [10.7565, 78.6512],
+            zoom: 17.5,
             zoomControl: true
         });
 
