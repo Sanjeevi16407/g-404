@@ -265,6 +265,7 @@ CREATE TABLE IF NOT EXISTS buddy_settings (
     enable_wheel TINYINT(1) NOT NULL DEFAULT 1,
     enable_predictive TINYINT(1) NOT NULL DEFAULT 1,
     gemini_api_key VARCHAR(255) DEFAULT NULL,
+    mapbox_token VARCHAR(255) DEFAULT NULL,
     CHECK (id = 1)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

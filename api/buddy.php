@@ -358,65 +358,88 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ]
                     ];
 
-                    // cURL request
-                    $ch = curl_init($url);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($ch, CURLOPT_POST, true);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                    // Helper to execute cURL
+                    $execute_curl = function($url, $payload_data) {
+                        $ch = curl_init($url);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        curl_setopt($ch, CURLOPT_POST, true);
+                        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload_data));
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                        $res = curl_exec($ch);
+                        $err = curl_errno($ch);
+                        curl_close($ch);
+                        return [$res, $err];
+                    };
 
-                    $curl_response = curl_exec($ch);
+                    list($curl_response, $curl_err) = $execute_curl($url, $payload);
                     
-                    if (curl_errno($ch)) {
+                    if ($curl_err) {
                         $response["answer"] = "Buddy says: I'm having trouble reaching my AI service at the moment. I can still help with campus-related questions from my knowledge base.";
                         $response["category"] = $localCategory;
                         $response["suggestions"] = getStaticSuggestions($localCategory);
                         array_pop($_SESSION['buddy_history']);
                     } else {
                         $result = json_decode($curl_response, true);
-                        $raw_answer = $result['candidates'][0]['content']['parts'][0]['text'] ?? '';
                         
-                        // Parse JSON from model, stripping markdown brackets if returned
-                        $clean_raw = trim($raw_answer);
-                        if (strpos($clean_raw, '```') === 0) {
-                            $clean_raw = preg_replace('/^```(?:json)?\s+/', '', $clean_raw);
-                            $clean_raw = preg_replace('/\s+```$/', '', $clean_raw);
+                        // Self-healing: If googleSearch grounding fails with 429/400, retry without tools
+                        if (isset($result['error']) && isset($payload['tools'])) {
+                            unset($payload['tools']);
+                            list($curl_response, $curl_err) = $execute_curl($url, $payload);
+                            if (!$curl_err) {
+                                $result = json_decode($curl_response, true);
+                            }
                         }
-                        
-                        $parsed_json = json_decode(trim($clean_raw), true);
-                        if ($parsed_json && isset($parsed_json['response'])) {
-                            $response["answer"] = trim($parsed_json['response']);
-                            $response["category"] = $parsed_json['category'] ?? $localCategory;
-                            $response["suggestions"] = $parsed_json['suggestions'] ?? getStaticSuggestions($response["category"]);
-                        } else {
-                            // Fallback if model didn't return valid JSON
-                            $response["answer"] = trim(str_replace('```json', '', str_replace('```', '', $raw_answer)));
+
+                        // Check if it's still an error (e.g. general 429 quota exhaustion)
+                        if (isset($result['error'])) {
+                            $response["answer"] = "Buddy says: I'm having trouble reaching my AI service at the moment. I can still help with campus-related questions from my knowledge base.";
                             $response["category"] = $localCategory;
                             $response["suggestions"] = getStaticSuggestions($localCategory);
+                            array_pop($_SESSION['buddy_history']);
+                        } else {
+                            $raw_answer = $result['candidates'][0]['content']['parts'][0]['text'] ?? '';
+                            
+                            // Parse JSON from model, stripping markdown brackets if returned
+                            $clean_raw = trim($raw_answer);
+                            if (strpos($clean_raw, '```') === 0) {
+                                $clean_raw = preg_replace('/^```(?:json)?\s+/', '', $clean_raw);
+                                $clean_raw = preg_replace('/\s+```$/', '', $clean_raw);
+                            }
+                            
+                            $parsed_json = json_decode(trim($clean_raw), true);
+                            if ($parsed_json && isset($parsed_json['response'])) {
+                                $response["answer"] = trim($parsed_json['response']);
+                                $response["category"] = $parsed_json['category'] ?? $localCategory;
+                                $response["suggestions"] = $parsed_json['suggestions'] ?? getStaticSuggestions($response["category"]);
+                            } else {
+                                // Fallback if model didn't return valid JSON
+                                $response["answer"] = trim(str_replace('```json', '', str_replace('```', '', $raw_answer)));
+                                $response["category"] = $localCategory;
+                                $response["suggestions"] = getStaticSuggestions($localCategory);
+                            }
+
+                            // Save model turn to history
+                            $_SESSION['buddy_history'][] = [
+                                "role" => "model",
+                                "parts" => [["text" => $response["answer"]]]
+                            ];
+
+                            // Cache the response
+                            try {
+                                $suggestions_json = json_encode($response["suggestions"]);
+                                $cache_ins = $db->prepare("INSERT INTO gemini_cache (query_hash, query_text, response_text, category, suggestions) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE response_text = ?, category = ?, suggestions = ?");
+                                $cache_ins->execute([$query_hash, $query, $response["answer"], $response["category"], $suggestions_json, $response["answer"], $response["category"], $suggestions_json]);
+                            } catch (PDOException $e) {}
+
+                            // Log metrics
+                            try {
+                                $responseTime = microtime(true) - $startTime;
+                                $metrics_stmt = $db->prepare("INSERT INTO buddy_analytics (question, category, answered_by, response_time) VALUES (?, ?, 'Gemini', ?)");
+                                $metrics_stmt->execute([$query, $response["category"], $responseTime]);
+                            } catch (PDOException $e) {}
                         }
-
-                        // Save model turn to history
-                        $_SESSION['buddy_history'][] = [
-                            "role" => "model",
-                            "parts" => [["text" => $response["answer"]]]
-                        ];
-
-                        // Cache the response
-                        try {
-                            $suggestions_json = json_encode($response["suggestions"]);
-                            $cache_ins = $db->prepare("INSERT INTO gemini_cache (query_hash, query_text, response_text, category, suggestions) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE response_text = ?, category = ?, suggestions = ?");
-                            $cache_ins->execute([$query_hash, $query, $response["answer"], $response["category"], $suggestions_json, $response["answer"], $response["category"], $suggestions_json]);
-                        } catch (PDOException $e) {}
-
-                        // Log metrics
-                        try {
-                            $responseTime = microtime(true) - $startTime;
-                            $metrics_stmt = $db->prepare("INSERT INTO buddy_analytics (question, category, answered_by, response_time) VALUES (?, ?, 'Gemini', ?)");
-                            $metrics_stmt->execute([$query, $response["category"], $responseTime]);
-                        } catch (PDOException $e) {}
                     }
-                    curl_close($ch);
                 } else {
                     $response["answer"] = "Buddy says: I'm having trouble reaching my AI service at the moment. I can still help with campus-related questions from my knowledge base.";
                     $response["category"] = $localCategory;

@@ -7,14 +7,19 @@ require_once __DIR__ . '/includes/header.php';
 $error_msg = "";
 $success_msg = "";
 
+// Auto-migrate column if missing
+try {
+    $db->exec("ALTER TABLE buddy_settings ADD COLUMN IF NOT EXISTS mapbox_token VARCHAR(255) DEFAULT NULL");
+} catch (PDOException $e) {}
+
 // 1. Fetch current settings row (ID=1)
 $settings = $db->query("SELECT * FROM buddy_settings WHERE id = 1 LIMIT 1")->fetch();
 
 if (!$settings) {
     // Fail-safe initialization if database row missing
     $db->query("
-        INSERT INTO buddy_settings (id, buddy_name, welcome_message, morning_message, afternoon_message, evening_message, night_message, daily_tips, enable_voice, enable_wheel, enable_predictive, gemini_api_key) 
-        VALUES (1, 'Buddy', 'Welcome!', 'Good Morning!', 'Good Afternoon!', 'Good Evening!', 'Good Night!', 'Tip here', 1, 1, 1, '')
+        INSERT INTO buddy_settings (id, buddy_name, welcome_message, morning_message, afternoon_message, evening_message, night_message, daily_tips, enable_voice, enable_wheel, enable_predictive, gemini_api_key, mapbox_token) 
+        VALUES (1, 'Buddy', 'Welcome!', 'Good Morning!', 'Good Afternoon!', 'Good Evening!', 'Good Night!', 'Tip here', 1, 1, 1, '', '')
     ");
     $settings = $db->query("SELECT * FROM buddy_settings WHERE id = 1 LIMIT 1")->fetch();
 }
@@ -32,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $wheel = isset($_POST['enable_wheel']) ? 1 : 0;
     $predictive = isset($_POST['enable_predictive']) ? 1 : 0;
     $api_key = sanitize_input($_POST['gemini_api_key']);
+    $mapbox_token = sanitize_input($_POST['mapbox_token']);
 
     // Suggested Questions
     $q1_text = sanitize_input($_POST['suggest_q1_text']);
@@ -84,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     UPDATE buddy_settings 
                     SET buddy_name = ?, welcome_message = ?, morning_message = ?, afternoon_message = ?, 
                         evening_message = ?, night_message = ?, daily_tips = ?, enable_voice = ?, 
-                        enable_wheel = ?, enable_predictive = ?, gemini_api_key = ?,
+                        enable_wheel = ?, enable_predictive = ?, gemini_api_key = ?, mapbox_token = ?,
                         suggest_q1_text = ?, suggest_q1_query = ?,
                         suggest_q2_text = ?, suggest_q2_query = ?,
                         suggest_q3_text = ?, suggest_q3_query = ?,
@@ -93,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     WHERE id = 1
                 ");
                 $stmt->execute([
-                    $buddy_name, $welcome, $morning, $afternoon, $evening, $night, $tips, $voice, $wheel, $predictive, $api_key,
+                    $buddy_name, $welcome, $morning, $afternoon, $evening, $night, $tips, $voice, $wheel, $predictive, $api_key, $mapbox_token,
                     $q1_text, $q1_query, $q2_text, $q2_query, $q3_text, $q3_query, $q4_text, $q4_query,
                     $ad_image_url, $ad_go_url, $ad_enabled
                 ]);
@@ -243,6 +249,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label class="form-label" style="color: var(--glow-primary); font-weight: 700;">Google Gemini API Key</label>
                 <input type="password" name="gemini_api_key" value="<?php echo sanitize_input($settings['gemini_api_key']); ?>" class="form-control" placeholder="AIzaSy...">
                 <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 6px;">Used to connect Buddy to the Google Gemini Flash model when local Q&As don't match.</p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" style="color: var(--glow-primary); font-weight: 700;">Mapbox Access Token</label>
+                <input type="password" name="mapbox_token" value="<?php echo sanitize_input($settings['mapbox_token'] ?? ''); ?>" class="form-control" placeholder="pk.eyJ1I...">
+                <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 6px;">Required to load the 3D Campus Navigator satellite street maps.</p>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 16px;">

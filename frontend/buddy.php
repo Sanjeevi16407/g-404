@@ -556,8 +556,48 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
 
     function checkQuickAction(query) {
         const q = query.toLowerCase().trim();
+        
+        // 3D Campus Navigator redirection checks
+        if (q.includes("library")) {
+            showQuickActionMessage("Flying to Library on 3D Campus Map...", "campus.php?fly=library");
+            return true;
+        }
+        if (q.includes("canteen")) {
+            showQuickActionMessage("Flying to Canteen on 3D Campus Map...", "campus.php?fly=canteen");
+            return true;
+        }
+        if (q.includes("rv block") || q.includes("rv")) {
+            showQuickActionMessage("Flying to RV Block on 3D Campus Map...", "campus.php?fly=rv_block");
+            return true;
+        }
+        if (q.includes("js block") || q.includes("js")) {
+            showQuickActionMessage("Flying to JS Block on 3D Campus Map...", "campus.php?fly=js_block");
+            return true;
+        }
+        if (q.includes("admin")) {
+            showQuickActionMessage("Flying to Admin Block on 3D Campus Map...", "campus.php?fly=admin_block");
+            return true;
+        }
+        if (q.includes("hostel")) {
+            showQuickActionMessage("Flying to Campus Hostel on 3D Campus Map...", "campus.php?fly=hostel");
+            return true;
+        }
+        if (q.includes("auditorium") || q.includes("audi")) {
+            showQuickActionMessage("Flying to Auditorium on 3D Campus Map...", "campus.php?fly=auditorium");
+            return true;
+        }
+        if (q.includes("parking")) {
+            showQuickActionMessage("Flying to Parking Area on 3D Campus Map...", "campus.php?fly=parking");
+            return true;
+        }
+        if (q.includes("main gate") || q.includes("entrance")) {
+            showQuickActionMessage("Flying to Main Gate on 3D Campus Map...", "campus.php?fly=main_gate");
+            return true;
+        }
+
+        // Standard portal shortcuts
         if (q.includes("show bus timing") || q.includes("open bus page") || q.includes("bus timing") || q.includes("bus timings")) {
-            showQuickActionMessage("Opening Bus Routes Guide...", "campus.php");
+            showQuickActionMessage("Opening Bus Routes Guide...", "campus.php?fly=bus_stop");
             return true;
         }
         if (q.includes("show events") || q.includes("events page") || q.includes("open events")) {
@@ -584,6 +624,9 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
 
     function typeWriterEffect(text, sender, suggestions) {
         isTyping = true;
+        if (typeof window.setChatBackgroundState === 'function') {
+            window.setChatBackgroundState('scatter');
+        }
         const feed = document.getElementById('hub-conversation-feed');
         const bubble = document.createElement('div');
         bubble.className = `msg-bubble msg-bubble-${sender}`;
@@ -609,6 +652,10 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
                 feed.scrollTop = feed.scrollHeight;
                 if (speakOutput && cleanText) {
                     speakHubOutput(cleanText);
+                } else {
+                    if (typeof window.setChatBackgroundState === 'function') {
+                        window.setChatBackgroundState('assemble');
+                    }
                 }
                 if (suggestions) {
                     updateSuggestionsPanel(suggestions);
@@ -756,7 +803,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         }
     }
 
-    // 3D background particle sphere generator
+    // Live black hole particle generator
     document.addEventListener('DOMContentLoaded', () => {
         const canvas = document.getElementById('chat-bg-canvas');
         if (!canvas || typeof THREE === 'undefined') return;
@@ -773,7 +820,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         renderer.setSize(width, height);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // Create glowing radial circle texture programmatically
+        // Create glowing radial particle texture
         const createParticleTexture = () => {
             const canvasTex = document.createElement('canvas');
             canvasTex.width = 32;
@@ -781,65 +828,81 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
             const ctxTex = canvasTex.getContext('2d');
             const grad = ctxTex.createRadialGradient(16, 16, 0, 16, 16, 16);
             grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
-            grad.addColorStop(0.2, 'rgba(255, 255, 255, 0.85)');
-            grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.25)');
+            grad.addColorStop(0.2, 'rgba(255, 255, 255, 0.8)');
+            grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.2)');
             grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
             ctxTex.fillStyle = grad;
             ctxTex.fillRect(0, 0, 32, 32);
             return new THREE.CanvasTexture(canvasTex);
         };
 
-        const particleCount = 1600; // High-density count
-        let currentRadius = 8.5;
-        let targetRadius = 8.5;
-        let targetNoise = 0.2;
-        let currentNoise = 0.2;
-        let currentState = 'assemble';
-        let sphereAngle = 0;
-
-        const geometry = new THREE.BufferGeometry();
-        const positions = new Float32Array(particleCount * 3);
-        const colors = new Float32Array(particleCount * 3);
-        const particles = [];
-
-        // Parse theme color values
         const getThemeColors = () => {
             const colorStr = getComputedStyle(document.documentElement).getPropertyValue('--glow-primary').trim();
             const baseColor = colorStr ? new THREE.Color(colorStr) : new THREE.Color(0x00f2fe);
-            // Dynamic purple-indigo offset for dual-tone premium gradient shift
-            const secondaryColor = new THREE.Color(0x7f00ff);
+            const secondaryColor = new THREE.Color(0x7f00ff); // dynamic dual-tone secondary
             return { baseColor, secondaryColor };
         };
 
         const { baseColor, secondaryColor } = getThemeColors();
 
-        for (let i = 0; i < particleCount; i++) {
-            const theta = Math.acos(Math.random() * 2 - 1);
-            const phi = Math.random() * Math.PI * 2;
-            
-            const dx = Math.sin(theta) * Math.cos(phi);
-            const dy = Math.sin(theta) * Math.sin(phi);
-            const dz = Math.cos(theta);
+        // 1. Singularity Core (Black Hole Centre Circle)
+        const singularityGeo = new THREE.CircleGeometry(1.6, 64);
+        const singularityMat = new THREE.MeshBasicMaterial({
+            color: 0x05070e,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.96
+        });
+        const singularity = new THREE.Mesh(singularityGeo, singularityMat);
+        scene.add(singularity);
 
-            positions[i * 3] = dx * currentRadius;
-            positions[i * 3 + 1] = dy * currentRadius;
-            positions[i * 3 + 2] = dz * currentRadius;
+        // 2. Event Horizon Glowing Rim
+        const horizonGeo = new THREE.RingGeometry(1.6, 1.8, 64);
+        const horizonMat = new THREE.MeshBasicMaterial({
+            color: baseColor.clone(),
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.85,
+            blending: THREE.AdditiveBlending
+        });
+        const horizon = new THREE.Mesh(horizonGeo, horizonMat);
+        scene.add(horizon);
+
+        // 3. Particles Accretion Disk Layout
+        const particleCount = 1400;
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+        const particles = [];
+
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            // Denser distribution closer to the event horizon (power function)
+            const distance = 2.1 + Math.pow(Math.random(), 2) * 11;
+            const z = (Math.random() - 0.5) * 0.6; // Thin accretion disk thickness
+
+            const x = Math.cos(angle) * distance;
+            const y = Math.sin(angle) * distance;
+
+            positions[i * 3] = x;
+            positions[i * 3 + 1] = y;
+            positions[i * 3 + 2] = z;
 
             particles.push({
-                x: dx * currentRadius,
-                y: dy * currentRadius,
-                z: dz * currentRadius,
-                vx: 0,
-                vy: 0,
-                vz: 0,
-                dx: dx,
-                dy: dy,
-                dz: dz,
-                randSpeed: 0.3 + Math.random() * 0.7
+                x: x,
+                y: y,
+                z: z,
+                distance: distance,
+                angle: angle,
+                orbitSpeed: (0.012 + Math.random() * 0.015) * (4.0 / Math.sqrt(distance)), // Keplerian speed
+                pullSpeed: 0.006 + Math.random() * 0.007,
+                origZ: z,
+                scatterVx: 0,
+                scatterVy: 0
             });
 
-            // Gradient mixed color mapping based on vertical sphere height
-            const t = (dy + 1.0) / 2.0;
+            // Map color gradient: brighter neon near core, fades to indigo outer
+            const t = (distance - 2.1) / 11.0;
             const mixedColor = baseColor.clone().lerp(secondaryColor, t);
             colors[i * 3] = mixedColor.r;
             colors[i * 3 + 1] = mixedColor.g;
@@ -850,37 +913,40 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
         const material = new THREE.PointsMaterial({
-            size: 0.35,
+            size: 0.32,
             map: createParticleTexture(),
             vertexColors: true,
             transparent: true,
-            opacity: 0.85,
+            opacity: 0.8,
             blending: THREE.AdditiveBlending,
             depthWrite: false
         });
 
-        const sphere = new THREE.Points(geometry, material);
-        scene.add(sphere);
+        const accretionDisk = new THREE.Points(geometry, material);
+        scene.add(accretionDisk);
 
-        // Global callback to control particle alignment vs boundary roaming
+        let currentState = 'assemble'; // 'assemble' (live blackhole swirl) or 'scatter' (AI speaking/pulsating)
+        let horizonPulse = 0;
+
         window.setChatBackgroundState = (state) => {
             currentState = state;
             if (state === 'scatter') {
-                targetRadius = 15.0;     // Expand boundary
-                targetNoise = 1.2;       // Waviness active
-            } else {
-                targetRadius = 8.5;      // Tight sphere coordinates
-                targetNoise = 0.2;       // Subtle breathing noise
+                particles.forEach(p => {
+                    // Set random radial push velocities when starting to speak
+                    const pushForce = 0.12 + Math.random() * 0.16;
+                    p.scatterVx = Math.cos(p.angle) * pushForce;
+                    p.scatterVy = Math.sin(p.angle) * pushForce;
+                });
             }
         };
 
-        // Update colors dynamically on theme switch
         const observer = new MutationObserver(() => {
             const { baseColor: newBase, secondaryColor: newSec } = getThemeColors();
+            horizonMat.color.copy(newBase);
             const colorAttr = geometry.attributes.color;
             const colorsArr = colorAttr.array;
             for (let i = 0; i < particleCount; i++) {
-                const t = (particles[i].dy + 1.0) / 2.0;
+                const t = (particles[i].distance - 2.1) / 11.0;
                 const mixed = newBase.clone().lerp(newSec, t);
                 colorsArr[i * 3] = mixed.r;
                 colorsArr[i * 3 + 1] = mixed.g;
@@ -898,7 +964,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
             renderer.setSize(width, height);
         };
         window.addEventListener('resize', resize);
-        
+
         setInterval(() => {
             if (container.clientHeight !== height || container.clientWidth !== width) {
                 resize();
@@ -908,91 +974,80 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         const animate = () => {
             requestAnimationFrame(animate);
 
-            // Compute dynamic viewport boundaries for boxing collision (at z=0)
-            const halfH = camera.position.z * Math.tan((camera.fov * Math.PI) / 360);
-            const halfW = halfH * camera.aspect;
-
-            // Revolve angle over time
-            sphereAngle += 0.004;
-
-            // Smooth state values interpolation
-            currentRadius += (targetRadius - currentRadius) * 0.08;
-            currentNoise += (targetNoise - currentNoise) * 0.08;
-
+            horizonPulse += 0.08;
             const posAttr = geometry.attributes.position;
             const positionsArr = posAttr.array;
-            const time = Date.now() * 0.0015;
 
-            for (let i = 0; i < particleCount; i++) {
-                const p = particles[i];
+            if (currentState === 'scatter') {
+                // AI speaking: black hole event horizon pulsates violently
+                const speakScale = 1.0 + Math.sin(Date.now() * 0.03) * 0.18;
+                singularity.scale.setScalar(speakScale);
+                horizon.scale.setScalar(speakScale);
 
-                if (currentState === 'scatter') {
-                    // Set random velocities on initial trigger
-                    if (p.vx === 0 && p.vy === 0 && p.vz === 0) {
-                        const speedVal = 0.22;
-                        p.vx = (Math.random() - 0.5) * speedVal;
-                        p.vy = (Math.random() - 0.5) * speedVal;
-                        p.vz = (Math.random() - 0.5) * speedVal;
+                for (let i = 0; i < particleCount; i++) {
+                    const p = particles[i];
+                    
+                    // Apply outward scatter velocity
+                    p.x += p.scatterVx;
+                    p.y += p.scatterVy;
+
+                    // Decelerate scattering over time
+                    p.scatterVx *= 0.96;
+                    p.scatterVy *= 0.96;
+
+                    // Orbit slightly as they scatter
+                    p.angle += p.orbitSpeed * 0.25;
+                    p.distance = Math.sqrt(p.x * p.x + p.y * p.y);
+
+                    // Add dynamic floating waves
+                    p.z += Math.sin(horizonPulse + i) * 0.015;
+
+                    positionsArr[i * 3] = p.x;
+                    positionsArr[i * 3 + 1] = p.y;
+                    positionsArr[i * 3 + 2] = p.z;
+                }
+            } else {
+                // Idle: Accretion Disk (particles fall towards the black hole core)
+                const idleScale = 1.0 + Math.sin(Date.now() * 0.0025) * 0.05;
+                singularity.scale.setScalar(idleScale);
+                horizon.scale.setScalar(idleScale);
+
+                for (let i = 0; i < particleCount; i++) {
+                    const p = particles[i];
+
+                    // Swirl orbit and spiral inwards
+                    p.angle += p.orbitSpeed;
+                    p.distance -= p.pullSpeed;
+                    p.z += (p.origZ - p.z) * 0.1; // Restabilize vertical disk flatness
+
+                    // Recalculate target positions
+                    let targetX = Math.cos(p.angle) * p.distance;
+                    let targetY = Math.sin(p.angle) * p.distance;
+
+                    // Smooth transition from scattering back to disk orbit
+                    p.x += (targetX - p.x) * 0.08;
+                    p.y += (targetY - p.y) * 0.08;
+
+                    // If particles cross event horizon (swallowed by the black hole core), respawn on the outer boundary
+                    if (p.distance < 1.7) {
+                        p.distance = 12.0 + Math.random() * 2.0;
+                        p.angle = Math.random() * Math.PI * 2;
+                        p.x = Math.cos(p.angle) * p.distance;
+                        p.y = Math.sin(p.angle) * p.distance;
+                        p.z = (Math.random() - 0.5) * 0.6;
                     }
 
-                    // Gentle drift force for roaming path
-                    p.vx += (Math.random() - 0.5) * 0.006;
-                    p.vy += (Math.random() - 0.5) * 0.006;
-                    p.vz += (Math.random() - 0.5) * 0.006;
-
-                    // Bound maximum speed to keep it inside screen nicely
-                    p.vx *= 0.98;
-                    p.vy *= 0.98;
-                    p.vz *= 0.98;
-
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.z += p.vz;
-
-                    // Boxing back collision check: bounce back off margins
-                    const margin = 0.4;
-                    if (p.x > halfW - margin) { p.x = halfW - margin; p.vx *= -1.0; }
-                    if (p.x < -halfW + margin) { p.x = -halfW + margin; p.vx *= -1.0; }
-                    
-                    if (p.y > halfH - margin) { p.y = halfH - margin; p.vy *= -1.0; }
-                    if (p.y < -halfH + margin) { p.y = -halfH + margin; p.vy *= -1.0; }
-                    
-                    if (p.z > 7) { p.z = 7; p.vz *= -1.0; }
-                    if (p.z < -7) { p.z = -7; p.vz *= -1.0; }
-
-                } else {
-                    // Assemble: Rotates and Lerps coordinates back to the revolving sphere layout
-                    const cosY = Math.cos(sphereAngle);
-                    const sinY = Math.sin(sphereAngle);
-
-                    const rotatedX = p.dx * cosY - p.dz * sinY;
-                    const rotatedZ = p.dx * sinY + p.dz * cosY;
-
-                    const offset = Math.sin(time + i * p.randSpeed) * currentNoise;
-                    const dist = currentRadius + offset;
-
-                    const targetX = rotatedX * dist;
-                    const targetY = p.dy * dist;
-                    const targetZ = rotatedZ * dist;
-
-                    p.x += (targetX - p.x) * 0.07;
-                    p.y += (targetY - p.y) * 0.07;
-                    p.z += (targetZ - p.z) * 0.07;
-
-                    p.vx = 0;
-                    p.vy = 0;
-                    p.vz = 0;
+                    positionsArr[i * 3] = p.x;
+                    positionsArr[i * 3 + 1] = p.y;
+                    positionsArr[i * 3 + 2] = p.z;
                 }
-
-                positionsArr[i * 3] = p.x;
-                positionsArr[i * 3 + 1] = p.y;
-                positionsArr[i * 3 + 2] = p.z;
             }
-            posAttr.needsUpdate = true;
 
+            posAttr.needsUpdate = true;
             renderer.render(scene, camera);
         };
         animate();
+    });
     });
 </script>
 
