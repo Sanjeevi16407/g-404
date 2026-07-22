@@ -556,48 +556,10 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
 
     function checkQuickAction(query) {
         const q = query.toLowerCase().trim();
-        
-        // 3D Campus Navigator redirection checks
-        if (q.includes("library")) {
-            showQuickActionMessage("Flying to Library on 3D Campus Map...", "campus.php?fly=library");
-            return true;
-        }
-        if (q.includes("canteen")) {
-            showQuickActionMessage("Flying to Canteen on 3D Campus Map...", "campus.php?fly=canteen");
-            return true;
-        }
-        if (q.includes("rv block") || q.includes("rv")) {
-            showQuickActionMessage("Flying to RV Block on 3D Campus Map...", "campus.php?fly=rv_block");
-            return true;
-        }
-        if (q.includes("js block") || q.includes("js")) {
-            showQuickActionMessage("Flying to JS Block on 3D Campus Map...", "campus.php?fly=js_block");
-            return true;
-        }
-        if (q.includes("admin")) {
-            showQuickActionMessage("Flying to Admin Block on 3D Campus Map...", "campus.php?fly=admin_block");
-            return true;
-        }
-        if (q.includes("hostel")) {
-            showQuickActionMessage("Flying to Campus Hostel on 3D Campus Map...", "campus.php?fly=hostel");
-            return true;
-        }
-        if (q.includes("auditorium") || q.includes("audi")) {
-            showQuickActionMessage("Flying to Auditorium on 3D Campus Map...", "campus.php?fly=auditorium");
-            return true;
-        }
-        if (q.includes("parking")) {
-            showQuickActionMessage("Flying to Parking Area on 3D Campus Map...", "campus.php?fly=parking");
-            return true;
-        }
-        if (q.includes("main gate") || q.includes("entrance")) {
-            showQuickActionMessage("Flying to Main Gate on 3D Campus Map...", "campus.php?fly=main_gate");
-            return true;
-        }
 
         // Standard portal shortcuts
         if (q.includes("show bus timing") || q.includes("open bus page") || q.includes("bus timing") || q.includes("bus timings")) {
-            showQuickActionMessage("Opening Bus Routes Guide...", "campus.php?fly=bus_stop");
+            showQuickActionMessage("Opening Bus Routes Guide...", "campus.php");
             return true;
         }
         if (q.includes("show events") || q.includes("events page") || q.includes("open events")) {
