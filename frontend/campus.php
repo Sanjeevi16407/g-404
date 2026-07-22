@@ -332,7 +332,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
     const locations = {
         main_gate: {
             name: "Main Gate",
-            coords: [10.7552, 78.6523], // Leaflet uses [lat, lng]
+            coords: [10.7548, 78.6524], // Leaflet uses [lat, lng]
             details: "College Entrance Gate",
             hours: "24 Hours Open",
             description: "The primary entry and exit gate of Saranathan College of Engineering on the Trichy-Madurai Highway. Security checks and visitor registrations are handled here.",
@@ -341,7 +341,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         },
         parking: {
             name: "Parking Area",
-            coords: [10.7554, 78.6521],
+            coords: [10.7552, 78.6521],
             details: "Visitor & Student Parking Lot",
             hours: "7:00 AM - 7:00 PM",
             description: "Secure parking space for two-wheelers and four-wheelers located right near the main entrance highway road.",
@@ -350,7 +350,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         },
         ks_block: {
             name: "KS Block",
-            coords: [10.7562, 78.6510],
+            coords: [10.7562, 78.6511],
             details: "Kamaraj Academic Block",
             hours: "8:30 AM - 6:00 PM",
             description: "Contains classrooms and state-of-the-art laboratories for EEE, ECE, and ICE departments.",
@@ -359,7 +359,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         },
         rv_block: {
             name: "RV Block",
-            coords: [10.7563, 78.6515],
+            coords: [10.7565, 78.6517],
             details: "Shri R.V. Block (CSE & IT)",
             hours: "8:30 AM - 6:00 PM",
             description: "Major block housing class sessions, advanced programming labs for CSE and IT departments, faculty cabins, and the main office.",
@@ -367,9 +367,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
             icon: "fa-solid fa-laptop-code"
         },
         bd_js_block: {
-            name: "BD and JS Block",
-            coords: [10.7567, 78.6513],
-            details: "BD & JS Academic Block",
+            name: "JS and BD Block",
+            coords: [10.7572, 78.6513],
+            details: "JS & BD Academic Block",
             hours: "8:30 AM - 6:00 PM",
             description: "Academic building housing classrooms and research labs for Civil Engineering, AI&DS, and CSBS departments.",
             photo: "assets/images/default-campus.jpg",
@@ -377,7 +377,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         },
         canteen: {
             name: "Canteen",
-            coords: [10.7567, 78.6508],
+            coords: [10.7570, 78.6508],
             details: "Main Dining & Cafeteria",
             hours: "8:00 AM - 4:30 PM",
             description: "Serves hygiene vegetarian meals, hot snacks, tea, and beverages, featuring separate dining halls for students and faculty.",
@@ -386,7 +386,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         },
         staff_parking: {
             name: "Staff Parking",
-            coords: [10.7571, 78.6511],
+            coords: [10.7577, 78.6510],
             details: "Faculty Vehicle Parking Lot",
             hours: "7:30 AM - 6:30 PM",
             description: "Exclusive reserved parking spaces for staff members, teachers, and directors.",
@@ -395,7 +395,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         },
         mech_block: {
             name: "Mech Block",
-            coords: [10.7571, 78.6506],
+            coords: [10.7577, 78.6505],
             details: "Mechanical Engineering Block",
             hours: "8:30 AM - 6:00 PM",
             description: "Dedicated to the Mechanical Engineering department, housing advanced thermodynamic, design, and CAD labs.",
@@ -404,7 +404,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         },
         bus_parking: {
             name: "Bus Parking",
-            coords: [10.7574, 78.6509],
+            coords: [10.7582, 78.6507],
             details: "College Bus Transit Depot",
             hours: "7:30 AM - 9:00 AM, 4:00 PM - 6:00 PM",
             description: "Transit zone where college buses arrive and park, connecting students to various zones of Tiruchirappalli.",
@@ -413,7 +413,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         },
         hostel: {
             name: "Boys Hostel",
-            coords: [10.7578, 78.6508],
+            coords: [10.7588, 78.6504],
             details: "Student Hostels & Residence",
             hours: "Residence Facility",
             description: "Residential hostels for male students, complete with study halls, sports grounds, and dining mess operations.",
@@ -422,7 +422,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         },
         ground_main: {
             name: "Main Ground",
-            coords: [10.7565, 78.6501],
+            coords: [10.7570, 78.6499],
             details: "Sports & Athletic Field",
             hours: "Open Play",
             description: "Large open playground for cricket, football, athletic practice, and annual collegiate sports events.",
@@ -439,7 +439,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
 
         // Initialize Free Leaflet Satellite Map (ArcGIS Esri Satellite Imagery - No tokens required!)
         map = L.map('map', {
-            center: [10.7565, 78.6512],
+            center: [10.7568, 78.6510],
             zoom: 17.5,
             zoomControl: true
         });
@@ -448,6 +448,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
             attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
             maxZoom: 19
         }).addTo(map);
+
+        // Click listener to print coordinates in developer console for fine-tuning
+        map.on('click', (e) => {
+            console.log(`Clicked Coordinate: [${e.latlng.lat.toFixed(6)}, ${e.latlng.lng.toFixed(6)}]`);
+        });
 
         // Add standard scale indicator
         L.control.scale().addTo(map);
