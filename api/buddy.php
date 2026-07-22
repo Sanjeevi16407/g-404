@@ -76,6 +76,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $startTime = microtime(true);
     $query = trim($_POST['query'] ?? '');
     
+    // Retrieve student name to prevent repetitive greetings
+    $student_id = $_SESSION['student_id'] ?? 0;
+    $student_name = '';
+    if ($student_id > 0) {
+        try {
+            $st_name_stmt = $db->prepare("SELECT name FROM students WHERE id = ? LIMIT 1");
+            $st_name_stmt->execute([$student_id]);
+            $student_name = $st_name_stmt->fetchColumn() ?: '';
+        } catch (PDOException $e) {}
+    }
+    
     if (!empty($query)) {
         // Log query event to standard analytics
         try {
@@ -455,6 +466,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     $response["answer"] = "Invalid request method.";
     $response["suggestions"] = [];
+}
+
+// Clean up repetitive greetings (e.g. "Hi [Name]") if the user did not explicitly greet
+if (!empty($response["answer"]) && !empty($student_name)) {
+    $first_name = explode(' ', trim($student_name))[0];
+    
+    // Greeting regex patterns
+    $greeting_patterns = [
+        '/^(hi|hello|hey|vanakkam|yo)\s+(' . preg_quote($student_name, '/') . '|' . preg_quote($first_name, '/') . ')\b\s*[,.!:-]*\s*/i',
+        '/^(hi|hello|hey|vanakkam|yo)\s*[,.!:-]*\s*/i',
+    ];
+    
+    $user_greeted = preg_match('/^(hello|hi|hey|vanakkam|greetings|yo)/i', trim($query ?? ''));
+    if (!$user_greeted) {
+        $response["answer"] = preg_replace($greeting_patterns, '', $response["answer"]);
+        $response["answer"] = ucfirst(trim($response["answer"]));
+    }
 }
 
 echo json_encode($response);
