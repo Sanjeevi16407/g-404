@@ -6,6 +6,33 @@
 header('Content-Type: application/json');
 require_once __DIR__ . '/../backend/db.php';
 
+// Auto-migrate library location if not done yet
+if (!isset($_SESSION['library_migrated'])) {
+    try {
+        // 1. Check/Update buddy_knowledge
+        $check_kb = $db->prepare("SELECT id FROM buddy_knowledge WHERE question_keywords LIKE '%library%' LIMIT 1");
+        $check_kb->execute();
+        $kb_id = $check_kb->fetchColumn();
+        $answer = "The college library is located in the JS Block Groundfloor.";
+        $keywords = "library, where is library, campus library, library location, library block, library path";
+        if ($kb_id) {
+            $up = $db->prepare("UPDATE buddy_knowledge SET answer = ?, question = ?, question_keywords = ? WHERE id = ?");
+            $up->execute([$answer, "Where is the campus library?", $keywords, $kb_id]);
+        } else {
+            $ins = $db->prepare("INSERT INTO buddy_knowledge (question, question_keywords, category, answer, priority, status) VALUES (?, ?, 'Library', ?, 'high', 'active')");
+            $ins->execute(["Where is the campus library?", $keywords, $answer]);
+        }
+        
+        // 2. Update campus_locations
+        $db->query("INSERT INTO campus_locations (name, description, location_details) VALUES ('Library', 'The college library is located in the JS Block Groundfloor.', 'JS Block Groundfloor') ON DUPLICATE KEY UPDATE location_details = 'JS Block Groundfloor', description = 'The college library is located in the JS Block Groundfloor.'");
+        
+        // 3. Clear cache
+        $db->query("DELETE FROM gemini_cache WHERE query_text LIKE '%library%' OR response_text LIKE '%library%'");
+        
+        $_SESSION['library_migrated'] = true;
+    } catch (PDOException $e) {}
+}
+
 // Initialize session conversation history if missing
 if (!isset($_SESSION['buddy_history'])) {
     $_SESSION['buddy_history'] = [];
