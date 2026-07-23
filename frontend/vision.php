@@ -353,7 +353,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
             </button>
             <div id="dev-widget-content" style="margin-top: 10px;">
                 <div class="dev-form-group" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                    <input type="checkbox" id="sim-mode-toggle" checked onchange="toggleSimulationMode(this.checked)" style="accent-color: var(--glow-primary); cursor: pointer;">
+                    <input type="checkbox" id="sim-mode-toggle" onchange="toggleSimulationMode(this.checked)" style="accent-color: var(--glow-primary); cursor: pointer;">
                     <label for="sim-mode-toggle" style="font-size: 0.75rem; font-weight: 600; cursor: pointer; color: #fff;">Enable Simulation Mode</label>
                 </div>
                 <div class="dev-form-group">
@@ -441,7 +441,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
 
     let userLat = 10.756346;
     let userLng = 78.651692;
-    let isSimulatedMode = true; // Simulation mode is enabled by default to allow precise preset testing
+    let isSimulatedMode = false; // Simulation mode is disabled by default to prioritize physical GPS
     let compassHeading = 180; // 0 = North, 90 = East, 180 = South, 270 = West
     let currentNavTarget = null;
     let speakOutput = true;
