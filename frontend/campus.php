@@ -254,6 +254,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
             <i class="fa-solid fa-compass" style="color: var(--glow-primary); margin-right: 8px;"></i> Destinations
         </h3>
 
+        <a href="vision.php" class="btn-glass" style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; background: rgba(0, 242, 254, 0.1); border: 1px solid var(--glow-primary); color: var(--text-primary); transition: all 0.2s;" onmouseover="this.style.background='rgba(0, 242, 254, 0.2)'" onmouseout="this.style.background='rgba(0, 242, 254, 0.1)'">
+            <i class="fa-solid fa-camera-retro" style="color: var(--glow-primary);"></i> Launch Buddy Live Vision
+        </a>
+
         <input type="text" id="search-destinations" class="form-control" placeholder="Search classrooms, blocks..." style="font-size: 0.85rem; padding: 10px 14px;">
 
         <div id="destinations-list" style="display: flex; flex-direction: column; gap: 8px; flex-grow: 1; overflow-y: auto; max-height: 320px;">

@@ -381,6 +381,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
             </div>
             
             <div style="display: flex; gap: 12px; align-items: center;">
+                <a href="vision.php" class="btn-action btn-edit" style="width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; border: 1px solid var(--border-glass); background: rgba(0, 242, 254, 0.1); color: var(--glow-primary);" title="Launch Buddy Live Vision"><i class="fa-solid fa-camera"></i></a>
                 <button id="hub-speaker-btn" onclick="toggleSpeakerOutput()" class="btn-action btn-edit" style="width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; border: 1px solid var(--border-glass);" title="Toggle Voice Output"><i class="fa-solid fa-volume-high"></i></button>
                 <button onclick="clearChatHistory()" class="btn-action btn-delete" style="width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; border: 1px solid rgba(239, 68, 68, 0.2); color: #ef4444;" title="Reset Session Memory"><i class="fa-solid fa-trash-can"></i></button>
             </div>
@@ -466,6 +467,10 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
                 <a href="faculty.php" class="quick-action-btn btn-helpdesk">
                     <i class="fa-solid fa-circle-info"></i>
                     <span>Helpdesk</span>
+                </a>
+                <a href="vision.php" class="quick-action-btn btn-vision" style="background: rgba(0, 242, 254, 0.08); border: 1px solid rgba(0, 242, 254, 0.35);">
+                    <i class="fa-solid fa-camera-retro" style="color: var(--glow-primary);"></i>
+                    <span style="color: var(--text-primary); font-weight: 600;">Live Vision</span>
                 </a>
             </div>
         </div>
