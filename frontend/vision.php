@@ -355,13 +355,20 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
                 <div class="dev-form-group">
                     <label class="dev-label">Preset Location (GPS Mock)</label>
                     <select class="dev-select" id="mock-loc-select" onchange="applyLocationMock()">
-                        <option value="main_gate">Main Gate (Entrance)</option>
-                        <option value="parking">Parking Area (Near Entrance)</option>
-                        <option value="ks_block">KS Block (Bottom Left)</option>
-                        <option value="canteen">Canteen (Middle Left)</option>
-                        <option value="rv_block" selected>RV Block (Middle Right)</option>
-                        <option value="hostel">Boys Hostel (Top North)</option>
-                        <option value="ground_main">Main Ground (Sports Field)</option>
+                        <option value="main_gate">Main Gate</option>
+                        <option value="parking">Main Parking</option>
+                        <option value="football_ground">Football Ground</option>
+                        <option value="ground_main">Main Ground</option>
+                        <option value="ks_block">KS Block</option>
+                        <option value="rv_block" selected>RV Block</option>
+                        <option value="js_block">JS Block</option>
+                        <option value="canteen">Canteen</option>
+                        <option value="bd_block">BD Block</option>
+                        <option value="girls_mess">Girls' Mess</option>
+                        <option value="mech_block">Mechanical Block</option>
+                        <option value="bus_parking">Bus Parking</option>
+                        <option value="hostel">Boys' Hostel</option>
+                        <option value="tennis_ground">Tennis Ground</option>
                     </select>
                 </div>
                 <div class="dev-form-group">
@@ -412,17 +419,20 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
 <script>
     // College building database
     const locations = {
-        main_gate: { name: "Main Gate", coords: [10.7548, 78.6524], icon: "fa-solid fa-door-open" },
-        parking: { name: "Parking Area", coords: [10.7552, 78.6521], icon: "fa-solid fa-square-parking" },
-        ks_block: { name: "KS Block", coords: [10.7562, 78.6511], icon: "fa-solid fa-microchip" },
-        rv_block: { name: "RV Block", coords: [10.7565, 78.6517], icon: "fa-solid fa-laptop-code" },
-        bd_js_block: { name: "JS & BD Block", coords: [10.7572, 78.6513], icon: "fa-solid fa-building-columns" },
-        canteen: { name: "Canteen", coords: [10.7570, 78.6508], icon: "fa-solid fa-utensils" },
-        staff_parking: { name: "Staff Parking", coords: [10.7577, 78.6510], icon: "fa-solid fa-car" },
-        mech_block: { name: "Mech Block", coords: [10.7577, 78.6505], icon: "fa-solid fa-gears" },
-        bus_parking: { name: "Bus Parking", coords: [10.7582, 78.6507], icon: "fa-solid fa-bus" },
-        hostel: { name: "Boys Hostel", coords: [10.7588, 78.6504], icon: "fa-solid fa-hotel" },
-        ground_main: { name: "Main Ground", coords: [10.7570, 78.6499], icon: "fa-solid fa-circle-play" }
+        main_gate: { name: "Main Gate", coords: [10.753976, 78.652241], icon: "fa-solid fa-door-open" },
+        parking: { name: "Main Parking", coords: [10.754449, 78.652613], icon: "fa-solid fa-square-parking" },
+        football_ground: { name: "Football Ground", coords: [10.754952, 78.652247], icon: "fa-solid fa-circle-play" },
+        ground_main: { name: "Main Ground", coords: [10.755983, 78.650219], icon: "fa-solid fa-circle-play" },
+        ks_block: { name: "KS Block", coords: [10.755848, 78.651437], icon: "fa-solid fa-microchip" },
+        rv_block: { name: "RV Block", coords: [10.756346, 78.651692], icon: "fa-solid fa-laptop-code" },
+        js_block: { name: "JS Block", coords: [10.756776, 78.651475], icon: "fa-solid fa-building-columns" },
+        canteen: { name: "Canteen", coords: [10.756991, 78.650814], icon: "fa-solid fa-utensils" },
+        bd_block: { name: "BD Block", coords: [10.757188, 78.651255], icon: "fa-solid fa-building-columns" },
+        girls_mess: { name: "Girls' Mess", coords: [10.757191, 78.650665], icon: "fa-solid fa-utensils" },
+        mech_block: { name: "Mechanical Block", coords: [10.757420, 78.650594], icon: "fa-solid fa-gears" },
+        bus_parking: { name: "Bus Parking", coords: [10.757707, 78.651126], icon: "fa-solid fa-bus" },
+        hostel: { name: "Boys' Hostel", coords: [10.758197, 78.650906], icon: "fa-solid fa-hotel" },
+        tennis_ground: { name: "Tennis Ground", coords: [10.755788, 78.652249], icon: "fa-solid fa-circle-play" }
     };
 
     let userLat = 10.7563;

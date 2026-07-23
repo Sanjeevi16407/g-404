@@ -336,25 +336,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
     const locations = {
         main_gate: {
             name: "Main Gate",
-            coords: [10.7548, 78.6524], // Leaflet uses [lat, lng]
+            coords: [10.753976, 78.652241], // Leaflet uses [lat, lng]
             details: "College Entrance Gate",
             hours: "24 Hours Open",
-            description: "The primary entry and exit gate of Saranathan College of Engineering on the Trichy-Madurai Highway. Security checks and visitor registrations are handled here.",
+            description: "The primary entry and exit gate of Saranathan College of Engineering on the Trichy-Madurai Highway.",
             photo: "assets/images/default-campus.jpg",
             icon: "fa-solid fa-door-open"
         },
         parking: {
-            name: "Parking Area",
-            coords: [10.7552, 78.6521],
+            name: "Main Parking",
+            coords: [10.754449, 78.652613],
             details: "Visitor & Student Parking Lot",
             hours: "7:00 AM - 7:00 PM",
-            description: "Secure parking space for two-wheelers and four-wheelers located right near the main entrance highway road.",
+            description: "Secure parking space for two-wheelers and four-wheelers located near the entrance.",
             photo: "assets/images/default-campus.jpg",
             icon: "fa-solid fa-square-parking"
         },
+        football_ground: {
+            name: "Football Ground",
+            coords: [10.754952, 78.652247],
+            details: "Sports & Athletic Field",
+            hours: "Open Play",
+            description: "Dedicated turf for football tournaments and training.",
+            photo: "assets/images/default-campus.jpg",
+            icon: "fa-solid fa-circle-play"
+        },
+        ground_main: {
+            name: "Main Ground",
+            coords: [10.755983, 78.650219],
+            details: "Sports & Athletic Field",
+            hours: "Open Play",
+            description: "Large open playground for cricket, track events, and annual collegiate sports events.",
+            photo: "assets/images/default-campus.jpg",
+            icon: "fa-solid fa-circle-play"
+        },
         ks_block: {
             name: "KS Block",
-            coords: [10.7562, 78.6511],
+            coords: [10.755848, 78.651437],
             details: "Kamaraj Academic Block",
             hours: "8:30 AM - 6:00 PM",
             description: "Contains classrooms and state-of-the-art laboratories for EEE, ECE, and ICE departments.",
@@ -363,73 +381,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         },
         rv_block: {
             name: "RV Block",
-            coords: [10.7565, 78.6517],
+            coords: [10.756346, 78.651692],
             details: "Shri R.V. Block (CSE & IT)",
             hours: "8:30 AM - 6:00 PM",
-            description: "Major block housing class sessions, advanced programming labs for CSE and IT departments, faculty cabins, and the main office.",
+            description: "Academic block housing class sessions, advanced programming labs for CSE and IT departments.",
             photo: "assets/images/default-campus.jpg",
             icon: "fa-solid fa-laptop-code"
         },
-        bd_js_block: {
-            name: "JS and BD Block",
-            coords: [10.7572, 78.6513],
-            details: "JS & BD Academic Block",
+        js_block: {
+            name: "JS Block",
+            coords: [10.756776, 78.651475],
+            details: "Jeyaram Academic Block",
             hours: "8:30 AM - 6:00 PM",
-            description: "Academic building housing classrooms and research labs for Civil Engineering, AI&DS, and CSBS departments.",
+            description: "Academic building housing classrooms and research labs for Civil Engineering and AI&DS.",
             photo: "assets/images/default-campus.jpg",
             icon: "fa-solid fa-building-columns"
         },
         canteen: {
             name: "Canteen",
-            coords: [10.7570, 78.6508],
+            coords: [10.756991, 78.650814],
             details: "Main Dining & Cafeteria",
             hours: "8:00 AM - 4:30 PM",
-            description: "Serves hygiene vegetarian meals, hot snacks, tea, and beverages, featuring separate dining halls for students and faculty.",
+            description: "Serves vegetarian meals, hot snacks, tea, and beverages.",
             photo: "assets/images/default-campus.jpg",
             icon: "fa-solid fa-utensils"
         },
-        staff_parking: {
-            name: "Staff Parking",
-            coords: [10.7577, 78.6510],
-            details: "Faculty Vehicle Parking Lot",
-            hours: "7:30 AM - 6:30 PM",
-            description: "Exclusive reserved parking spaces for staff members, teachers, and directors.",
+        bd_block: {
+            name: "BD Block",
+            coords: [10.757188, 78.651255],
+            details: "Bala Dhandayuthapani Block",
+            hours: "8:30 AM - 6:00 PM",
+            description: "Academic building housing classrooms for MBA, Science & Humanities.",
             photo: "assets/images/default-campus.jpg",
-            icon: "fa-solid fa-car"
+            icon: "fa-solid fa-building-columns"
+        },
+        girls_mess: {
+            name: "Girls' Mess",
+            coords: [10.757191, 78.650665],
+            details: "Dining Mess Hall",
+            hours: "Meal Timings",
+            description: "Exclusive vegetarian dining hall facility for hostel students.",
+            photo: "assets/images/default-campus.jpg",
+            icon: "fa-solid fa-utensils"
         },
         mech_block: {
-            name: "Mech Block",
-            coords: [10.7577, 78.6505],
+            name: "Mechanical Block",
+            coords: [10.757420, 78.650594],
             details: "Mechanical Engineering Block",
             hours: "8:30 AM - 6:00 PM",
-            description: "Dedicated to the Mechanical Engineering department, housing advanced thermodynamic, design, and CAD labs.",
+            description: "Dedicated to the Mechanical Engineering department, housing thermodynamic and CAD labs.",
             photo: "assets/images/default-campus.jpg",
             icon: "fa-solid fa-gears"
         },
         bus_parking: {
             name: "Bus Parking",
-            coords: [10.7582, 78.6507],
+            coords: [10.757707, 78.651126],
             details: "College Bus Transit Depot",
-            hours: "7:30 AM - 9:00 AM, 4:00 PM - 6:00 PM",
-            description: "Transit zone where college buses arrive and park, connecting students to various zones of Tiruchirappalli.",
+            hours: "7:30 AM - 6:00 PM",
+            description: "Transit zone where college buses arrive and park, connecting students across Trichy.",
             photo: "assets/images/default-campus.jpg",
             icon: "fa-solid fa-bus"
         },
         hostel: {
-            name: "Boys Hostel",
-            coords: [10.7588, 78.6504],
+            name: "Boys' Hostel",
+            coords: [10.758197, 78.650906],
             details: "Student Hostels & Residence",
             hours: "Residence Facility",
-            description: "Residential hostels for male students, complete with study halls, sports grounds, and dining mess operations.",
+            description: "Residential hostels for male students with study halls and mess operations.",
             photo: "assets/images/default-campus.jpg",
             icon: "fa-solid fa-hotel"
         },
-        ground_main: {
-            name: "Main Ground",
-            coords: [10.7570, 78.6499],
-            details: "Sports & Athletic Field",
+        tennis_ground: {
+            name: "Tennis Ground",
+            coords: [10.755788, 78.652249],
+            details: "Sports Court",
             hours: "Open Play",
-            description: "Large open playground for cricket, football, athletic practice, and annual collegiate sports events.",
+            description: "Standard outdoor tennis courts for recreation and training.",
             photo: "assets/images/default-campus.jpg",
             icon: "fa-solid fa-circle-play"
         }
@@ -443,7 +470,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
 
         // Initialize Free Leaflet Satellite Map (ArcGIS Esri Satellite Imagery - No tokens required!)
         map = L.map('map', {
-            center: [10.7568, 78.6510],
+            center: [10.7561, 78.6513],
             zoom: 17.5,
             zoomControl: true
         });
