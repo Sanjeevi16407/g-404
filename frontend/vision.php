@@ -1,8 +1,8 @@
 <?php
 /**
  * Student Portal - Buddy AR Live Campus Guide (Buddy Live Vision)
- * Implements real-time WebRTC camera feed, Geolocation, Device Orientation,
- * AR-style overlay calculations, and floating Buddy AI Senior assistant.
+ * Clean, minimal AR assistant using pure device sensors (GPS & Compass).
+ * Displays only the requested destination marker with voice guidance.
  */
 require_once __DIR__ . '/includes/header.php';
 
@@ -54,163 +54,98 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         position: absolute;
         pointer-events: auto;
         transform: translate(-50%, -50%);
-        background: rgba(13, 18, 35, 0.68);
+        background: rgba(13, 18, 35, 0.72);
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
-        border: 1px solid rgba(0, 242, 254, 0.45);
-        box-shadow: 0 0 20px rgba(0, 242, 254, 0.25);
+        border: 1px solid #10b981;
+        box-shadow: 0 0 25px rgba(16, 185, 129, 0.45);
         color: #fff;
-        padding: 10px 16px;
-        border-radius: 16px;
+        padding: 12px 20px;
+        border-radius: 18px;
         transition: left 0.1s ease-out, top 0.1s ease-out, transform 0.2s ease-out;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 4px;
+        gap: 6px;
         font-family: inherit;
         z-index: 5;
     }
 
-    .ar-label-card.active-facing {
-        border-color: #10b981;
-        box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);
-    }
-
     .ar-icon {
-        font-size: 1.3rem;
-        color: var(--glow-primary);
-        filter: drop-shadow(0 0 4px var(--glow-primary));
-    }
-    
-    .ar-label-card.active-facing .ar-icon {
+        font-size: 1.4rem;
         color: #10b981;
         filter: drop-shadow(0 0 4px #10b981);
     }
 
     .ar-title {
         font-weight: 700;
-        font-size: 0.95rem;
+        font-size: 1rem;
     }
 
     .ar-dist {
-        font-size: 0.8rem;
-        opacity: 0.85;
-        font-weight: 500;
+        font-size: 0.85rem;
+        opacity: 0.9;
+        font-weight: 600;
     }
 
     .ar-arrow {
-        font-size: 1.1rem;
-        color: var(--glow-primary);
-        animation: pulseArrow 1.5s infinite alternate;
-    }
-    
-    .ar-label-card.active-facing .ar-arrow {
+        font-size: 1.2rem;
         color: #10b981;
-        animation: none;
-    }
-
-    @keyframes pulseArrow {
-        0% { transform: translateY(0); }
-        100% { transform: translateY(-4px); }
     }
 
     /* Screen edge indicators for off-screen blocks */
     .ar-edge-indicator {
         position: absolute;
         pointer-events: auto;
-        background: rgba(13, 18, 35, 0.7);
-        border: 1px solid var(--border-glass);
-        padding: 6px 12px;
-        border-radius: 10px;
+        background: rgba(13, 18, 35, 0.75);
+        border: 1px solid rgba(0, 242, 254, 0.4);
+        padding: 8px 16px;
+        border-radius: 12px;
         color: #fff;
-        font-size: 0.75rem;
+        font-size: 0.8rem;
         font-weight: 600;
         z-index: 4;
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
         box-shadow: var(--box-shadow);
         cursor: pointer;
     }
 
-    /* Developer Simulation Control Widget */
-    .dev-control-widget {
+    /* Debugging Card (Developer Panel - clean and minimal) */
+    .dev-debug-card {
         position: absolute;
         top: 20px;
         right: 20px;
         z-index: 10;
-        width: 320px;
-        background: rgba(13, 18, 35, 0.85);
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
+        width: 250px;
+        background: rgba(13, 18, 35, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        padding: 16px;
+        border-radius: 16px;
+        padding: 12px;
         color: #fff;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        font-size: 0.75rem;
+        font-family: monospace;
         pointer-events: auto;
-        transition: all 0.3s ease;
-    }
-    
-    .dev-control-widget.collapsed {
-        width: 50px;
-        height: 50px;
-        padding: 0;
-        overflow: hidden;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        box-shadow: var(--box-shadow);
     }
 
-    .dev-toggle-btn {
-        width: 100%;
-        background: transparent;
-        border: none;
-        color: var(--glow-primary);
-        font-size: 1.1rem;
-        cursor: pointer;
+    .debug-row {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        padding: 4px;
-    }
-
-    .dev-control-widget.collapsed .dev-toggle-btn {
-        justify-content: center;
-        height: 100%;
-    }
-
-    .dev-title {
-        font-weight: 700;
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    .dev-form-group {
-        margin-top: 12px;
-    }
-
-    .dev-label {
-        font-size: 0.75rem;
-        color: var(--text-secondary);
-        display: block;
         margin-bottom: 4px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding-bottom: 2px;
     }
 
-    .dev-select, .dev-input {
-        width: 100%;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid var(--border-glass);
-        border-radius: 8px;
-        padding: 6px 10px;
-        color: #fff;
-        font-size: 0.8rem;
-        outline: none;
+    .debug-val {
+        color: var(--glow-primary);
+        font-weight: bold;
     }
 
-    /* Floating AR Chat Panel overlay */
+    /* Floating Transparent Chat Panel overlay */
     .ar-chat-panel {
         position: absolute;
         bottom: 24px;
@@ -218,10 +153,10 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         transform: translateX(-50%);
         width: calc(100% - 48px);
         max-width: 650px;
-        background: rgba(13, 18, 35, 0.75);
+        background: rgba(13, 18, 35, 0.72);
         backdrop-filter: blur(25px);
         -webkit-backdrop-filter: blur(25px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 24px;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
         z-index: 10;
@@ -262,6 +197,15 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         overflow-y: auto;
     }
 
+    .ar-chat-text::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .ar-chat-text::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+    }
+
     .ar-chat-actions {
         display: flex;
         justify-content: space-between;
@@ -274,8 +218,9 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         color: var(--text-secondary);
         font-weight: 600;
         display: flex;
-        align-items: center;
-        gap: 6px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
     }
 
     .status-dot-active {
@@ -342,52 +287,19 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         
         <!-- AR HUD Overlay Layer -->
         <div class="ar-overlay-container" id="ar-overlay">
-            <!-- Dynamic building cards injected by JS -->
+            <!-- Requested destination card is injected here dynamically -->
         </div>
 
-        <!-- Dev Control Panel -->
-        <div class="dev-control-widget" id="dev-widget">
-            <button class="dev-toggle-btn" onclick="toggleDevWidget()">
-                <span class="dev-title" id="dev-widget-title"><i class="fa-solid fa-screwdriver-wrench"></i> Simulation panel</span>
-                <i class="fa-solid fa-chevron-up" id="dev-widget-icon"></i>
-            </button>
-            <div id="dev-widget-content" style="margin-top: 10px;">
-                <div class="dev-form-group" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                    <input type="checkbox" id="sim-mode-toggle" onchange="toggleSimulationMode(this.checked)" style="accent-color: var(--glow-primary); cursor: pointer;">
-                    <label for="sim-mode-toggle" style="font-size: 0.75rem; font-weight: 600; cursor: pointer; color: #fff;">Enable Simulation Mode</label>
-                </div>
-                <div class="dev-form-group">
-                    <label class="dev-label">Preset Location (GPS Mock)</label>
-                    <select class="dev-select" id="mock-loc-select" onchange="applyLocationMock()">
-                        <option value="main_gate">Main Gate</option>
-                        <option value="parking">Main Parking</option>
-                        <option value="football_ground">Football Ground</option>
-                        <option value="ground_main">Main Ground</option>
-                        <option value="ks_block">KS Block</option>
-                        <option value="rv_block" selected>RV Block</option>
-                        <option value="js_block">JS Block</option>
-                        <option value="canteen">Canteen</option>
-                        <option value="bd_block">BD Block</option>
-                        <option value="girls_mess">Girls' Mess</option>
-                        <option value="mech_block">Mechanical Block</option>
-                        <option value="bus_parking">Bus Parking</option>
-                        <option value="hostel">Boys' Hostel</option>
-                        <option value="tennis_ground">Tennis Ground</option>
-                    </select>
-                </div>
-                <div class="dev-form-group">
-                    <label class="dev-label">Heading Direction Offset: <span id="heading-val" style="color: var(--glow-primary); font-weight: 700;">180°</span></label>
-                    <input type="range" class="w-full" id="mock-heading-slider" min="0" max="360" value="180" oninput="applyHeadingMock()">
-                </div>
-                <div class="dev-form-group">
-                    <label class="dev-label">Custom Lat/Lng Offset</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <input type="number" step="0.0001" class="dev-input" id="custom-lat" value="10.7563">
-                        <input type="number" step="0.0001" class="dev-input" id="custom-lng" value="78.6515">
-                    </div>
-                    <button class="btn-glass btn-primary w-full mt-2 py-1 text-xs" onclick="applyCustomCoordinates()">Apply custom position</button>
-                </div>
-            </div>
+        <!-- Dev Debug Card (Top-right corner, compact) -->
+        <div class="dev-debug-card" id="debug-card">
+            <div class="debug-row"><span>Status</span><span class="debug-val" id="dbg-status">Searching...</span></div>
+            <div class="debug-row"><span>Latitude</span><span class="debug-val" id="dbg-lat">-</span></div>
+            <div class="debug-row"><span>Longitude</span><span class="debug-val" id="dbg-lng">-</span></div>
+            <div class="debug-row"><span>Accuracy</span><span class="debug-val" id="dbg-acc">-</span></div>
+            <div class="debug-row"><span>Heading</span><span class="debug-val" id="dbg-heading">-</span></div>
+            <div class="debug-row"><span>Nearest</span><span class="debug-val" id="dbg-nearest">-</span></div>
+            <div class="debug-row"><span>Target</span><span class="debug-val" id="dbg-target">None</span></div>
+            <div class="debug-row"><span>Distance</span><span class="debug-val" id="dbg-dist">-</span></div>
         </div>
 
         <!-- Floating Transparent Chat Panel -->
@@ -398,11 +310,11 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
             
             <div class="ar-chat-content">
                 <div class="ar-chat-text" id="ar-voice-bubble">
-                    👋 Welcome to **Buddy Live Vision**! Press the mic or speak naturally. Turn around to view spatial labels pointing to blocks.
+                    👋 Ask me where any building is (e.g., *"Where is RV Block?"*), and I will guide you there in real time!
                 </div>
                 
                 <div class="ar-chat-actions">
-                    <div class="ar-status-text" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px;">
+                    <div class="ar-status-text">
                         <div style="display: flex; align-items: center; gap: 6px;">
                             <span class="status-dot-active" id="listening-indicator"></span>
                             <span id="listening-text">Buddy ready</span>
@@ -413,8 +325,8 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
                     </div>
                     
                     <div class="flex gap-2">
-                        <button class="btn-ar btn-ar-stop" onclick="stopARVision()"><i class="fa-solid fa-circle-stop"></i> Stop</button>
-                        <button class="btn-ar btn-ar-nav" id="navigate-btn" style="display: none;" onclick="navigateToSelection()"><i class="fa-solid fa-location-arrow"></i> Navigate</button>
+                        <button class="btn-ar btn-ar-stop" onclick="stopARVision()"><i class="fa-solid fa-circle-stop"></i> Close</button>
+                        <button class="btn-ar btn-ar-nav" id="navigate-btn" style="display: none;" onclick="navigateToSelection()"><i class="fa-solid fa-location-arrow"></i> 3D Map</button>
                     </div>
                 </div>
             </div>
@@ -424,32 +336,33 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
 
 </div>
 
-<!-- Three.js Visualisation canvas loader -->
 <script>
     // College building database
     const locations = {
-        main_gate: { name: "Main Gate", coords: [10.753976, 78.652241], icon: "fa-solid fa-door-open" },
-        parking: { name: "Main Parking", coords: [10.754449, 78.652613], icon: "fa-solid fa-square-parking" },
-        football_ground: { name: "Football Ground", coords: [10.754952, 78.652247], icon: "fa-solid fa-circle-play" },
-        ground_main: { name: "Main Ground", coords: [10.755983, 78.650219], icon: "fa-solid fa-circle-play" },
-        ks_block: { name: "KS Block", coords: [10.755848, 78.651437], icon: "fa-solid fa-microchip" },
-        rv_block: { name: "RV Block", coords: [10.756346, 78.651692], icon: "fa-solid fa-laptop-code" },
-        js_block: { name: "JS Block", coords: [10.756776, 78.651475], icon: "fa-solid fa-building-columns" },
-        canteen: { name: "Canteen", coords: [10.756991, 78.650814], icon: "fa-solid fa-utensils" },
-        bd_block: { name: "BD Block", coords: [10.757188, 78.651255], icon: "fa-solid fa-building-columns" },
-        girls_mess: { name: "Girls' Mess", coords: [10.757191, 78.650665], icon: "fa-solid fa-utensils" },
-        mech_block: { name: "Mechanical Block", coords: [10.757420, 78.650594], icon: "fa-solid fa-gears" },
-        bus_parking: { name: "Bus Parking", coords: [10.757707, 78.651126], icon: "fa-solid fa-bus" },
-        hostel: { name: "Boys' Hostel", coords: [10.758197, 78.650906], icon: "fa-solid fa-hotel" },
-        tennis_ground: { name: "Tennis Ground", coords: [10.755788, 78.652249], icon: "fa-solid fa-circle-play" }
+        main_gate: { name: "Main Gate", coords: [10.753976, 78.652241], icon: "fa-solid fa-door-open", keywords: ["main gate", "gate", "entrance", "nuzhaiyil"] },
+        parking: { name: "Main Parking", coords: [10.754449, 78.652613], icon: "fa-solid fa-square-parking", keywords: ["parking", "main parking", "two wheeler", "four wheeler", "bike parking"] },
+        football_ground: { name: "Football Ground", coords: [10.754952, 78.652247], icon: "fa-solid fa-circle-play", keywords: ["football", "football ground", "soccer"] },
+        ground_main: { name: "Main Ground", coords: [10.755983, 78.650219], icon: "fa-solid fa-circle-play", keywords: ["main ground", "ground", "sports ground", "play ground"] },
+        ks_block: { name: "KS Block", coords: [10.755848, 78.651437], icon: "fa-solid fa-microchip", keywords: ["ks block", "ks", "kamaraj block", "eee", "ece"] },
+        rv_block: { name: "RV Block", coords: [10.756346, 78.651692], icon: "fa-solid fa-laptop-code", keywords: ["rv block", "rv", "computer science", "cse block", "it block"] },
+        js_block: { name: "JS Block", coords: [10.756776, 78.651475], icon: "fa-solid fa-building-columns", keywords: ["js block", "js", "jeyaram block", "civil block", "aids"] },
+        canteen: { name: "Canteen", coords: [10.756991, 78.650814], icon: "fa-solid fa-utensils", keywords: ["canteen", "saapaadu", "mess", "hotel", "food"] },
+        bd_block: { name: "BD Block", coords: [10.757188, 78.651255], icon: "fa-solid fa-building-columns", keywords: ["bd block", "bd", "mba block", "administration"] },
+        girls_mess: { name: "Girls' Mess", coords: [10.757191, 78.650665], icon: "fa-solid fa-utensils", keywords: ["girls mess", "girls' mess", "ladies mess"] },
+        mech_block: { name: "Mechanical Block", coords: [10.757420, 78.650594], icon: "fa-solid fa-gears", keywords: ["mechanical block", "mech block", "mech"] },
+        bus_parking: { name: "Bus Parking", coords: [10.757707, 78.651126], icon: "fa-solid fa-bus", keywords: ["bus parking", "bus stand", "bus depot", "bus yard"] },
+        hostel: { name: "Boys' Hostel", coords: [10.758197, 78.650906], icon: "fa-solid fa-hotel", keywords: ["hostel", "boys hostel", "boys' hostel", "mens hostel"] },
+        tennis_ground: { name: "Tennis Ground", coords: [10.755788, 78.652249], icon: "fa-solid fa-circle-play", keywords: ["tennis ground", "tennis court", "tennis"] }
     };
 
-    let userLat = 10.756346;
-    let userLng = 78.651692;
-    let isSimulatedMode = false; // Simulation mode is disabled by default to prioritize physical GPS
-    let compassHeading = 180; // 0 = North, 90 = East, 180 = South, 270 = West
-    let currentNavTarget = null;
+    let userLat = 0;
+    let userLng = 0;
+    let compassHeading = 0; // 0 = North, 90 = East, 180 = South, 270 = West
+    let currentNavTarget = null; // Key of locations database (starts null/empty!)
+    let gpsAccuracy = 0;
+    let gpsStatus = "Searching...";
     let speakOutput = true;
+    let hasAnnouncedArrival = false;
 
     // WebRTC Camera Feed handler
     async function startCamera() {
@@ -458,11 +371,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
 
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    facingMode: 'environment',
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 }
-                },
+                video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } },
                 audio: false
             });
             video.srcObject = stream;
@@ -472,35 +381,11 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 video.srcObject = stream;
             } catch (fallbackErr) {
-                console.error("Camera access denied or missing inputs.", fallbackErr);
-                document.getElementById('ar-voice-bubble').innerHTML = "⚠️ **Camera Feed Blocked**: Please grant camera access permissions. The AR overlays will still update in simulation mode.";
+                console.error("Camera access denied.", fallbackErr);
+                document.getElementById('ar-voice-bubble').innerHTML = "⚠️ **Camera Feed Blocked**: Please grant camera access permissions to proceed.";
             }
         }
     }
-
-    // Toggle dev simulation control view
-    function toggleDevWidget() {
-        const widget = document.getElementById('dev-widget');
-        const icon = document.getElementById('dev-widget-icon');
-        const content = document.getElementById('dev-widget-content');
-        
-        if (content.style.display === 'none') {
-            content.style.display = 'block';
-            widget.classList.remove('collapsed');
-            icon.className = 'fa-solid fa-chevron-up';
-        } else {
-            content.style.display = 'none';
-            widget.classList.add('collapsed');
-            icon.className = 'fa-solid fa-chevron-down';
-        }
-    }
-
-    // Collapsed by default on mobile, open on desktop
-    document.addEventListener("DOMContentLoaded", () => {
-        if (window.innerWidth < 768) {
-            toggleDevWidget();
-        }
-    });
 
     // Haversine formula to compute distance in metres
     function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -527,6 +412,51 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         return (bearing + 360) % 360;
     }
 
+    // Update Debugging Card Info
+    function updateDebugCard() {
+        document.getElementById('dbg-status').innerText = gpsStatus;
+        if (gpsStatus === "Active") {
+            document.getElementById('dbg-status').style.color = "#10b981";
+        } else {
+            document.getElementById('dbg-status').style.color = "#ef4444";
+        }
+        
+        document.getElementById('dbg-lat').innerText = userLat ? userLat.toFixed(6) : "-";
+        document.getElementById('dbg-lng').innerText = userLng ? userLng.toFixed(6) : "-";
+        document.getElementById('dbg-acc').innerText = gpsAccuracy ? `${Math.round(gpsAccuracy)} m` : "-";
+        document.getElementById('dbg-heading').innerText = `${Math.round(compassHeading)}°`;
+        
+        // Find nearest building
+        let nearestName = "-";
+        let nearestDist = Infinity;
+        if (userLat && userLng) {
+            Object.keys(locations).forEach(key => {
+                const loc = locations[key];
+                const d = calculateDistance(userLat, userLng, loc.coords[0], loc.coords[1]);
+                if (d < nearestDist) {
+                    nearestDist = d;
+                    nearestName = loc.name;
+                }
+            });
+        }
+        
+        if (nearestDist !== Infinity) {
+            document.getElementById('dbg-nearest').innerText = `${nearestName} (${Math.round(nearestDist)}m)`;
+        } else {
+            document.getElementById('dbg-nearest').innerText = "-";
+        }
+        
+        if (currentNavTarget && locations[currentNavTarget]) {
+            const loc = locations[currentNavTarget];
+            const dist = calculateDistance(userLat, userLng, loc.coords[0], loc.coords[1]);
+            document.getElementById('dbg-target').innerText = loc.name;
+            document.getElementById('dbg-dist').innerText = `${Math.round(dist)} m`;
+        } else {
+            document.getElementById('dbg-target').innerText = "None";
+            document.getElementById('dbg-dist').innerText = "-";
+        }
+    }
+
     // Update AR elements positioning based on GPS and Compass
     function updateAROverlay() {
         const overlay = document.getElementById('ar-overlay');
@@ -535,91 +465,80 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         // Clear existing overlays
         overlay.innerHTML = "";
 
-        const width = overlay.clientWidth;
-        const height = overlay.clientHeight;
-        const fovHorizontal = 80; // Field of View angle threshold in degrees
-
-        Object.keys(locations).forEach(key => {
-            const loc = locations[key];
-            const dist = calculateDistance(userLat, userLng, loc.coords[0], loc.coords[1]);
-            const bearing = calculateBearing(userLat, userLng, loc.coords[0], loc.coords[1]);
-
-            // Relative bearing to current device rotation
-            let relativeBearing = bearing - compassHeading;
-            // Normalize relative bearing to range [-180, 180]
-            relativeBearing = (relativeBearing + 180) % 360 - 180;
-
-            // If the target is inside the viewport Field of View
-            if (Math.abs(relativeBearing) <= fovHorizontal / 2) {
-                // Calculate horizontal percentage screen coordinate
-                const xPct = 50 + (relativeBearing / (fovHorizontal / 2)) * 50;
-                
-                // Stagger markers vertically depending on distance to make overlaps less severe
-                let yPct = 40 + (Math.sin(bearing) * 8); // Base stagger
-                
-                // Closer buildings appear lower, farther buildings higher
-                const distOffset = Math.min(dist / 150, 1) * 20; // 0 to 20% shift
-                yPct = yPct - 10 + distOffset;
-
-                // Create glass card label
-                const card = document.createElement('div');
-                const isFacingTarget = Math.abs(relativeBearing) <= 6;
-                card.className = `ar-label-card ${isFacingTarget ? 'active-facing' : ''}`;
-                card.style.left = `${xPct}%`;
-                card.style.top = `${yPct}%`;
-                card.style.transform = `translate(-50%, -50%) scale(${isFacingTarget ? 1.05 : 0.9})`;
-
-                card.innerHTML = `
-                    <i class="${loc.icon} ar-icon"></i>
-                    <span class="ar-title">${loc.name}</span>
-                    <span class="ar-dist">${Math.round(dist)} m</span>
-                    <span class="ar-arrow">${isFacingTarget ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-arrow-up"></i>'}</span>
-                    ${isFacingTarget ? '<span class="text-[0.65rem] text-emerald-400 font-bold">✓ Straight Ahead</span>' : ''}
-                `;
-
-                // Set nav target when clicking any card label
-                card.onclick = () => {
-                    selectLocationTarget(key);
-                };
-
-                overlay.appendChild(card);
-            } else {
-                // Off-screen helpers drawn on left or right borders
-                const directionArrow = relativeBearing < 0 ? '←' : '→';
-                const sideClass = relativeBearing < 0 ? 'left' : 'right';
-                
-                const indicator = document.createElement('div');
-                indicator.className = `ar-edge-indicator`;
-                indicator.style.top = `calc(50% + ${Math.sin(bearing) * 120}px)`;
-                if (sideClass === 'left') {
-                    indicator.style.left = '16px';
-                    indicator.innerHTML = `<span>${directionArrow} ${loc.name} (${Math.round(dist)}m)</span>`;
-                } else {
-                    indicator.style.right = '16px';
-                    indicator.innerHTML = `<span>${loc.name} (${Math.round(dist)}m) ${directionArrow}</span>`;
-                }
-
-                indicator.onclick = () => {
-                    selectLocationTarget(key);
-                };
-
-                overlay.appendChild(indicator);
-            }
-        });
-    }
-
-    // Select location and show Nav options
-    function selectLocationTarget(key) {
-        currentNavTarget = key;
-        const loc = locations[key];
-        const dist = calculateDistance(userLat, userLng, loc.coords[0], loc.coords[1]);
+        // If no target is requested, do not render any markers
+        if (!currentNavTarget || !locations[currentNavTarget] || !userLat || !userLng) {
+            document.getElementById('navigate-btn').style.display = 'none';
+            return;
+        }
 
         document.getElementById('navigate-btn').style.display = 'inline-flex';
-        document.getElementById('ar-voice-bubble').innerHTML = `📍 **Target Selected**: **${loc.name}** is **${Math.round(dist)} meters** away from you. Click **Navigate** to open the 3D Satellite Map guide.`;
 
-        // If voice synthesis is running, let Buddy confirm
-        if (speakOutput) {
-            speakAROutput(`Selected ${loc.name}. It is about ${Math.round(dist)} meters away.`);
+        const loc = locations[currentNavTarget];
+        const dist = calculateDistance(userLat, userLng, loc.coords[0], loc.coords[1]);
+        const bearing = calculateBearing(userLat, userLng, loc.coords[0], loc.coords[1]);
+
+        // Relative bearing to current device rotation
+        let relativeBearing = bearing - compassHeading;
+        relativeBearing = (relativeBearing + 180) % 360 - 180; // range [-180, 180]
+
+        const fovHorizontal = 80; // Field of View angle threshold in degrees
+
+        // If the target is inside the viewport Field of View
+        if (Math.abs(relativeBearing) <= fovHorizontal / 2) {
+            const xPct = 50 + (relativeBearing / (fovHorizontal / 2)) * 50;
+            const yPct = 45; // Fixed height center overlay
+
+            const card = document.createElement('div');
+            const isFacingTarget = Math.abs(relativeBearing) <= 6;
+            card.className = `ar-label-card`;
+            card.style.left = `${xPct}%`;
+            card.style.top = `${yPct}%`;
+
+            card.innerHTML = `
+                <i class="${loc.icon} ar-icon"></i>
+                <span class="ar-title">${loc.name}</span>
+                <span class="ar-dist">${Math.round(dist)} m</span>
+                <span class="ar-arrow">${isFacingTarget ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-arrow-up"></i>'}</span>
+                ${isFacingTarget ? '<span class="text-[0.65rem] text-emerald-400 font-bold">✓ Straight Ahead</span>' : ''}
+            `;
+            overlay.appendChild(card);
+        } else {
+            // Off-screen edge helpers
+            const directionArrow = relativeBearing < 0 ? '←' : '→';
+            const sideClass = relativeBearing < 0 ? 'left' : 'right';
+            
+            const indicator = document.createElement('div');
+            indicator.className = `ar-edge-indicator`;
+            indicator.style.top = `45%`;
+            if (sideClass === 'left') {
+                indicator.style.left = '16px';
+                indicator.innerHTML = `<span>${directionArrow} ${loc.name} (${Math.round(dist)}m)</span>`;
+            } else {
+                indicator.style.right = '16px';
+                indicator.innerHTML = `<span>${loc.name} (${Math.round(dist)}m) ${directionArrow}</span>`;
+            }
+            overlay.appendChild(indicator);
+        }
+    }
+
+    // Check if user has arrived at target destination
+    function checkArrival() {
+        if (!currentNavTarget || !locations[currentNavTarget] || !userLat || !userLng || hasAnnouncedArrival) return;
+
+        const loc = locations[currentNavTarget];
+        const dist = calculateDistance(userLat, userLng, loc.coords[0], loc.coords[1]);
+
+        if (dist <= 10) {
+            hasAnnouncedArrival = true;
+            const arrivalText = `🎉 You have arrived at **${loc.name}**! Would you like to navigate somewhere else?`;
+            
+            document.getElementById('ar-voice-bubble').innerHTML = arrivalText;
+            if (speakOutput) {
+                speakAROutput(`You have arrived at ${loc.name}. Would you like to navigate somewhere else?`);
+            }
+            
+            // Reset target after arrival
+            currentNavTarget = null;
         }
     }
 
@@ -628,44 +547,48 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         if ('geolocation' in navigator) {
             navigator.geolocation.watchPosition(
                 (pos) => {
-                    // Update status indicator with live metrics
-                    const accuracy = pos.coords.accuracy ? `(${Math.round(pos.coords.accuracy)}m accuracy)` : "";
-                    document.getElementById('gps-status-indicator').innerHTML = 
-                        `<span style="color: #10b981;"><i class="fa-solid fa-location-dot"></i> GPS: Active ${accuracy}</span>`;
-
-                    // Skip updating coordinates if Simulation mode is active
-                    if (isSimulatedMode) return;
-
-                    // Update user coordinates dynamically
                     userLat = pos.coords.latitude;
                     userLng = pos.coords.longitude;
+                    gpsAccuracy = pos.coords.accuracy;
+                    gpsStatus = "Active";
 
-                    // Sync custom input dev markers
-                    document.getElementById('custom-lat').value = userLat.toFixed(6);
-                    document.getElementById('custom-lng').value = userLng.toFixed(6);
+                    // Update UI status row indicator
+                    const accText = gpsAccuracy ? `(${Math.round(gpsAccuracy)}m accuracy)` : "";
+                    document.getElementById('gps-status-indicator').innerHTML = 
+                        `<span style="color: #10b981;"><i class="fa-solid fa-location-dot"></i> GPS: Active ${accText}</span>`;
 
+                    updateDebugCard();
                     updateAROverlay();
+                    checkArrival();
                 },
                 (err) => {
-                    let errMsg = "Unknown Error";
+                    let errMsg = "Error";
                     if (err.code === 1) errMsg = "Permission Denied";
                     else if (err.code === 2) errMsg = "Position Unavailable";
                     else if (err.code === 3) errMsg = "Timeout";
+                    
+                    gpsStatus = "Error: " + errMsg;
                     document.getElementById('gps-status-indicator').innerHTML = 
-                        `<span style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> GPS Blocked: ${errMsg}</span>`;
-                    console.warn("GPS tracking access blocked: " + errMsg, err);
+                        `<span style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> GPS: ${errMsg}</span>`;
+                    
+                    updateDebugCard();
                 },
-                { enableHighAccuracy: true, timeout: 10000 }
+                {
+                    enableHighAccuracy: true,
+                    maximumAge: 0,
+                    timeout: 10000
+                }
             );
         } else {
+            gpsStatus = "Not Supported";
             document.getElementById('gps-status-indicator').innerHTML = 
                 `<span style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> GPS Not Supported</span>`;
+            updateDebugCard();
         }
     }
 
     // Compass device sensors (iOS / Android support)
     function initCompass() {
-        // Request iOS device permission request block
         if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
             DeviceOrientationEvent.requestPermission()
                 .then(response => {
@@ -681,93 +604,10 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
     }
 
     function handleOrientationEvent(event) {
-        // Skip updating heading from live sensors if Simulation mode is active
-        if (isSimulatedMode) return;
-
-        // compass heading in degrees (alpha or webkitCompassHeading)
         let heading = event.webkitCompassHeading || event.alpha;
         if (heading !== undefined) {
             compassHeading = 360 - heading; // Mirror logic for camera viewport
-            document.getElementById('mock-heading-slider').value = Math.round(compassHeading);
-            document.getElementById('heading-val').innerText = `${Math.round(compassHeading)}°`;
-            updateAROverlay();
-        }
-    }
-
-    // Toggle Simulation Mode on/off
-    function toggleSimulationMode(enabled) {
-        isSimulatedMode = enabled;
-        if (!enabled) {
-            document.getElementById('gps-status-indicator').innerHTML = 
-                `<i class="fa-solid fa-location-crosshairs"></i> GPS: Acquiring position...`;
-            // Immediately request GPS to sync to live sensors
-            if ('geolocation' in navigator) {
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                        userLat = pos.coords.latitude;
-                        userLng = pos.coords.longitude;
-                        document.getElementById('custom-lat').value = userLat.toFixed(6);
-                        document.getElementById('custom-lng').value = userLng.toFixed(6);
-                        const accuracy = pos.coords.accuracy ? `(${Math.round(pos.coords.accuracy)}m accuracy)` : "";
-                        document.getElementById('gps-status-indicator').innerHTML = 
-                            `<span style="color: #10b981;"><i class="fa-solid fa-location-dot"></i> GPS: Active ${accuracy}</span>`;
-                        updateAROverlay();
-                    },
-                    (err) => {
-                        let errMsg = "Unknown Error";
-                        if (err.code === 1) errMsg = "Permission Denied";
-                        else if (err.code === 2) errMsg = "Position Unavailable";
-                        else if (err.code === 3) errMsg = "Timeout";
-                        document.getElementById('gps-status-indicator').innerHTML = 
-                            `<span style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> GPS Blocked: ${errMsg}</span>`;
-                    }
-                );
-            }
-        } else {
-            document.getElementById('gps-status-indicator').innerHTML = 
-                `<span style="color: var(--glow-primary);"><i class="fa-solid fa-screwdriver-wrench"></i> GPS: Simulation Mode</span>`;
-            // Apply coordinates of currently selected mock preset
-            applyLocationMock();
-        }
-    }
-
-    // Desktop Developer Panel overrides
-    function applyLocationMock() {
-        const val = document.getElementById('mock-loc-select').value;
-        const loc = locations[val];
-        if (loc) {
-            isSimulatedMode = true;
-            document.getElementById('sim-mode-toggle').checked = true;
-
-            userLat = loc.coords[0];
-            userLng = loc.coords[1];
-
-            document.getElementById('custom-lat').value = userLat.toFixed(6);
-            document.getElementById('custom-lng').value = userLng.toFixed(6);
-
-            updateAROverlay();
-        }
-    }
-
-    function applyHeadingMock() {
-        isSimulatedMode = true;
-        document.getElementById('sim-mode-toggle').checked = true;
-
-        const val = parseInt(document.getElementById('mock-heading-slider').value);
-        compassHeading = val;
-        document.getElementById('heading-val').innerText = `${val}°`;
-        updateAROverlay();
-    }
-
-    function applyCustomCoordinates() {
-        const lat = parseFloat(document.getElementById('custom-lat').value);
-        const lng = parseFloat(document.getElementById('custom-lng').value);
-        if (!isNaN(lat) && !isNaN(lng)) {
-            isSimulatedMode = true;
-            document.getElementById('sim-mode-toggle').checked = true;
-
-            userLat = lat;
-            userLng = lng;
+            updateDebugCard();
             updateAROverlay();
         }
     }
@@ -784,7 +624,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         }
     }
 
-    // Zero-click AR Voice recognition (Speech to Text)
+    // Continuous voice recognition
     let arRecognition;
     let arListening = false;
 
@@ -794,7 +634,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
             arRecognition = new SpeechRecognition();
             arRecognition.continuous = true;
             arRecognition.interimResults = false;
-            arRecognition.lang = 'en-IN'; // Indian English accent context parser
+            arRecognition.lang = 'en-IN'; // Indian English accent context
 
             arRecognition.onstart = () => {
                 arListening = true;
@@ -816,7 +656,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
                 ind.className = "status-dot-active";
                 document.getElementById('listening-text').innerText = "Buddy ready";
                 
-                // Restart listening automatically for hands-free mode
+                // Restart listening automatically
                 if (window.location.pathname.includes('vision.php')) {
                     setTimeout(() => {
                         try { arRecognition.start(); } catch(e) {}
@@ -826,6 +666,23 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
 
             arRecognition.start();
         }
+    }
+
+    // Match query keywords to set destination targets
+    function detectTargetDestination(query) {
+        const queryLower = query.toLowerCase();
+        let matchedKey = null;
+
+        Object.keys(locations).forEach(key => {
+            const loc = locations[key];
+            loc.keywords.forEach(keyword => {
+                if (queryLower.includes(keyword)) {
+                    matchedKey = key;
+                }
+            });
+        });
+
+        return matchedKey;
     }
 
     // Send query to Gemini API and print/speak back
@@ -840,19 +697,17 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         .then(res => res.json())
         .then(data => {
             let replyText = data.answer;
-            
-            // Clean markdown syntax indicators
             const cleanText = replyText.replace(/\*\*|\*/g, '');
             document.getElementById('ar-voice-bubble').innerHTML = replyText;
 
-            // Highlight target location if Buddy references a block name
-            Object.keys(locations).forEach(key => {
-                const nameLower = locations[key].name.toLowerCase();
-                const cleanQuery = query.toLowerCase();
-                if (cleanQuery.includes(nameLower) || cleanQuery.includes(key.replace('_', ' '))) {
-                    selectLocationTarget(key);
-                }
-            });
+            // Detect target destination keywords
+            const matchedTarget = detectTargetDestination(query);
+            if (matchedTarget) {
+                currentNavTarget = matchedTarget;
+                hasAnnouncedArrival = false; // Reset arrival triggers for new target
+                updateDebugCard();
+                updateAROverlay();
+            }
 
             if (speakOutput) {
                 speakAROutput(cleanText);
@@ -898,13 +753,13 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         }
     }
 
-    // 3D Buddy profile canvas inside transparent card
+    // Initialize scripts
     document.addEventListener("DOMContentLoaded", () => {
         startCamera();
         initGPS();
         initCompass();
-        updateAROverlay();
         initARSpeechRecognition();
+        updateDebugCard();
 
         // Spawn Three.js 3D particles in the card
         if (typeof THREE !== 'undefined') {
@@ -916,7 +771,6 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
             const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
             renderer.setSize(80, 80);
 
-            // Simple 3D revolving particle sphere
             const count = 400;
             const geo = new THREE.BufferGeometry();
             const pos = new Float32Array(count * 3);
@@ -949,7 +803,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
             window.setChatBackgroundState = (state) => {
                 particleState = state;
                 if (state === 'scatter') {
-                    mat.color.setHex(0x7f00ff); // Shift to energetic purple when talking
+                    mat.color.setHex(0x7f00ff);
                 } else {
                     mat.color.setHex(0x00f2fe);
                 }
@@ -957,11 +811,9 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
 
             const animate = () => {
                 requestAnimationFrame(animate);
-                
                 rotY += 0.008;
                 points.rotation.y = rotY;
 
-                // Simple particle pulse based on state
                 if (particleState === 'scatter') {
                     const scale = 1.0 + Math.sin(Date.now() * 0.015) * 0.15;
                     points.scale.setScalar(scale);
