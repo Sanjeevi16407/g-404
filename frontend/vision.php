@@ -402,9 +402,14 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
                 </div>
                 
                 <div class="ar-chat-actions">
-                    <div class="ar-status-text">
-                        <span class="status-dot-active" id="listening-indicator"></span>
-                        <span id="listening-text">Buddy ready</span>
+                    <div class="ar-status-text" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px;">
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <span class="status-dot-active" id="listening-indicator"></span>
+                            <span id="listening-text">Buddy ready</span>
+                        </div>
+                        <div id="gps-status-indicator" style="font-size: 0.7rem; opacity: 0.85; display: flex; align-items: center; gap: 4px; color: var(--text-secondary);">
+                            <i class="fa-solid fa-location-crosshairs"></i> GPS: Initializing...
+                        </div>
                     </div>
                     
                     <div class="flex gap-2">
@@ -623,6 +628,11 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         if ('geolocation' in navigator) {
             navigator.geolocation.watchPosition(
                 (pos) => {
+                    // Update status indicator with live metrics
+                    const accuracy = pos.coords.accuracy ? `(${Math.round(pos.coords.accuracy)}m accuracy)` : "";
+                    document.getElementById('gps-status-indicator').innerHTML = 
+                        `<span style="color: #10b981;"><i class="fa-solid fa-location-dot"></i> GPS: Active ${accuracy}</span>`;
+
                     // Skip updating coordinates if Simulation mode is active
                     if (isSimulatedMode) return;
 
@@ -637,10 +647,19 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
                     updateAROverlay();
                 },
                 (err) => {
-                    console.warn("GPS tracking access blocked, using simulated mock positions.", err);
+                    let errMsg = "Unknown Error";
+                    if (err.code === 1) errMsg = "Permission Denied";
+                    else if (err.code === 2) errMsg = "Position Unavailable";
+                    else if (err.code === 3) errMsg = "Timeout";
+                    document.getElementById('gps-status-indicator').innerHTML = 
+                        `<span style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> GPS Blocked: ${errMsg}</span>`;
+                    console.warn("GPS tracking access blocked: " + errMsg, err);
                 },
                 { enableHighAccuracy: true, timeout: 10000 }
             );
+        } else {
+            document.getElementById('gps-status-indicator').innerHTML = 
+                `<span style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> GPS Not Supported</span>`;
         }
     }
 
@@ -679,17 +698,34 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
     function toggleSimulationMode(enabled) {
         isSimulatedMode = enabled;
         if (!enabled) {
+            document.getElementById('gps-status-indicator').innerHTML = 
+                `<i class="fa-solid fa-location-crosshairs"></i> GPS: Acquiring position...`;
             // Immediately request GPS to sync to live sensors
             if ('geolocation' in navigator) {
-                navigator.geolocation.getCurrentPosition((pos) => {
-                    userLat = pos.coords.latitude;
-                    userLng = pos.coords.longitude;
-                    document.getElementById('custom-lat').value = userLat.toFixed(6);
-                    document.getElementById('custom-lng').value = userLng.toFixed(6);
-                    updateAROverlay();
-                });
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        userLat = pos.coords.latitude;
+                        userLng = pos.coords.longitude;
+                        document.getElementById('custom-lat').value = userLat.toFixed(6);
+                        document.getElementById('custom-lng').value = userLng.toFixed(6);
+                        const accuracy = pos.coords.accuracy ? `(${Math.round(pos.coords.accuracy)}m accuracy)` : "";
+                        document.getElementById('gps-status-indicator').innerHTML = 
+                            `<span style="color: #10b981;"><i class="fa-solid fa-location-dot"></i> GPS: Active ${accuracy}</span>`;
+                        updateAROverlay();
+                    },
+                    (err) => {
+                        let errMsg = "Unknown Error";
+                        if (err.code === 1) errMsg = "Permission Denied";
+                        else if (err.code === 2) errMsg = "Position Unavailable";
+                        else if (err.code === 3) errMsg = "Timeout";
+                        document.getElementById('gps-status-indicator').innerHTML = 
+                            `<span style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> GPS Blocked: ${errMsg}</span>`;
+                    }
+                );
             }
         } else {
+            document.getElementById('gps-status-indicator').innerHTML = 
+                `<span style="color: var(--glow-primary);"><i class="fa-solid fa-screwdriver-wrench"></i> GPS: Simulation Mode</span>`;
             // Apply coordinates of currently selected mock preset
             applyLocationMock();
         }
