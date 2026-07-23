@@ -352,6 +352,10 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
                 <i class="fa-solid fa-chevron-up" id="dev-widget-icon"></i>
             </button>
             <div id="dev-widget-content" style="margin-top: 10px;">
+                <div class="dev-form-group" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <input type="checkbox" id="sim-mode-toggle" checked onchange="toggleSimulationMode(this.checked)" style="accent-color: var(--glow-primary); cursor: pointer;">
+                    <label for="sim-mode-toggle" style="font-size: 0.75rem; font-weight: 600; cursor: pointer; color: #fff;">Enable Simulation Mode</label>
+                </div>
                 <div class="dev-form-group">
                     <label class="dev-label">Preset Location (GPS Mock)</label>
                     <select class="dev-select" id="mock-loc-select" onchange="applyLocationMock()">
@@ -435,8 +439,9 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         tennis_ground: { name: "Tennis Ground", coords: [10.755788, 78.652249], icon: "fa-solid fa-circle-play" }
     };
 
-    let userLat = 10.7563;
-    let userLng = 78.6515;
+    let userLat = 10.756346;
+    let userLng = 78.651692;
+    let isSimulatedMode = true; // Simulation mode is enabled by default to allow precise preset testing
     let compassHeading = 180; // 0 = North, 90 = East, 180 = South, 270 = West
     let currentNavTarget = null;
     let speakOutput = true;
@@ -618,6 +623,9 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         if ('geolocation' in navigator) {
             navigator.geolocation.watchPosition(
                 (pos) => {
+                    // Skip updating coordinates if Simulation mode is active
+                    if (isSimulatedMode) return;
+
                     // Update user coordinates dynamically
                     userLat = pos.coords.latitude;
                     userLng = pos.coords.longitude;
@@ -654,6 +662,9 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
     }
 
     function handleOrientationEvent(event) {
+        // Skip updating heading from live sensors if Simulation mode is active
+        if (isSimulatedMode) return;
+
         // compass heading in degrees (alpha or webkitCompassHeading)
         let heading = event.webkitCompassHeading || event.alpha;
         if (heading !== undefined) {
@@ -664,11 +675,34 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         }
     }
 
+    // Toggle Simulation Mode on/off
+    function toggleSimulationMode(enabled) {
+        isSimulatedMode = enabled;
+        if (!enabled) {
+            // Immediately request GPS to sync to live sensors
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    userLat = pos.coords.latitude;
+                    userLng = pos.coords.longitude;
+                    document.getElementById('custom-lat').value = userLat.toFixed(6);
+                    document.getElementById('custom-lng').value = userLng.toFixed(6);
+                    updateAROverlay();
+                });
+            }
+        } else {
+            // Apply coordinates of currently selected mock preset
+            applyLocationMock();
+        }
+    }
+
     // Desktop Developer Panel overrides
     function applyLocationMock() {
         const val = document.getElementById('mock-loc-select').value;
         const loc = locations[val];
         if (loc) {
+            isSimulatedMode = true;
+            document.getElementById('sim-mode-toggle').checked = true;
+
             userLat = loc.coords[0];
             userLng = loc.coords[1];
 
@@ -680,6 +714,9 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
     }
 
     function applyHeadingMock() {
+        isSimulatedMode = true;
+        document.getElementById('sim-mode-toggle').checked = true;
+
         const val = parseInt(document.getElementById('mock-heading-slider').value);
         compassHeading = val;
         document.getElementById('heading-val').innerText = `${val}°`;
@@ -690,6 +727,9 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         const lat = parseFloat(document.getElementById('custom-lat').value);
         const lng = parseFloat(document.getElementById('custom-lng').value);
         if (!isNaN(lat) && !isNaN(lng)) {
+            isSimulatedMode = true;
+            document.getElementById('sim-mode-toggle').checked = true;
+
             userLat = lat;
             userLng = lng;
             updateAROverlay();
