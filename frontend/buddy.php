@@ -390,7 +390,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         <div class="chat-hub-body" id="hub-conversation-feed">
             <!-- Initial Greeting -->
             <div class="msg-bubble msg-bubble-buddy">
-                👋 Hello! I am <?php echo sanitize_input($buddy_name); ?>, your digital senior. You can ask me any questions about our college blocks, exam regulations, syllabus, timetable or cafeteria, in English, Tamil, or Tanglish. I remember our conversation, so ask away!
+                👋 Hello <?php echo explode(' ', $student_name)[0]; ?>! I am <?php echo sanitize_input($buddy_name); ?>, your digital senior. You can ask me any questions about our college blocks, exam regulations, syllabus, timetable or cafeteria, in English, Tamil, or Tanglish. I remember our conversation, so ask away!
             </div>
         </div>
 
