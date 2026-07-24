@@ -145,108 +145,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         font-weight: bold;
     }
 
-    /* Floating Radar Card (Top-left corner, scrollable) */
-    .ar-radar-card {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        z-index: 10;
-        width: 250px;
-        max-height: 250px;
-        background: rgba(13, 18, 35, 0.72);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 18px;
-        padding: 12px;
-        color: #fff;
-        font-size: 0.8rem;
-        pointer-events: auto;
-        box-shadow: var(--box-shadow);
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        transition: max-height 0.3s ease;
-    }
 
-    .ar-radar-card.collapsed {
-        max-height: 40px;
-        overflow: hidden;
-    }
-
-    .radar-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-        padding-bottom: 6px;
-        font-weight: 700;
-        font-size: 0.85rem;
-        color: var(--glow-primary);
-        cursor: pointer;
-        user-select: none;
-    }
-
-    .radar-list {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        overflow-y: auto;
-        padding-right: 4px;
-    }
-
-    .radar-list::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    .radar-list::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 4px;
-    }
-
-    .radar-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: rgba(255, 255, 255, 0.04);
-        padding: 6px 10px;
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        transition: all 0.2s ease;
-        cursor: pointer;
-    }
-
-    .radar-item:hover {
-        background: rgba(255, 255, 255, 0.08);
-        border-color: var(--glow-primary);
-    }
-
-    .radar-item.active-target {
-        border-color: #10b981;
-        background: rgba(16, 185, 129, 0.15);
-        box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
-    }
-
-    .radar-item-left {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-weight: 600;
-        font-size: 0.75rem;
-    }
-
-    .radar-item-right {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 0.75rem;
-        font-weight: bold;
-    }
-
-    .radar-arrow-icon {
-        color: var(--glow-primary);
-        font-size: 0.85rem;
-    }
 
     .dev-debug-card.collapsed {
         max-height: 40px;
@@ -412,16 +311,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
             <!-- Requested destination card is injected here dynamically -->
         </div>
 
-        <!-- Floating Radar Card (Top-left corner) -->
-        <div class="ar-radar-card" id="radar-card">
-            <div class="radar-header" onclick="toggleRadarCollapse()">
-                <span>🧭 Spatial Radar</span>
-                <i class="fa-solid fa-chevron-up" id="radar-collapse-icon" style="font-size: 0.7rem; color: var(--glow-primary);"></i>
-            </div>
-            <div class="radar-list" id="radar-locations-list">
-                <!-- Sorted building rows injected here by JS -->
-            </div>
-        </div>
+
 
         <!-- Dev Debug Card (Top-right corner, compact) -->
         <div class="dev-debug-card" id="debug-card">
@@ -604,60 +494,120 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         // Clear existing overlays
         overlay.innerHTML = "";
 
-        // If no target is requested, do not render any markers
-        if (!currentNavTarget || !locations[currentNavTarget] || !userLat || !userLng) {
+        if (!userLat || !userLng) {
             document.getElementById('navigate-btn').style.display = 'none';
             return;
         }
 
-        document.getElementById('navigate-btn').style.display = 'inline-flex';
-
-        const loc = locations[currentNavTarget];
-        const dist = calculateDistance(userLat, userLng, loc.coords[0], loc.coords[1]);
-        const bearing = calculateBearing(userLat, userLng, loc.coords[0], loc.coords[1]);
-
-        // Relative bearing to current device rotation
-        let relativeBearing = bearing - compassHeading;
-        relativeBearing = (relativeBearing + 180) % 360 - 180; // range [-180, 180]
+        // Show/hide 3D Map navigation button based on whether a target is active
+        if (currentNavTarget && locations[currentNavTarget]) {
+            document.getElementById('navigate-btn').style.display = 'inline-flex';
+        } else {
+            document.getElementById('navigate-btn').style.display = 'none';
+        }
 
         const fovHorizontal = 80; // Field of View angle threshold in degrees
+        const offScreenLocs = [];
 
-        // If the target is inside the viewport Field of View
-        if (Math.abs(relativeBearing) <= fovHorizontal / 2) {
-            const xPct = 50 + (relativeBearing / (fovHorizontal / 2)) * 50;
-            const yPct = 45; // Fixed height center overlay
+        Object.keys(locations).forEach(key => {
+            const loc = locations[key];
+            const dist = calculateDistance(userLat, userLng, loc.coords[0], loc.coords[1]);
+            const bearing = calculateBearing(userLat, userLng, loc.coords[0], loc.coords[1]);
 
-            const card = document.createElement('div');
-            const isFacingTarget = Math.abs(relativeBearing) <= 6;
-            card.className = `ar-label-card`;
-            card.style.left = `${xPct}%`;
-            card.style.top = `${yPct}%`;
+            // Relative bearing to current device rotation
+            let relativeBearing = bearing - compassHeading;
+            relativeBearing = (relativeBearing + 180) % 360 - 180; // range [-180, 180]
 
-            card.innerHTML = `
-                <i class="${loc.icon} ar-icon"></i>
-                <span class="ar-title">${loc.name}</span>
-                <span class="ar-dist">${Math.round(dist)} m</span>
-                <span class="ar-arrow">${isFacingTarget ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-arrow-up"></i>'}</span>
-                ${isFacingTarget ? '<span class="text-[0.65rem] text-emerald-400 font-bold">✓ Straight Ahead</span>' : ''}
-            `;
-            overlay.appendChild(card);
-        } else {
-            // Off-screen edge helpers
-            const directionArrow = relativeBearing < 0 ? '←' : '→';
-            const sideClass = relativeBearing < 0 ? 'left' : 'right';
-            
-            const indicator = document.createElement('div');
-            indicator.className = `ar-edge-indicator`;
-            indicator.style.top = `45%`;
-            if (sideClass === 'left') {
-                indicator.style.left = '16px';
-                indicator.innerHTML = `<span>${directionArrow} ${loc.name} (${Math.round(dist)}m)</span>`;
+            const isTarget = currentNavTarget === key;
+
+            // If the target is inside the viewport Field of View
+            if (Math.abs(relativeBearing) <= fovHorizontal / 2) {
+                const xPct = 50 + (relativeBearing / (fovHorizontal / 2)) * 50;
+                
+                // Stagger markers vertically depending on distance to make overlaps less severe
+                let yPct = 45;
+                const distOffset = Math.min(dist / 200, 1) * 25; // 0 to 25% shift
+                yPct = yPct - 12 + distOffset + (Math.sin(bearing * 10) * 8);
+
+                const isFacingTarget = Math.abs(relativeBearing) <= 6;
+                const scale = isTarget ? 1.15 : Math.max(0.7, 1 - (dist / 350));
+                const opacity = isTarget ? 1.0 : Math.max(0.45, 1 - (dist / 300));
+                const borderCol = isTarget ? '#10b981' : 'rgba(0, 242, 254, 0.4)';
+                const glowShadow = isTarget ? '0 0 20px rgba(16, 185, 129, 0.4)' : '0 0 10px rgba(0, 242, 254, 0.15)';
+
+                const card = document.createElement('div');
+                card.className = `ar-label-card`;
+                card.style.left = `${xPct}%`;
+                card.style.top = `${yPct}%`;
+                card.style.opacity = opacity;
+                card.style.transform = `translate(-50%, -50%) scale(${scale})`;
+                card.style.border = `1px solid ${borderCol}`;
+                card.style.boxShadow = glowShadow;
+
+                // Clicking a card focuses it as the nav target!
+                card.onclick = () => {
+                    currentNavTarget = key;
+                    hasAnnouncedArrival = false;
+                    updateDebugCard();
+                    updateAROverlay();
+                };
+
+                card.innerHTML = `
+                    <i class="${loc.icon} ar-icon" style="color: ${isTarget ? '#10b981' : 'var(--glow-primary)'}"></i>
+                    <span class="ar-title">${loc.name}</span>
+                    <span class="ar-dist">${Math.round(dist)} m</span>
+                    <span class="ar-arrow">${isFacingTarget ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-arrow-up"></i>'}</span>
+                    ${isTarget && isFacingTarget ? '<span class="text-[0.65rem] text-emerald-400 font-bold">✓ Straight Ahead</span>' : ''}
+                `;
+                overlay.appendChild(card);
             } else {
-                indicator.style.right = '16px';
-                indicator.innerHTML = `<span>${loc.name} (${Math.round(dist)}m) ${directionArrow}</span>`;
+                // Collect off-screen locations
+                offScreenLocs.push({ key, loc, dist, relativeBearing, isTarget });
             }
-            overlay.appendChild(indicator);
-        }
+        });
+
+        // Sort off-screen locations by distance
+        offScreenLocs.sort((a, b) => a.dist - b.dist);
+
+        // Render off-screen edge indicators for target + nearest 3 off-screen locations
+        let indicatorsRendered = 0;
+        offScreenLocs.forEach(item => {
+            const shouldRender = item.isTarget || (indicatorsRendered < 3);
+            if (shouldRender) {
+                const directionArrow = item.relativeBearing < 0 ? '←' : '→';
+                const sideClass = item.relativeBearing < 0 ? 'left' : 'right';
+                
+                const indicator = document.createElement('div');
+                indicator.className = `ar-edge-indicator`;
+                
+                // Vertical spacing for multiple indicators on the same side
+                const verticalOffset = 30 + (indicatorsRendered * 12);
+                indicator.style.top = `${verticalOffset}%`;
+                
+                if (item.isTarget) {
+                    indicator.style.border = '1px solid #10b981';
+                    indicator.style.boxShadow = '0 0 10px rgba(16, 185, 129, 0.3)';
+                }
+
+                if (sideClass === 'left') {
+                    indicator.style.left = '16px';
+                    indicator.innerHTML = `<span>${directionArrow} ${item.loc.name} (${Math.round(item.dist)}m)</span>`;
+                } else {
+                    indicator.style.right = '16px';
+                    indicator.innerHTML = `<span>${item.loc.name} (${Math.round(item.dist)}m) ${directionArrow}</span>`;
+                }
+
+                indicator.onclick = () => {
+                    currentNavTarget = item.key;
+                    hasAnnouncedArrival = false;
+                    updateDebugCard();
+                    updateAROverlay();
+                };
+
+                overlay.appendChild(indicator);
+                indicatorsRendered++;
+            }
+        });
     }
 
     // Check if user has arrived at target destination
@@ -698,7 +648,6 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
 
                     updateDebugCard();
                     updateAROverlay();
-                    updateRadarPanel();
                     checkArrival();
                 },
                 (err) => {
@@ -749,7 +698,6 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
             compassHeading = 360 - heading; // Mirror logic for camera viewport
             updateDebugCard();
             updateAROverlay();
-            updateRadarPanel();
         }
     }
 
@@ -894,19 +842,6 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         }
     }
 
-    // Toggle Spatial Radar collapse/expand
-    function toggleRadarCollapse() {
-        const card = document.getElementById('radar-card');
-        const icon = document.getElementById('radar-collapse-icon');
-        if (card.classList.contains('collapsed')) {
-            card.classList.remove('collapsed');
-            icon.className = "fa-solid fa-chevron-up";
-        } else {
-            card.classList.add('collapsed');
-            icon.className = "fa-solid fa-chevron-down";
-        }
-    }
-
     // Toggle Sensor Debug collapse/expand
     function toggleDebugCollapse() {
         const card = document.getElementById('debug-card');
@@ -923,67 +858,6 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         }
     }
 
-    // Update Floating Radar panel displaying all directions/distances
-    function updateRadarPanel() {
-        const listContainer = document.getElementById('radar-locations-list');
-        if (!listContainer || !userLat || !userLng) return;
-
-        // Map and sort locations by distance
-        const items = Object.keys(locations).map(key => {
-            const loc = locations[key];
-            const dist = calculateDistance(userLat, userLng, loc.coords[0], loc.coords[1]);
-            const bearing = calculateBearing(userLat, userLng, loc.coords[0], loc.coords[1]);
-            
-            // Relative bearing
-            let relativeBearing = bearing - compassHeading;
-            relativeBearing = (relativeBearing + 180) % 360 - 180; // range [-180, 180]
-
-            // Get directional arrow representation
-            let arrow = "↑";
-            if (relativeBearing >= -22.5 && relativeBearing < 22.5) arrow = "↑";
-            else if (relativeBearing >= 22.5 && relativeBearing < 67.5) arrow = "↗";
-            else if (relativeBearing >= 67.5 && relativeBearing < 112.5) arrow = "→";
-            else if (relativeBearing >= 112.5 && relativeBearing < 157.5) arrow = "↘";
-            else if (relativeBearing >= 157.5 || relativeBearing < -157.5) arrow = "↓";
-            else if (relativeBearing >= -157.5 && relativeBearing < -112.5) arrow = "↙";
-            else if (relativeBearing >= -112.5 && relativeBearing < -67.5) arrow = "←";
-            else if (relativeBearing >= -67.5 && relativeBearing < -22.5) arrow = "↖";
-
-            return { key, loc, dist, arrow };
-        });
-
-        // Sort by distance (closest first)
-        items.sort((a, b) => a.dist - b.dist);
-
-        // Render sorted list items
-        listContainer.innerHTML = "";
-        items.forEach(item => {
-            const el = document.createElement('div');
-            const isActive = currentNavTarget === item.key;
-            el.className = `radar-item ${isActive ? 'active-target' : ''}`;
-            el.onclick = () => {
-                // Clicking a radar item sets it as the active navigation target!
-                currentNavTarget = item.key;
-                hasAnnouncedArrival = false;
-                updateDebugCard();
-                updateAROverlay();
-                updateRadarPanel();
-            };
-
-            el.innerHTML = `
-                <div class="radar-item-left">
-                    <i class="${item.loc.icon}" style="color: ${isActive ? '#10b981' : 'var(--glow-primary)'}"></i>
-                    <span>${item.loc.name}</span>
-                </div>
-                <div class="radar-item-right">
-                    <span>${Math.round(item.dist)}m</span>
-                    <span class="radar-arrow-icon" style="color: ${isActive ? '#10b981' : 'var(--glow-primary)'}">${item.arrow}</span>
-                </div>
-            `;
-            listContainer.appendChild(el);
-        });
-    }
-
     // Initialize scripts
     document.addEventListener("DOMContentLoaded", () => {
         startCamera();
@@ -991,7 +865,6 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         initCompass();
         initARSpeechRecognition();
         updateDebugCard();
-        updateRadarPanel();
 
         // Spawn Three.js 3D particles in the card
         if (typeof THREE !== 'undefined') {
