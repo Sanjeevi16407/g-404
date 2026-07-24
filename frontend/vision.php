@@ -145,6 +145,128 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         font-weight: bold;
     }
 
+    /* Floating Radar Card (Top-left corner, scrollable) */
+    .ar-radar-card {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 10;
+        width: 250px;
+        max-height: 250px;
+        background: rgba(13, 18, 35, 0.72);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 18px;
+        padding: 12px;
+        color: #fff;
+        font-size: 0.8rem;
+        pointer-events: auto;
+        box-shadow: var(--box-shadow);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        transition: max-height 0.3s ease;
+    }
+
+    .ar-radar-card.collapsed {
+        max-height: 40px;
+        overflow: hidden;
+    }
+
+    .radar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        padding-bottom: 6px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: var(--glow-primary);
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .radar-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        overflow-y: auto;
+        padding-right: 4px;
+    }
+
+    .radar-list::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .radar-list::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+    }
+
+    .radar-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.04);
+        padding: 6px 10px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .radar-item:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: var(--glow-primary);
+    }
+
+    .radar-item.active-target {
+        border-color: #10b981;
+        background: rgba(16, 185, 129, 0.15);
+        box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+    }
+
+    .radar-item-left {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 600;
+        font-size: 0.75rem;
+    }
+
+    .radar-item-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.75rem;
+        font-weight: bold;
+    }
+
+    .radar-arrow-icon {
+        color: var(--glow-primary);
+        font-size: 0.85rem;
+    }
+
+    .dev-debug-card.collapsed {
+        max-height: 40px;
+        overflow: hidden;
+    }
+
+    .debug-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        padding-bottom: 6px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: #ef4444;
+        cursor: pointer;
+        user-select: none;
+        margin-bottom: 6px;
+    }
+
     /* Floating Transparent Chat Panel overlay */
     .ar-chat-panel {
         position: absolute;
@@ -290,16 +412,33 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
             <!-- Requested destination card is injected here dynamically -->
         </div>
 
+        <!-- Floating Radar Card (Top-left corner) -->
+        <div class="ar-radar-card" id="radar-card">
+            <div class="radar-header" onclick="toggleRadarCollapse()">
+                <span>🧭 Spatial Radar</span>
+                <i class="fa-solid fa-chevron-up" id="radar-collapse-icon" style="font-size: 0.7rem; color: var(--glow-primary);"></i>
+            </div>
+            <div class="radar-list" id="radar-locations-list">
+                <!-- Sorted building rows injected here by JS -->
+            </div>
+        </div>
+
         <!-- Dev Debug Card (Top-right corner, compact) -->
         <div class="dev-debug-card" id="debug-card">
-            <div class="debug-row"><span>Status</span><span class="debug-val" id="dbg-status">Searching...</span></div>
-            <div class="debug-row"><span>Latitude</span><span class="debug-val" id="dbg-lat">-</span></div>
-            <div class="debug-row"><span>Longitude</span><span class="debug-val" id="dbg-lng">-</span></div>
-            <div class="debug-row"><span>Accuracy</span><span class="debug-val" id="dbg-acc">-</span></div>
-            <div class="debug-row"><span>Heading</span><span class="debug-val" id="dbg-heading">-</span></div>
-            <div class="debug-row"><span>Nearest</span><span class="debug-val" id="dbg-nearest">-</span></div>
-            <div class="debug-row"><span>Target</span><span class="debug-val" id="dbg-target">None</span></div>
-            <div class="debug-row"><span>Distance</span><span class="debug-val" id="dbg-dist">-</span></div>
+            <div class="debug-header" onclick="toggleDebugCollapse()">
+                <span>⚙️ Debug Sensors</span>
+                <i class="fa-solid fa-chevron-down" id="debug-collapse-icon" style="font-size: 0.7rem; color: #ef4444;"></i>
+            </div>
+            <div id="debug-card-body" style="display: none;">
+                <div class="debug-row"><span>Status</span><span class="debug-val" id="dbg-status">Searching...</span></div>
+                <div class="debug-row"><span>Latitude</span><span class="debug-val" id="dbg-lat">-</span></div>
+                <div class="debug-row"><span>Longitude</span><span class="debug-val" id="dbg-lng">-</span></div>
+                <div class="debug-row"><span>Accuracy</span><span class="debug-val" id="dbg-acc">-</span></div>
+                <div class="debug-row"><span>Heading</span><span class="debug-val" id="dbg-heading">-</span></div>
+                <div class="debug-row"><span>Nearest</span><span class="debug-val" id="dbg-nearest">-</span></div>
+                <div class="debug-row"><span>Target</span><span class="debug-val" id="dbg-target">None</span></div>
+                <div class="debug-row"><span>Distance</span><span class="debug-val" id="dbg-dist">-</span></div>
+            </div>
         </div>
 
         <!-- Floating Transparent Chat Panel -->
@@ -559,6 +698,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
 
                     updateDebugCard();
                     updateAROverlay();
+                    updateRadarPanel();
                     checkArrival();
                 },
                 (err) => {
@@ -609,6 +749,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
             compassHeading = 360 - heading; // Mirror logic for camera viewport
             updateDebugCard();
             updateAROverlay();
+            updateRadarPanel();
         }
     }
 
@@ -753,6 +894,96 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         }
     }
 
+    // Toggle Spatial Radar collapse/expand
+    function toggleRadarCollapse() {
+        const card = document.getElementById('radar-card');
+        const icon = document.getElementById('radar-collapse-icon');
+        if (card.classList.contains('collapsed')) {
+            card.classList.remove('collapsed');
+            icon.className = "fa-solid fa-chevron-up";
+        } else {
+            card.classList.add('collapsed');
+            icon.className = "fa-solid fa-chevron-down";
+        }
+    }
+
+    // Toggle Sensor Debug collapse/expand
+    function toggleDebugCollapse() {
+        const card = document.getElementById('debug-card');
+        const body = document.getElementById('debug-card-body');
+        const icon = document.getElementById('debug-collapse-icon');
+        if (body.style.display === 'none') {
+            body.style.display = 'block';
+            card.classList.remove('collapsed');
+            icon.className = "fa-solid fa-chevron-up";
+        } else {
+            body.style.display = 'none';
+            card.classList.add('collapsed');
+            icon.className = "fa-solid fa-chevron-down";
+        }
+    }
+
+    // Update Floating Radar panel displaying all directions/distances
+    function updateRadarPanel() {
+        const listContainer = document.getElementById('radar-locations-list');
+        if (!listContainer || !userLat || !userLng) return;
+
+        // Map and sort locations by distance
+        const items = Object.keys(locations).map(key => {
+            const loc = locations[key];
+            const dist = calculateDistance(userLat, userLng, loc.coords[0], loc.coords[1]);
+            const bearing = calculateBearing(userLat, userLng, loc.coords[0], loc.coords[1]);
+            
+            // Relative bearing
+            let relativeBearing = bearing - compassHeading;
+            relativeBearing = (relativeBearing + 180) % 360 - 180; // range [-180, 180]
+
+            // Get directional arrow representation
+            let arrow = "↑";
+            if (relativeBearing >= -22.5 && relativeBearing < 22.5) arrow = "↑";
+            else if (relativeBearing >= 22.5 && relativeBearing < 67.5) arrow = "↗";
+            else if (relativeBearing >= 67.5 && relativeBearing < 112.5) arrow = "→";
+            else if (relativeBearing >= 112.5 && relativeBearing < 157.5) arrow = "↘";
+            else if (relativeBearing >= 157.5 || relativeBearing < -157.5) arrow = "↓";
+            else if (relativeBearing >= -157.5 && relativeBearing < -112.5) arrow = "↙";
+            else if (relativeBearing >= -112.5 && relativeBearing < -67.5) arrow = "←";
+            else if (relativeBearing >= -67.5 && relativeBearing < -22.5) arrow = "↖";
+
+            return { key, loc, dist, arrow };
+        });
+
+        // Sort by distance (closest first)
+        items.sort((a, b) => a.dist - b.dist);
+
+        // Render sorted list items
+        listContainer.innerHTML = "";
+        items.forEach(item => {
+            const el = document.createElement('div');
+            const isActive = currentNavTarget === item.key;
+            el.className = `radar-item ${isActive ? 'active-target' : ''}`;
+            el.onclick = () => {
+                // Clicking a radar item sets it as the active navigation target!
+                currentNavTarget = item.key;
+                hasAnnouncedArrival = false;
+                updateDebugCard();
+                updateAROverlay();
+                updateRadarPanel();
+            };
+
+            el.innerHTML = `
+                <div class="radar-item-left">
+                    <i class="${item.loc.icon}" style="color: ${isActive ? '#10b981' : 'var(--glow-primary)'}"></i>
+                    <span>${item.loc.name}</span>
+                </div>
+                <div class="radar-item-right">
+                    <span>${Math.round(item.dist)}m</span>
+                    <span class="radar-arrow-icon" style="color: ${isActive ? '#10b981' : 'var(--glow-primary)'}">${item.arrow}</span>
+                </div>
+            `;
+            listContainer.appendChild(el);
+        });
+    }
+
     // Initialize scripts
     document.addEventListener("DOMContentLoaded", () => {
         startCamera();
@@ -760,6 +991,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         initCompass();
         initARSpeechRecognition();
         updateDebugCard();
+        updateRadarPanel();
 
         // Spawn Three.js 3D particles in the card
         if (typeof THREE !== 'undefined') {
