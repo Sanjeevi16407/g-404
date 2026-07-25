@@ -62,6 +62,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 try {
                     $stmt = $db->prepare("INSERT INTO announcements (title, description, priority, pdf_path, publish_date, expiry_date) VALUES (?, ?, ?, ?, ?, ?)");
                     $stmt->execute([$title, $description, $priority, $pdf_path, $pub_date, $exp_date]);
+                    
+                    // Create system notifications for all students
+                    $students = $db->query("SELECT id FROM students")->fetchAll(PDO::FETCH_COLUMN);
+                    if (!empty($students)) {
+                        $notif_stmt = $db->prepare("INSERT INTO notifications (student_id, message) VALUES (?, ?)");
+                        foreach ($students as $stu_id) {
+                            $notif_stmt->execute([$stu_id, "📢 Announcement: " . $title]);
+                        }
+                    }
+                    
                     $success_msg = "Announcement published successfully.";
                 } catch (PDOException $e) {
                     $error_msg = "Database Error: Could not save announcement.";

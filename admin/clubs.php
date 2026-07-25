@@ -54,6 +54,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $stmt = $db->prepare("INSERT INTO clubs (name, description, faculty_coordinator, logo_url) VALUES (?, ?, ?, ?)");
                 $stmt->execute([$name, $description, $coordinator, $logo_url]);
+                
+                // Create system notifications for all students
+                $students = $db->query("SELECT id FROM students")->fetchAll(PDO::FETCH_COLUMN);
+                if (!empty($students)) {
+                    $notif_stmt = $db->prepare("INSERT INTO notifications (student_id, message) VALUES (?, ?)");
+                    foreach ($students as $stu_id) {
+                        $notif_stmt->execute([$stu_id, "👥 New Club: Join the newly registered " . $name . " Club!"]);
+                    }
+                }
+                
                 $success_msg = "Club registered successfully.";
             } catch (PDOException $e) {
                 $error_msg = "A club with this name already exists!";

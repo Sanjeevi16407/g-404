@@ -43,6 +43,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 try {
                     $stmt = $db->prepare("INSERT INTO documents (title, file_path) VALUES (?, ?)");
                     $stmt->execute([$title, $uploaded_path]);
+                    
+                    // Create system notifications for all students
+                    $students = $db->query("SELECT id FROM students")->fetchAll(PDO::FETCH_COLUMN);
+                    if (!empty($students)) {
+                        $notif_stmt = $db->prepare("INSERT INTO notifications (student_id, message) VALUES (?, ?)");
+                        foreach ($students as $stu_id) {
+                            $notif_stmt->execute([$stu_id, "📄 Document uploaded: " . $title]);
+                        }
+                    }
+                    
                     $success_msg = "Academic document uploaded successfully.";
                 } catch (PDOException $e) {
                     $error_msg = "Database Error: Could not log document details.";

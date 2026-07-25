@@ -56,6 +56,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $stmt = $db->prepare("INSERT INTO events (title, description, image_url, venue, event_date, event_time) VALUES (?, ?, ?, ?, ?, ?)");
                 $stmt->execute([$title, $description, $image_url, $venue, $date, $time]);
+                
+                // Create system notifications for all students
+                $students = $db->query("SELECT id FROM students")->fetchAll(PDO::FETCH_COLUMN);
+                if (!empty($students)) {
+                    $deadline = date('M d, Y', strtotime($date . ' - 1 day'));
+                    $event_f_date = date('M d, Y', strtotime($date));
+                    $notif_stmt = $db->prepare("INSERT INTO notifications (student_id, message) VALUES (?, ?)");
+                    foreach ($students as $stu_id) {
+                        $notif_stmt->execute([$stu_id, "🎉 New Event: " . $title . " scheduled on " . $event_f_date . ". Last date of registration is " . $deadline]);
+                    }
+                }
+                
                 $success_msg = "Event scheduled successfully.";
             } catch (PDOException $e) {
                 $error_msg = "An event with this title already exists!";

@@ -152,8 +152,34 @@ $db->prepare("UPDATE notifications SET is_read = 1 WHERE student_id = ?")->execu
                     <p style="font-size: 0.85rem; color: var(--text-tertiary); text-align: center; padding: 20px;">No alerts logged yet.</p>
                 <?php else: ?>
                     <?php foreach ($notifications as $notif): ?>
-                        <div style="padding: 14px 20px; border-radius: 12px; background: rgba(255,255,255,0.01); border: 1px solid var(--border-light); font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; display: flex; justify-content: space-between; align-items: center;">
-                            <span><?php echo sanitize_input($notif['message']); ?></span>
+                        <?php 
+                        $icon = 'fa-bell';
+                        $color = 'var(--glow-primary)';
+                        $msg = $notif['message'];
+                        if (stripos($msg, 'Document') !== false || stripos($msg, 'documnet') !== false) {
+                            $icon = 'fa-file-pdf';
+                            $color = 'var(--glow-primary)';
+                        } elseif (stripos($msg, 'Announcement') !== false) {
+                            $icon = 'fa-bullhorn';
+                            $color = 'var(--glow-tertiary)';
+                        } elseif (stripos($msg, 'Event') !== false) {
+                            $icon = 'fa-calendar-check';
+                            $color = 'var(--glow-secondary)';
+                        } elseif (stripos($msg, 'Club') !== false) {
+                            $icon = 'fa-people-group';
+                            $color = 'var(--glow-primary)';
+                        } elseif (stripos($msg, 'Reminder') !== false) {
+                            $icon = 'fa-clock';
+                            $color = 'var(--glow-secondary)';
+                        }
+                        ?>
+                        <div style="padding: 14px 20px; border-radius: 12px; background: rgba(255,255,255,0.01); border: 1px solid var(--border-light); font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: center; color: <?php echo $color; ?>; font-size: 0.95rem; flex-shrink: 0;">
+                                    <i class="fa-solid <?php echo $icon; ?>"></i>
+                                </div>
+                                <span><?php echo sanitize_input($notif['message']); ?></span>
+                            </div>
                             <span style="font-size: 0.75rem; color: var(--text-tertiary); flex-shrink: 0;"><?php echo date('M d, h:i A', strtotime($notif['created_at'])); ?></span>
                         </div>
                     <?php endforeach; ?>

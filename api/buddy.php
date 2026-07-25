@@ -145,6 +145,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     if (!empty($query)) {
+        // Intercept reminder / remember requests
+        $q_clean = strtolower($query);
+        $is_reminder = false;
+        $reminder_text = "";
+        
+        if (preg_match('/tomorrow.*lab|lab.*tomorrow/i', $q_clean)) {
+            $is_reminder = true;
+            $reminder_text = "📅 Reminder: Lab session tomorrow morning.";
+        } elseif (preg_match('/(?:remind|remember|rember)\b/i', $q_clean)) {
+            $is_reminder = true;
+            // Clean query to construct a clean reminder message
+            $clean_msg = preg_replace('/^(?:kindly\s+)?(?:remind|remember|rember)(?:\s+me)?(?:\s+(?:to|about|that))?/i', '', $query);
+            $clean_msg = trim($clean_msg, "?.! ");
+            if (empty($clean_msg)) {
+                $clean_msg = "your scheduled task";
+            }
+            $reminder_text = "📅 Reminder: " . ucfirst($clean_msg);
+        }
+
+        if ($is_reminder && $student_id > 0) {
+            try {
+                $notif_stmt = $db->prepare("INSERT INTO notifications (student_id, message) VALUES (?, ?)");
+                $notif_stmt->execute([$student_id, $reminder_text]);
+                
+                // Track in analytics
+                $log_stmt = $db->prepare("INSERT INTO analytics_logs (event_type, item_name) VALUES ('buddy_reminder', ?)");
+                $log_stmt->execute([substr($reminder_text, 0, 100)]);
+                
+                $buddy_settings = $db->query("SELECT buddy_name FROM buddy_settings WHERE id = 1 LIMIT 1")->fetch();
+                $b_name = $buddy_settings['buddy_name'] ?? 'Buddy';
+                
+                $answer = "Got it! I have set a reminder for you: \"" . htmlspecialchars($reminder_text) . "\". You'll find it logged under your notification bell and profile log.";
+                echo json_encode([
+                    "answer" => $answer,
+                    "category" => "Student Services",
+                    "answered_by" => "Buddy AI Assistant",
+                    "suggestions" => ["Show my notifications", "View my profile", "My weekly schedule"]
+                ]);
+                exit;
+            } catch (PDOException $e) {}
+        }
         // Log query event to standard analytics
         try {
             $log_stmt = $db->prepare("INSERT INTO analytics_logs (event_type, item_name) VALUES ('buddy_query', ?)");
