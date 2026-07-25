@@ -6,6 +6,22 @@ require_once __DIR__ . '/includes/header.php';
 
 $student_id = (int)$_SESSION['student_id'];
 
+// Handle delete or clear notifications actions
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    if ($_POST['action'] === 'delete_notification') {
+        $notif_id = (int)$_POST['notification_id'];
+        $delete_stmt = $db->prepare("DELETE FROM notifications WHERE id = ? AND student_id = ?");
+        $delete_stmt->execute([$notif_id, $student_id]);
+        echo "<script>window.location.href = 'profile.php#notifications';</script>";
+        exit;
+    } elseif ($_POST['action'] === 'clear_all_notifications') {
+        $clear_stmt = $db->prepare("DELETE FROM notifications WHERE student_id = ?");
+        $clear_stmt->execute([$student_id]);
+        echo "<script>window.location.href = 'profile.php#notifications';</script>";
+        exit;
+    }
+}
+
 // 1. Fetch complete student details
 $stu_stmt = $db->prepare("
     SELECT s.*, d.name as dept_name, sec.name as section_name 
@@ -143,9 +159,19 @@ $db->prepare("UPDATE notifications SET is_read = 1 WHERE student_id = ?")->execu
 
         <!-- Notifications History log -->
         <div class="glass-panel" id="notifications" style="padding: 28px;">
-            <h3 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-                <i class="fa-solid fa-bell" style="color: var(--glow-tertiary);"></i> Notifications Log
-            </h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 16px; flex-wrap: wrap;">
+                <h3 style="font-size: 1.15rem; color: var(--text-primary); font-weight: 700; display: flex; align-items: center; gap: 8px; margin: 0;">
+                    <i class="fa-solid fa-bell" style="color: var(--glow-tertiary);"></i> Notifications Log
+                </h3>
+                <?php if (!empty($notifications)): ?>
+                    <form method="POST" style="margin: 0;" onsubmit="return confirm('Are you sure you want to clear all notifications?');">
+                        <input type="hidden" name="action" value="clear_all_notifications">
+                        <button type="submit" class="btn-glass" style="padding: 6px 14px; font-size: 0.75rem; border-radius: 8px; cursor: pointer; color: #ef4444; border-color: rgba(239, 68, 68, 0.2); background: rgba(239, 68, 68, 0.05); display: inline-flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-trash-can"></i> Clear All
+                        </button>
+                    </form>
+                <?php endif; ?>
+            </div>
             
             <div style="display: flex; flex-direction: column; gap: 12px;">
                 <?php if (empty($notifications)): ?>
@@ -180,7 +206,16 @@ $db->prepare("UPDATE notifications SET is_read = 1 WHERE student_id = ?")->execu
                                 </div>
                                 <span><?php echo sanitize_input($notif['message']); ?></span>
                             </div>
-                            <span style="font-size: 0.75rem; color: var(--text-tertiary); flex-shrink: 0;"><?php echo format_to_local_time($notif['created_at']); ?></span>
+                            <div style="display: flex; align-items: center; gap: 16px; flex-shrink: 0;">
+                                <span style="font-size: 0.75rem; color: var(--text-tertiary);"><?php echo format_to_local_time($notif['created_at']); ?></span>
+                                <form method="POST" style="margin: 0;" onsubmit="return confirm('Delete this notification?');">
+                                    <input type="hidden" name="action" value="delete_notification">
+                                    <input type="hidden" name="notification_id" value="<?php echo $notif['id']; ?>">
+                                    <button type="submit" style="background: none; border: none; color: var(--text-tertiary); cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; transition: color 0.2s;" onmouseover="this.style.color='#ef4444';" onmouseout="this.style.color='var(--text-tertiary)';" title="Delete Notification">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
