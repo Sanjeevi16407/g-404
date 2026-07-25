@@ -136,7 +136,7 @@ $recent_queries = $recent_queries_stmt->fetchAll();
                             <td style="padding: 14px 10px; font-weight: bold; color: <?php echo $q['response_time'] > 1.0 ? '#f87171' : '#34d399'; ?>;">
                                 <?php echo round($q['response_time'], 3); ?>s
                             </td>
-                            <td style="padding: 14px 10px; color: var(--text-secondary); font-size: 0.8rem;"><?php echo $q['created_at']; ?></td>
+                            <td style="padding: 14px 10px; color: var(--text-secondary); font-size: 0.8rem;"><?php echo format_to_local_time($q['created_at']); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>

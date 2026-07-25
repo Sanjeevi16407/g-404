@@ -92,4 +92,20 @@ function handle_file_upload($file, $target_subfolder, $allowed_types = ['image/j
 
     return false;
 }
+
+/**
+ * Format UTC database timestamp to student's local timezone (Asia/Kolkata)
+ */
+function format_to_local_time($utc_timestamp_str, $format = 'M d, h:i A') {
+    try {
+        if (empty($utc_timestamp_str)) {
+            return '';
+        }
+        $utc_date = new DateTime($utc_timestamp_str, new DateTimeZone('UTC'));
+        $utc_date->setTimezone(new DateTimeZone('Asia/Kolkata'));
+        return $utc_date->format($format);
+    } catch (Exception $e) {
+        return $utc_timestamp_str;
+    }
+}
 ?>

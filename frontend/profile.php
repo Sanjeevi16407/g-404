@@ -180,7 +180,7 @@ $db->prepare("UPDATE notifications SET is_read = 1 WHERE student_id = ?")->execu
                                 </div>
                                 <span><?php echo sanitize_input($notif['message']); ?></span>
                             </div>
-                            <span style="font-size: 0.75rem; color: var(--text-tertiary); flex-shrink: 0;"><?php echo date('M d, h:i A', strtotime($notif['created_at'])); ?></span>
+                            <span style="font-size: 0.75rem; color: var(--text-tertiary); flex-shrink: 0;"><?php echo format_to_local_time($notif['created_at']); ?></span>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
