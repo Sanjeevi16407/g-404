@@ -480,6 +480,11 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
                 </a>
             </li>
             <li>
+                <a href="documents.php" class="menu-item-link <?php echo $active_page === 'documents.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-file-pdf"></i> Academic Documents
+                </a>
+            </li>
+            <li>
                 <a href="profile.php" class="menu-item-link <?php echo $active_page === 'profile.php' ? 'active' : ''; ?>">
                     <i class="fa-solid fa-circle-user"></i> My Profile
                 </a>

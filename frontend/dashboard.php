@@ -243,7 +243,7 @@ $random_quote = $quotes[array_rand($quotes)];
                     <p style="font-size: 0.85rem; color: var(--text-tertiary);">No notices published today.</p>
                 <?php else: ?>
                     <?php foreach ($announcements as $ann): ?>
-                        <div style="padding: 12px; border-radius: 8px; background: rgba(255,255,255,0.01); border: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
+                        <div onclick='openAnnouncementModal(<?php echo json_encode($ann); ?>)' style="padding: 12px; border-radius: 8px; background: rgba(255,255,255,0.01); border: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)';" onmouseout="this.style.background='rgba(255,255,255,0.01)';">
                             <div>
                                 <h4 style="font-size: 0.85rem; color: var(--text-primary); font-weight: 600;"><?php echo sanitize_input($ann['title']); ?></h4>
                                 <span style="font-size: 0.7rem; color: var(--text-tertiary);"><?php echo date('M d, Y', strtotime($ann['publish_date'])); ?></span>
@@ -258,5 +258,50 @@ $random_quote = $quotes[array_rand($quotes)];
     </div>
 
 </div>
+
+<!-- Announcement Detail Modal -->
+<div id="announcement-detail-modal" class="glass-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; background: rgba(13, 18, 35, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); align-items: center; justify-content: center;">
+    <div class="glass-panel modal-content" style="background: rgba(15, 23, 42, 0.85); border: 1px solid var(--border-light); padding: 32px; border-radius: 20px; max-width: 500px; width: 90%; position: relative; margin: auto;">
+        <i onclick="closeAnnouncementModal()" class="fa-solid fa-xmark modal-close" style="position: absolute; top: 20px; right: 20px; cursor: pointer; color: var(--text-secondary); font-size: 1.2rem;"></i>
+        <span id="ann-modal-priority" class="badge-pill" style="font-size: 0.7rem; padding: 3px 8px; text-transform: uppercase;"></span>
+        <h3 id="ann-modal-title" style="margin-top: 14px; margin-bottom: 8px; font-size: 1.3rem; color: var(--text-primary); font-weight: 700;"></h3>
+        <p id="ann-modal-date" style="font-size: 0.8rem; color: var(--text-tertiary); margin-bottom: 20px;"></p>
+        <div id="ann-modal-desc" style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 24px; white-space: pre-wrap; max-height: 250px; overflow-y: auto;"></div>
+        <div id="ann-modal-attachment-container" style="display: none; border-top: 1px solid var(--border-light); padding-top: 16px;">
+            <a id="ann-modal-attachment-link" href="#" target="_blank" class="btn-glass btn-primary" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 10px 18px; border-radius: 10px; font-size: 0.85rem; width: 100%; justify-content: center;">
+                <i class="fa-solid fa-file-pdf"></i> View Circular Document (PDF)
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+function openAnnouncementModal(ann) {
+    document.getElementById('ann-modal-title').innerText = ann.title;
+    document.getElementById('ann-modal-priority').innerText = ann.priority + ' Priority';
+    document.getElementById('ann-modal-priority').className = 'badge-pill badge-' + ann.priority;
+    
+    // Format Date
+    const pubDate = new Date(ann.publish_date);
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    document.getElementById('ann-modal-date').innerText = 'Published on ' + pubDate.toLocaleDateString('en-US', options);
+    
+    document.getElementById('ann-modal-desc').innerText = ann.description;
+    
+    const attachContainer = document.getElementById('ann-modal-attachment-container');
+    if (ann.pdf_path) {
+        document.getElementById('ann-modal-attachment-link').href = '../' + ann.pdf_path;
+        attachContainer.style.display = 'block';
+    } else {
+        attachContainer.style.display = 'none';
+    }
+    
+    document.getElementById('announcement-detail-modal').style.display = 'flex';
+}
+
+function closeAnnouncementModal() {
+    document.getElementById('announcement-detail-modal').style.display = 'none';
+}
+</script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
