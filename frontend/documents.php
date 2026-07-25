@@ -57,9 +57,11 @@ $documents = $db->query("
                         <h4 style="font-size: 1.05rem; color: var(--text-primary); font-weight: 700; line-height: 1.4; margin-bottom: 8px;" class="doc-title-text"><?php echo sanitize_input($doc['title']); ?></h4>
                     </div>
 
-                    <div style="margin-top: 20px; border-top: 1px solid var(--border-light); padding-top: 16px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 0.75rem; color: var(--text-secondary);"><i class="fa-solid fa-circle-info" style="color: var(--glow-primary); margin-right: 4px;"></i> PDF Format</span>
-                        <a href="../<?php echo $doc['file_path']; ?>" download="<?php echo sanitize_input($doc['title']); ?>.pdf" target="_blank" class="btn-glass btn-primary" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 8px 16px; border-radius: 8px; font-size: 0.8rem; font-weight: 600;">
+                    <div style="margin-top: 20px; border-top: 1px solid var(--border-light); padding-top: 16px; display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+                        <a href="../<?php echo $doc['file_path']; ?>" target="_blank" class="btn-glass btn-secondary" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; padding: 8px 14px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; border: 1px solid rgba(255, 255, 255, 0.1);">
+                            <i class="fa-solid fa-eye"></i> View PDF
+                        </a>
+                        <a href="../<?php echo $doc['file_path']; ?>" download="<?php echo sanitize_input($doc['title']); ?>.pdf" class="btn-glass btn-primary" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; padding: 8px 14px; border-radius: 8px; font-size: 0.75rem; font-weight: 600;">
                             <i class="fa-solid fa-download"></i> Download
                         </a>
                     </div>
