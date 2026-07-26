@@ -403,6 +403,11 @@ $active_page = basename($_SERVER['PHP_SELF']);
                 </a>
             </li>
             <li>
+                <a href="registration_requests.php" class="menu-item-link <?php echo $active_page === 'registration_requests.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-user-clock"></i> Reg Requests
+                </a>
+            </li>
+            <li>
                 <a href="announcements.php" class="menu-item-link <?php echo $active_page === 'announcements.php' ? 'active' : ''; ?>">
                     <i class="fa-solid fa-bullhorn"></i> Announcements
                 </a>

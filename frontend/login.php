@@ -197,9 +197,18 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
             
             <button type="submit" class="btn-glass btn-primary btn-submit">SIGN IN</button>
         </form>
-        
-        <p style="margin-top: 24px; font-size: 0.8rem; color: var(--text-tertiary);">
-            First time logging in? Use your college-assigned register number and default credentials.
+
+        <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border-light); text-align: center;">
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px; font-weight: 500;">
+                New Student? Don't have an account yet?
+            </p>
+            <a href="student_registration_request.php" class="btn-glass" style="display: block; width: 100%; padding: 12px; font-weight: 600; border-radius: 12px; text-decoration: none; font-size: 0.9rem; text-align: center;">
+                <i class="fa-solid fa-user-plus" style="margin-right: 8px; color: var(--glow-primary);"></i> Request Registration
+            </a>
+        </div>
+
+        <p style="margin-top: 18px; font-size: 0.78rem; color: var(--text-tertiary);">
+            First time logging in? Use your college-assigned register number and approved credentials.
         </p>
     </div>
 
