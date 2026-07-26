@@ -352,6 +352,18 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
         .aurora-bg-container {
             transition: opacity 0.8s ease;
         }
+
+        /* Hide mobile layout elements on screens wider than 768px */
+        @media (min-width: 769px) {
+            .mobile-top-header,
+            .mobile-drawer,
+            .mobile-backdrop,
+            .mobile-bottom-nav,
+            .campus-bottom-sheet,
+            .mobile-only {
+                display: none !important;
+            }
+        }
     </style>
     <script>
         function toggleSidebar() {
