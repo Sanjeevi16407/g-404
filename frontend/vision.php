@@ -339,7 +339,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
             
             <div class="ar-chat-content">
                 <div class="ar-chat-text" id="ar-voice-bubble">
-                    👋 Ask me where any building is (e.g., *"Where is RV Block?"*), and I will guide you there in real time!
+                    👋 Select a destination above or ask Buddy!
                 </div>
                 
                 <div class="ar-chat-actions">
@@ -447,15 +447,22 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
     }
 
     function setARNavTarget(key) {
+        const bubbleEl = document.getElementById('ar-voice-bubble');
         if (key && locations[key]) {
             currentNavTarget = key;
             hasAnnouncedArrival = false;
+            if (bubbleEl) {
+                bubbleEl.innerHTML = `🎯 Target: <strong>${locations[key].name}</strong> — Follow the green marker ahead!`;
+            }
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 speakAROutput(`Guiding you to ${locations[key].name}`);
             }
         } else {
             currentNavTarget = null;
+            if (bubbleEl) {
+                bubbleEl.innerHTML = `👋 Select a destination above or ask Buddy!`;
+            }
         }
         const selectEl = document.getElementById('ar-destination-dropdown');
         if (selectEl) selectEl.value = currentNavTarget || '';
