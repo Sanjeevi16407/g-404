@@ -112,58 +112,51 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         cursor: pointer;
     }
 
-    /* Debugging Card (Developer Panel - clean and minimal) */
-    .dev-debug-card {
+    /* AR Destination Selector Card (Top-right corner, spatial glass style) */
+    .ar-destination-card {
         position: absolute;
-        top: 20px;
-        right: 20px;
-        z-index: 10;
-        width: 250px;
-        background: rgba(13, 18, 35, 0.7);
+        top: 16px;
+        right: 16px;
+        z-index: 20;
+        background: rgba(13, 18, 35, 0.85);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         border-radius: 16px;
-        padding: 12px;
-        color: #fff;
-        font-size: 0.75rem;
-        font-family: monospace;
+        padding: 10px 14px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 180px;
         pointer-events: auto;
-        box-shadow: var(--box-shadow);
     }
 
-    .debug-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 4px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        padding-bottom: 2px;
-    }
-
-    .debug-val {
-        color: var(--glow-primary);
-        font-weight: bold;
-    }
-
-
-
-    .dev-debug-card.collapsed {
-        max-height: 40px;
-        overflow: hidden;
-    }
-
-    .debug-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-        padding-bottom: 6px;
+    .destination-header {
+        font-size: 0.8rem;
         font-weight: 700;
-        font-size: 0.85rem;
-        color: #ef4444;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .ar-destination-select {
+        width: 100%;
+        height: 36px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        color: #ffffff;
+        font-size: 0.8rem;
+        padding: 0 8px;
+        outline: none;
         cursor: pointer;
-        user-select: none;
-        margin-bottom: 6px;
+    }
+
+    .ar-destination-select option {
+        background-color: #121824;
+        color: #ffffff;
     }
 
     /* Floating Transparent Chat Panel overlay */
@@ -225,6 +218,10 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
     .ar-chat-text::-webkit-scrollbar-thumb {
         background: rgba(255, 255, 255, 0.2);
         border-radius: 4px;
+    }
+
+    .ar-chat-text::-webkit-scrollbar-track {
+        background: transparent;
     }
 
     .ar-chat-actions {
@@ -313,22 +310,25 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
 
 
 
-        <!-- Dev Debug Card (Top-right corner, compact) -->
-        <div class="dev-debug-card" id="debug-card">
-            <div class="debug-header" onclick="toggleDebugCollapse()">
-                <span>⚙️ Debug Sensors</span>
-                <i class="fa-solid fa-chevron-down" id="debug-collapse-icon" style="font-size: 0.7rem; color: #ef4444;"></i>
+        <!-- AR Destination Selector Card (Top-right corner) -->
+        <div class="ar-destination-card" id="destination-card">
+            <div class="destination-header">
+                <i class="fa-solid fa-compass" style="color: #10b981;"></i> Target Destination
             </div>
-            <div id="debug-card-body" style="display: none;">
-                <div class="debug-row"><span>Status</span><span class="debug-val" id="dbg-status">Searching...</span></div>
-                <div class="debug-row"><span>Latitude</span><span class="debug-val" id="dbg-lat">-</span></div>
-                <div class="debug-row"><span>Longitude</span><span class="debug-val" id="dbg-lng">-</span></div>
-                <div class="debug-row"><span>Accuracy</span><span class="debug-val" id="dbg-acc">-</span></div>
-                <div class="debug-row"><span>Heading</span><span class="debug-val" id="dbg-heading">-</span></div>
-                <div class="debug-row"><span>Nearest</span><span class="debug-val" id="dbg-nearest">-</span></div>
-                <div class="debug-row"><span>Target</span><span class="debug-val" id="dbg-target">None</span></div>
-                <div class="debug-row"><span>Distance</span><span class="debug-val" id="dbg-dist">-</span></div>
-            </div>
+            <select id="ar-destination-dropdown" class="ar-destination-select" onchange="setARNavTarget(this.value)">
+                <option value="">-- All Locations --</option>
+                <option value="rv_block">💻 RV Block (CSE / IT)</option>
+                <option value="ks_block">⚡ KS Block (EEE / ECE)</option>
+                <option value="js_block">🏛️ JS Block (Civil / AIDS)</option>
+                <option value="bd_block">🏢 BD Block (MBA / Admin)</option>
+                <option value="mech_block">⚙️ Mechanical Block</option>
+                <option value="canteen">🍽️ Canteen</option>
+                <option value="main_gate">🚪 Main Gate</option>
+                <option value="parking">🅿️ Main Parking</option>
+                <option value="hostel">🏨 Boys' Hostel</option>
+                <option value="bus_parking">🚌 Bus Parking</option>
+                <option value="ground_main">⚽ Main Ground</option>
+            </select>
         </div>
 
         <!-- Floating Transparent Chat Panel -->
@@ -443,47 +443,23 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
 
     // Update Debugging Card Info
     function updateDebugCard() {
-        document.getElementById('dbg-status').innerText = gpsStatus;
-        if (gpsStatus === "Active") {
-            document.getElementById('dbg-status').style.color = "#10b981";
+        // Safe stub - debug card replaced with AR Destination Selector
+    }
+
+    function setARNavTarget(key) {
+        if (key && locations[key]) {
+            currentNavTarget = key;
+            hasAnnouncedArrival = false;
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                speakAROutput(`Guiding you to ${locations[key].name}`);
+            }
         } else {
-            document.getElementById('dbg-status').style.color = "#ef4444";
+            currentNavTarget = null;
         }
-        
-        document.getElementById('dbg-lat').innerText = userLat ? userLat.toFixed(6) : "-";
-        document.getElementById('dbg-lng').innerText = userLng ? userLng.toFixed(6) : "-";
-        document.getElementById('dbg-acc').innerText = gpsAccuracy ? `${Math.round(gpsAccuracy)} m` : "-";
-        document.getElementById('dbg-heading').innerText = `${Math.round(compassHeading)}°`;
-        
-        // Find nearest building
-        let nearestName = "-";
-        let nearestDist = Infinity;
-        if (userLat && userLng) {
-            Object.keys(locations).forEach(key => {
-                const loc = locations[key];
-                const d = calculateDistance(userLat, userLng, loc.coords[0], loc.coords[1]);
-                if (d < nearestDist) {
-                    nearestDist = d;
-                    nearestName = loc.name;
-                }
-            });
-        }
-        
-        if (nearestDist !== Infinity) {
-            document.getElementById('dbg-nearest').innerText = `${nearestName} (${Math.round(nearestDist)}m)`;
-        } else {
-            document.getElementById('dbg-nearest').innerText = "-";
-        }
-        
-        if (currentNavTarget && locations[currentNavTarget]) {
-            const loc = locations[currentNavTarget];
-            const dist = calculateDistance(userLat, userLng, loc.coords[0], loc.coords[1]);
-            document.getElementById('dbg-target').innerText = loc.name;
-            document.getElementById('dbg-dist').innerText = `${Math.round(dist)} m`;
-        } else {
-            document.getElementById('dbg-target').innerText = "None";
-            document.getElementById('dbg-dist').innerText = "-";
-        }
+        const selectEl = document.getElementById('ar-destination-dropdown');
+        if (selectEl) selectEl.value = currentNavTarget || '';
+        updateAROverlay();
     }
 
     // Update AR elements positioning based on GPS and Compass
@@ -493,6 +469,12 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
 
         // Clear existing overlays
         overlay.innerHTML = "";
+
+        // Sync destination dropdown value
+        const selectEl = document.getElementById('ar-destination-dropdown');
+        if (selectEl && selectEl.value !== (currentNavTarget || '')) {
+            selectEl.value = currentNavTarget || '';
+        }
 
         if (!userLat || !userLng) {
             document.getElementById('navigate-btn').style.display = 'none';
@@ -509,7 +491,12 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         const fovHorizontal = 80; // Field of View angle threshold in degrees
         const offScreenLocs = [];
 
-        Object.keys(locations).forEach(key => {
+        // If a destination target is selected (e.g. RV Block), only render THAT specific location card
+        const keysToRender = (currentNavTarget && locations[currentNavTarget])
+            ? [currentNavTarget]
+            : Object.keys(locations);
+
+        keysToRender.forEach(key => {
             const loc = locations[key];
             const dist = calculateDistance(userLat, userLng, loc.coords[0], loc.coords[1]);
             const bearing = calculateBearing(userLat, userLng, loc.coords[0], loc.coords[1]);
@@ -546,10 +533,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
 
                 // Clicking a card focuses it as the nav target!
                 card.onclick = () => {
-                    currentNavTarget = key;
-                    hasAnnouncedArrival = false;
-                    updateDebugCard();
-                    updateAROverlay();
+                    setARNavTarget(key);
                 };
 
                 card.innerHTML = `
