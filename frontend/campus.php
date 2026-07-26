@@ -521,13 +521,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         };
         reloadControl.addTo(map);
 
-        // Add static building markers to map
-        Object.keys(locations).forEach(key => {
-            const loc = locations[key];
-            const marker = L.marker(loc.coords).addTo(map);
-            marker.bindPopup(`<b>${loc.name}</b><br>${loc.details}`);
-            marker.on('click', () => flyToLocation(key));
-        });
+        // Clean satellite map view without default blue pin markers
 
         // Force Leaflet to recalculate container viewport dimensions and redraw tiles on mobile load & resize
         [100, 300, 600, 1200].forEach(delay => {
