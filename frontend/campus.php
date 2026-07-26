@@ -476,9 +476,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         });
 
         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+            attribution: '&copy; Esri Satellite',
             maxZoom: 19
         }).addTo(map);
+
+        // Force Leaflet to recalculate container viewport dimensions on mobile load & resize
+        setTimeout(() => { if (map) map.invalidateSize(); }, 200);
+        setTimeout(() => { if (map) map.invalidateSize(); }, 600);
+        window.addEventListener('resize', () => { if (map) map.invalidateSize(); });
 
         // Click listener to print coordinates in developer console for fine-tuning
         map.on('click', (e) => {
@@ -494,7 +499,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         if (flyTarget && locations[flyTarget]) {
             setTimeout(() => {
                 flyToLocation(flyTarget);
-            }, 1200);
+            }, 1000);
         }
     });
 
