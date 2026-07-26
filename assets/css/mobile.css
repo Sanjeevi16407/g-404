@@ -3,50 +3,12 @@
  * Dedicated Mobile Stylesheet - Compiled Responsive Layout (Desktop Protected)
  */
 
-/* ==========================================================================
-   1. Default Global Display Configurations (Hides mobile elements on desktop)
-   ========================================================================== */
-.mobile-top-header,
-.mobile-drawer,
-.mobile-backdrop,
-.mobile-bottom-nav,
-.campus-bottom-sheet,
-.mobile-only {
-    display: none;
-}
-
-/* ==========================================================================
-   2. Desktop Viewport Protection (min-width: 769px)
-   ========================================================================== */
-@media (min-width: 769px) {
-    .mobile-top-header,
-    .mobile-bottom-nav,
-    .mobile-drawer,
-    .mobile-backdrop,
-    .campus-bottom-sheet,
-    .mobile-only,
-    .mobile-sidebar-drawer,
-    .mobile-overlay {
-        display: none !important;
-    }
-    
-    #student-sidebar {
-        display: flex !important;
-    }
-    
-    .top-navbar {
-        display: flex !important;
-    }
-    
-    .main-content {
-        display: block !important;
-    }
-}
-
-/* ==========================================================================
-   3. Mobile Viewport Layout & Overrides (max-width: 768px)
-   ========================================================================== */
 @media (max-width: 768px) {
+    /* Define variables */
+    :root {
+        --mobile-bottom-nav-height: 72px;
+    }
+
     /* Global Reset & Viewport Constraints */
     html, body {
         width: 100vw !important;
@@ -55,6 +17,14 @@
         font-size: 16px !important;
         line-height: 1.6 !important;
         background: #080b16 !important;
+    }
+
+    /* Override parent inline display none wrappers */
+    .mobile-only {
+        display: block !important;
+    }
+    .mobile-only.day-content-panel {
+        display: flex !important;
     }
 
     /* Wrap all text naturally and prevent overflow */
@@ -82,7 +52,7 @@
     /* Scrollable Content Wrapper Padding */
     .main-content {
         margin-left: 0 !important;
-        padding: 80px 16px 104px 16px !important; /* 64px header + 16px pad (top) | 72px nav + 16px pad + 16px buffer (bottom) */
+        padding: 80px 16px calc(var(--mobile-bottom-nav-height) + 24px) 16px !important; /* 64px header + 16px pad (top) | nav height + 24px buffer (bottom) */
         width: 100% !important;
         max-width: 100vw !important;
         box-sizing: border-box !important;
@@ -104,7 +74,7 @@
         color: var(--text-primary) !important;
     }
 
-    /* 4. Top App Bar Styles (64px) */
+    /* Top App Bar Styles (64px) */
     .mobile-top-header {
         position: fixed !important;
         top: 0 !important;
@@ -156,7 +126,7 @@
         object-fit: cover !important;
     }
 
-    /* 5. Navigation Drawer Styles (78% Width) */
+    /* Navigation Drawer Styles (78% Width) */
     .mobile-drawer {
         position: fixed !important;
         top: 0 !important;
@@ -254,13 +224,13 @@
         pointer-events: auto !important;
     }
 
-    /* 6. Fixed Bottom Navigation Bar (72px) */
+    /* Fixed Bottom Navigation Bar (72px) */
     .mobile-bottom-nav {
         position: fixed !important;
         bottom: 0 !important;
         left: 0 !important;
         width: 100vw !important;
-        height: 72px !important;
+        height: var(--mobile-bottom-nav-height) !important;
         background: rgba(10, 15, 30, 0.95) !important;
         backdrop-filter: blur(20px) !important;
         -webkit-backdrop-filter: blur(20px) !important;
@@ -300,7 +270,7 @@
         color: var(--glow-primary) !important;
     }
 
-    /* 7. Universal Scoped Card Overrides (18px Radius) */
+    /* Universal Scoped Card Overrides (18px Radius) */
     .glass-panel, 
     .card, 
     .buddy-profile-card,
@@ -336,7 +306,7 @@
         line-height: 1.6 !important;
     }
 
-    /* 8. Forms & Buttons */
+    /* Forms & Buttons */
     input, select, textarea {
         width: 100% !important;
         height: 52px !important;
@@ -377,7 +347,7 @@
         border-radius: 16px !important;
     }
 
-    /* 9. Page Layout Collapses */
+    /* Page Layout Collapses */
 
     /* Dashboard: Stacks widgets to clean single column */
     .main-content > div[style*="grid-template-columns: 2fr 1fr"] {
@@ -481,7 +451,7 @@
         gap: 16px !important;
     }
 
-    /* 10. Page Specific Exception Components */
+    /* Page Specific Exception Components */
 
     /* buddy.php Chat Fullscreen Layout */
     .chat-hub-container {
@@ -635,7 +605,7 @@
         display: none !important; /* Hide map guide helper chatbot drawer */
     }
 
-    /* 11. Campus Selector Bottom Sheet style */
+    /* Campus Selector Bottom Sheet style */
     .campus-bottom-sheet {
         position: fixed !important;
         bottom: -100% !important;
@@ -702,14 +672,6 @@
         font-size: 0.8rem !important;
         color: var(--text-secondary) !important;
         margin-top: 2px !important;
-    }
-
-    /* 12. Helper classes visibility selector */
-    .mobile-only {
-        display: block !important;
-    }
-    .mobile-only.day-content-panel {
-        display: flex !important;
     }
 }
 

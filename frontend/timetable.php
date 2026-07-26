@@ -105,7 +105,7 @@ $period_times = [
     </div>
 
     <!-- Mobile Day Orders Tabs Selector (Mobile Only) -->
-    <div class="mobile-only" style="margin-bottom: 16px;">
+    <div class="mobile-only" style="display: none; margin-bottom: 16px;">
         <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; -ms-overflow-style: none;">
             <?php foreach ($weekdays as $index => $day): ?>
                 <button onclick="switchMobileDayOrder(<?php echo $index; ?>)" id="day-tab-<?php echo $index; ?>" class="day-tab-btn" style="flex-shrink: 0; padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; border: 1px solid rgba(255,255,255,0.08); background: <?php echo $index === 0 ? 'var(--glow-primary-alpha)' : 'rgba(255,255,255,0.02)'; ?>; color: <?php echo $index === 0 ? 'var(--text-primary)' : 'var(--text-secondary)'; ?>; border-color: <?php echo $index === 0 ? 'var(--glow-primary)' : 'rgba(255,255,255,0.08)'; ?>; box-shadow: <?php echo $index === 0 ? '0 0 10px var(--glow-primary-alpha)' : 'none'; ?>; cursor: pointer; transition: all 0.2s; min-height: auto !important;">
@@ -116,7 +116,7 @@ $period_times = [
     </div>
 
     <!-- Mobile Timetable Lists (Mobile Only) -->
-    <div class="mobile-only">
+    <div class="mobile-only" style="display: none;">
         <?php foreach ($weekdays as $index => $day): ?>
             <div id="day-content-<?php echo $index; ?>" class="day-content-panel" style="<?php echo $index === 0 ? 'display: flex;' : 'display: none;'; ?> flex-direction: column; gap: 12px;">
                 <?php for ($p = 1; $p <= 8; $p++): ?>

@@ -46,7 +46,7 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
     <!-- Core styles -->
     <link rel="stylesheet" href="../assets/css/style.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="../assets/themes/themes.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="../assets/css/mobile.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="../assets/css/mobile.css?v=<?php echo time(); ?>" media="screen and (max-width: 768px)">
     <!-- FontAwesome Vector Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Tailwind CSS Engine -->
@@ -417,74 +417,77 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
 </head>
 <body>
 
-    <!-- Mobile Top Header Bar -->
-    <header class="mobile-top-header">
-        <button class="mobile-icon-btn" onclick="toggleMobileDrawer()" title="Menu">
-            <i class="fa-solid fa-bars"></i>
-        </button>
-        <div class="mobile-top-title">Saranathan</div>
-        <a href="profile.php#notifications" class="mobile-icon-btn" title="Notifications">
-            <i class="fa-solid fa-bell"></i>
-            <?php if ($notif_count > 0): ?>
-                <span style="position: absolute; top: 4px; right: 4px; background: #ef4444; color: white; font-size: 0.65rem; font-weight: bold; border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 5px rgba(239, 68, 68, 0.5);"><?php echo $notif_count; ?></span>
-            <?php endif; ?>
-        </a>
-        <a href="profile.php" style="margin-left: 8px;">
-            <img src="../<?php echo !empty($student_settings['avatar_url']) ? sanitize_input($student_settings['avatar_url']) : 'assets/images/default-avatar.png'; ?>" alt="Avatar" class="mobile-badge-avatar">
-        </a>
-    </header>
+    <!-- Mobile Shell Wrapper -->
+    <div class="mobile-only" style="display: none;">
+        <!-- Mobile Top Header Bar -->
+        <header class="mobile-top-header">
+            <button class="mobile-icon-btn" onclick="toggleMobileDrawer()" title="Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="mobile-top-title">Saranathan</div>
+            <a href="profile.php#notifications" class="mobile-icon-btn" title="Notifications">
+                <i class="fa-solid fa-bell"></i>
+                <?php if ($notif_count > 0): ?>
+                    <span style="position: absolute; top: 4px; right: 4px; background: #ef4444; color: white; font-size: 0.65rem; font-weight: bold; border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 5px rgba(239, 68, 68, 0.5);"><?php echo $notif_count; ?></span>
+                <?php endif; ?>
+            </a>
+            <a href="profile.php" style="margin-left: 8px;">
+                <img src="../<?php echo !empty($student_settings['avatar_url']) ? sanitize_input($student_settings['avatar_url']) : 'assets/images/default-avatar.png'; ?>" alt="Avatar" class="mobile-badge-avatar">
+            </a>
+        </header>
 
-    <!-- Mobile Sidebar Backdrop -->
-    <div class="mobile-backdrop" id="mobile-drawer-backdrop"></div>
+        <!-- Mobile Sidebar Backdrop -->
+        <div class="mobile-backdrop" id="mobile-drawer-backdrop"></div>
 
-    <!-- Mobile Sidebar Drawer -->
-    <aside class="mobile-drawer" id="mobile-sidebar-drawer">
-        <div class="mobile-drawer-brand">
-            <img src="../<?php echo sanitize_input($college_logo); ?>" alt="College Logo" style="width: 36px; height: 36px; border-radius: 50%;">
-            <div style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700; color: var(--text-primary); line-height: 1.2;">
-                Saranathan
-                <span style="display: block; font-size: 0.7rem; font-weight: 500; color: var(--text-secondary); text-transform: uppercase;">Digital Senior</span>
+        <!-- Mobile Sidebar Drawer -->
+        <aside class="mobile-drawer" id="mobile-sidebar-drawer">
+            <div class="mobile-drawer-brand">
+                <img src="../<?php echo sanitize_input($college_logo); ?>" alt="College Logo" style="width: 36px; height: 36px; border-radius: 50%;">
+                <div style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700; color: var(--text-primary); line-height: 1.2;">
+                    Saranathan
+                    <span style="display: block; font-size: 0.7rem; font-weight: 500; color: var(--text-secondary); text-transform: uppercase;">Digital Senior</span>
+                </div>
             </div>
-        </div>
-        <nav class="mobile-drawer-list">
-            <a href="dashboard.php" class="mobile-drawer-link <?php echo $active_page === 'dashboard.php' ? 'active' : ''; ?>">
-                <i class="fa-solid fa-gauge-high"></i> Dashboard
-            </a>
-            <a href="buddy.php" class="mobile-drawer-link <?php echo $active_page === 'buddy.php' ? 'active' : ''; ?>">
-                <i class="fa-solid fa-brain"></i> Ask Buddy AI
-            </a>
-            <a href="orientation.php" class="mobile-drawer-link <?php echo $active_page === 'orientation.php' ? 'active' : ''; ?>">
-                <i class="fa-solid fa-graduation-cap"></i> Orientation
-            </a>
-            <a href="campus.php" class="mobile-drawer-link <?php echo $active_page === 'campus.php' ? 'active' : ''; ?>">
-                <i class="fa-solid fa-map-location-dot"></i> Campus Guide
-            </a>
-            <a href="faculty.php" class="mobile-drawer-link <?php echo $active_page === 'faculty.php' ? 'active' : ''; ?>">
-                <i class="fa-solid fa-user-tie"></i> Faculty
-            </a>
-            <a href="timetable.php" class="mobile-drawer-link <?php echo $active_page === 'timetable.php' ? 'active' : ''; ?>">
-                <i class="fa-solid fa-calendar-days"></i> Timetable
-            </a>
-            <a href="clubs.php" class="mobile-drawer-link <?php echo $active_page === 'clubs.php' ? 'active' : ''; ?>">
-                <i class="fa-solid fa-people-group"></i> Clubs Directory
-            </a>
-            <a href="events.php" class="mobile-drawer-link <?php echo $active_page === 'events.php' ? 'active' : ''; ?>">
-                <i class="fa-solid fa-calendar-check"></i> Campus Events
-            </a>
-            <a href="documents.php" class="mobile-drawer-link <?php echo $active_page === 'documents.php' ? 'active' : ''; ?>">
-                <i class="fa-solid fa-file-pdf"></i> Academic Documents
-            </a>
-            <a href="profile.php" class="mobile-drawer-link <?php echo $active_page === 'profile.php' ? 'active' : ''; ?>">
-                <i class="fa-solid fa-circle-user"></i> My Profile
-            </a>
-            <a href="settings.php" class="mobile-drawer-link <?php echo $active_page === 'settings.php' ? 'active' : ''; ?>">
-                <i class="fa-solid fa-sliders"></i> Settings
-            </a>
-            <a href="logout.php" class="mobile-drawer-link" style="color: #ef4444; margin-top: 16px;">
-                <i class="fa-solid fa-right-from-bracket"></i> Sign Out
-            </a>
-        </nav>
-    </aside>
+            <nav class="mobile-drawer-list">
+                <a href="dashboard.php" class="mobile-drawer-link <?php echo $active_page === 'dashboard.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-gauge-high"></i> Dashboard
+                </a>
+                <a href="buddy.php" class="mobile-drawer-link <?php echo $active_page === 'buddy.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-brain"></i> Ask Buddy AI
+                </a>
+                <a href="orientation.php" class="mobile-drawer-link <?php echo $active_page === 'orientation.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-graduation-cap"></i> Orientation
+                </a>
+                <a href="campus.php" class="mobile-drawer-link <?php echo $active_page === 'campus.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-map-location-dot"></i> Campus Guide
+                </a>
+                <a href="faculty.php" class="mobile-drawer-link <?php echo $active_page === 'faculty.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-user-tie"></i> Faculty
+                </a>
+                <a href="timetable.php" class="mobile-drawer-link <?php echo $active_page === 'timetable.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-calendar-days"></i> Timetable
+                </a>
+                <a href="clubs.php" class="mobile-drawer-link <?php echo $active_page === 'clubs.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-people-group"></i> Clubs Directory
+                </a>
+                <a href="events.php" class="mobile-drawer-link <?php echo $active_page === 'events.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-calendar-check"></i> Campus Events
+                </a>
+                <a href="documents.php" class="mobile-drawer-link <?php echo $active_page === 'documents.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-file-pdf"></i> Academic Documents
+                </a>
+                <a href="profile.php" class="mobile-drawer-link <?php echo $active_page === 'profile.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-circle-user"></i> My Profile
+                </a>
+                <a href="settings.php" class="mobile-drawer-link <?php echo $active_page === 'settings.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-sliders"></i> Settings
+                </a>
+                <a href="logout.php" class="mobile-drawer-link" style="color: #ef4444; margin-top: 16px;">
+                    <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+                </a>
+            </nav>
+        </aside>
+    </div>
 
     <!-- LineWaves Background Canvas -->
     <div id="linewaves-bg-container"></div>

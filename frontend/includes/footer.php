@@ -216,51 +216,54 @@
     </script>
     <?php endif; ?>
     <?php if ($active_page !== 'login.php' && $active_page !== 'welcome.php'): ?>
-    <!-- Mobile Pinned Bottom Navigation -->
-    <nav class="mobile-bottom-nav">
-        <a href="dashboard.php" class="mobile-bottom-item <?php echo $active_page === 'dashboard.php' ? 'active' : ''; ?>">
-            <i class="fa-solid fa-house"></i>
-            <span>Home</span>
-        </a>
-        <a href="buddy.php" class="mobile-bottom-item <?php echo $active_page === 'buddy.php' ? 'active' : ''; ?>">
-            <i class="fa-solid fa-brain"></i>
-            <span>Buddy</span>
-        </a>
-        <a href="javascript:void(0)" onclick="openCampusSelectorMobile()" class="mobile-bottom-item <?php echo ($active_page === 'campus.php' || $active_page === 'vision.php') ? 'active' : ''; ?>">
-            <i class="fa-solid fa-map-location-dot"></i>
-            <span>Campus</span>
-        </a>
-        <a href="documents.php" class="mobile-bottom-item <?php echo $active_page === 'documents.php' ? 'active' : ''; ?>">
-            <i class="fa-solid fa-file-pdf"></i>
-            <span>Docs</span>
-        </a>
-        <a href="profile.php" class="mobile-bottom-item <?php echo $active_page === 'profile.php' ? 'active' : ''; ?>">
-            <i class="fa-solid fa-circle-user"></i>
-            <span>Profile</span>
-        </a>
-    </nav>
-
-    <!-- Campus Guide Selector Bottom Sheet Backdrop -->
-    <div class="mobile-backdrop" id="campus-sheet-backdrop" style="z-index: 24000;"></div>
-
-    <!-- Campus Guide Selector Bottom Sheet -->
-    <div class="campus-bottom-sheet" id="campus-bottom-sheet">
-        <div class="campus-sheet-title">Explore Campus Guide</div>
-        <div class="campus-sheet-options">
-            <a href="campus.php" onclick="closeCampusSelectorMobile()" class="campus-sheet-card">
-                <i class="fa-solid fa-map-marked-alt"></i>
-                <div class="campus-sheet-card-info">
-                    <h4>🗺️ 3D Campus Map</h4>
-                    <p>Navigate the 3D block model database and search building layouts.</p>
-                </div>
+    <!-- Mobile Footer Shell Wrapper -->
+    <div class="mobile-only" style="display: none;">
+        <!-- Mobile Pinned Bottom Navigation -->
+        <nav class="mobile-bottom-nav">
+            <a href="dashboard.php" class="mobile-bottom-item <?php echo $active_page === 'dashboard.php' ? 'active' : ''; ?>">
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
             </a>
-            <a href="vision.php" onclick="closeCampusSelectorMobile()" class="campus-sheet-card">
-                <i class="fa-solid fa-compass"></i>
-                <div class="campus-sheet-card-info">
-                    <h4>📷 Live Campus Vision</h4>
-                    <p>Track real-time directions and cabin distances using GPS Compass.</p>
-                </div>
+            <a href="buddy.php" class="mobile-bottom-item <?php echo $active_page === 'buddy.php' ? 'active' : ''; ?>">
+                <i class="fa-solid fa-brain"></i>
+                <span>Buddy</span>
             </a>
+            <a href="javascript:void(0)" onclick="openCampusSelectorMobile()" class="mobile-bottom-item <?php echo ($active_page === 'campus.php' || $active_page === 'vision.php') ? 'active' : ''; ?>">
+                <i class="fa-solid fa-map-location-dot"></i>
+                <span>Campus</span>
+            </a>
+            <a href="documents.php" class="mobile-bottom-item <?php echo $active_page === 'documents.php' ? 'active' : ''; ?>">
+                <i class="fa-solid fa-file-pdf"></i>
+                <span>Docs</span>
+            </a>
+            <a href="profile.php" class="mobile-bottom-item <?php echo $active_page === 'profile.php' ? 'active' : ''; ?>">
+                <i class="fa-solid fa-circle-user"></i>
+                <span>Profile</span>
+            </a>
+        </nav>
+
+        <!-- Campus Guide Selector Bottom Sheet Backdrop -->
+        <div class="mobile-backdrop" id="campus-sheet-backdrop" style="z-index: 24000;"></div>
+
+        <!-- Campus Guide Selector Bottom Sheet -->
+        <div class="campus-bottom-sheet" id="campus-bottom-sheet">
+            <div class="campus-sheet-title">Explore Campus Guide</div>
+            <div class="campus-sheet-options">
+                <a href="campus.php" onclick="closeCampusSelectorMobile()" class="campus-sheet-card">
+                    <i class="fa-solid fa-map-marked-alt"></i>
+                    <div class="campus-sheet-card-info">
+                        <h4>🗺️ 3D Campus Map</h4>
+                        <p>Navigate the 3D block model database and search building layouts.</p>
+                    </div>
+                </a>
+                <a href="vision.php" onclick="closeCampusSelectorMobile()" class="campus-sheet-card">
+                    <i class="fa-solid fa-compass"></i>
+                    <div class="campus-sheet-card-info">
+                        <h4>📷 Live Campus Vision</h4>
+                        <p>Track real-time directions and cabin distances using GPS Compass.</p>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
 
