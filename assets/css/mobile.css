@@ -22,11 +22,10 @@
         display: flex !important;
     }
 
-    /* Wrap all text naturally and prevent overflow */
-    h1, h2, h3, h4, h5, h6, p, span, div, a, li, td, th, strong, button, label {
+    /* Scope word wrapping only to content texts to prevent breaking custom layout buttons/widgets */
+    h1, h2, h3, h4, h5, h6, p, .page-title, .glass-panel h3, .glass-card h4, .ar-chat-text {
         word-break: break-word !important;
         overflow-wrap: break-word !important;
-        white-space: normal !important;
     }
 
     /* Hide desktop frame items with high specificity to override inline style blocks */

@@ -15,31 +15,37 @@ $student = $db->prepare("
 ");
 $student->execute([$student_id]);
 $profile = $student->fetch();
-// Set Indian Time Zone
-date_default_timezone_set('Asia/Kolkata');
+
 // 2. Daily Buddy Card Greeting based on current time
 // Time: 05:00-11:59 (Morning), 12:00-16:59 (Afternoon), 17:00-21:59 (Evening), 22:00-04:59 (Night)
+$current_weekday = date('l');
 $hour = (int)date('G');
 $greeting_col = 'morning_message';
 $greeting_prefix = '☀️ Good Morning!';
 
-if ($hour >= 12 && $hour < 17) {
-    $greeting_col = 'afternoon_message';
-    $greeting_prefix = '☀️ Good Afternoon!';
-} elseif ($hour >= 17 && $hour < 22) {
-    $greeting_col = 'evening_message';
-    $greeting_prefix = '🌆 Good Evening!';
-} elseif ($hour >= 22 || $hour < 5) {
-    $greeting_col = 'night_message';
-    $greeting_prefix = '🌙 Good Night!';
-}
+if ($current_weekday === 'Saturday' || $current_weekday === 'Sunday') {
+    $greeting_prefix = '✨ Enjoy your Weekend!';
+    $greeting_message = 'Relax, recharge, and have a wonderful weekend, ' . $profile['name'] . '!';
+    $buddy_tip = 'Spend some time planning your upcoming week and getting well-rested!';
+} else {
+    if ($hour >= 12 && $hour < 17) {
+        $greeting_col = 'afternoon_message';
+        $greeting_prefix = '☀️ Good Afternoon!';
+    } elseif ($hour >= 17 && $hour < 22) {
+        $greeting_col = 'evening_message';
+        $greeting_prefix = '🌆 Good Evening!';
+    } elseif ($hour >= 22 || $hour < 5) {
+        $greeting_col = 'night_message';
+        $greeting_prefix = '🌙 Good Night!';
+    }
 
-// Fetch buddy greeting configurations
-$buddy = $db->query("SELECT buddy_name, daily_tips, $greeting_col FROM buddy_settings WHERE id = 1 LIMIT 1")->fetch();
-$buddy_name = $buddy['buddy_name'] ?? 'Buddy';
-$buddy_tip = $buddy['daily_tips'] ?? 'Check your classroom locations early!';
-$greeting_message = $buddy[$greeting_col] ?? "Hope you have an amazing day!";
-$greeting_message = str_replace('[Student Name]', $profile['name'], $greeting_message);
+    // Fetch buddy greeting configurations
+    $buddy = $db->query("SELECT buddy_name, daily_tips, $greeting_col FROM buddy_settings WHERE id = 1 LIMIT 1")->fetch();
+    $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
+    $buddy_tip = $buddy['daily_tips'] ?? 'Check your classroom locations early!';
+    $greeting_message = $buddy[$greeting_col] ?? "Hope you have an amazing day!";
+    $greeting_message = str_replace('[Student Name]', $profile['name'], $greeting_message);
+}
 
 // 3. Fetch today's Timetable slots
 $current_weekday = date('l');
