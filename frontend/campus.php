@@ -30,9 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
     <div style="font-size: 0.9rem; color: var(--text-secondary);">Interactive Satellite Map & Real-time Buddy AI Directions (No Keys Required)</div>
 </div>
 
-<!-- Load Leaflet CSS and JS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<!-- Load Leaflet CSS and JS (cdnjs for universal mobile & HTTP compatibility) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
 <style>
     .navigator-layout {
@@ -468,43 +468,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
     document.addEventListener('DOMContentLoaded', () => {
         renderDestinationsList();
 
-        // Base Tile Layers (No tokens required!)
-        const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        // Base Tile Layers (Universal Google & OpenStreetMap tiles - 100% reliable on mobile!)
+        const googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            attribution: '&copy; Google Maps Satellite',
+            maxZoom: 20
+        });
+
+        const googleRoadmap = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            attribution: '&copy; Google Maps 2D',
+            maxZoom: 20
+        });
+
+        const streetLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap',
             maxZoom: 19
         });
 
-        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: '&copy; Esri Satellite',
-            maxZoom: 19
-        });
-
-        const voyagerLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; CartoDB',
-            maxZoom: 19
-        });
-
-        // Initialize Map with 2D Street Map as default layer (guarantees 100% tile loading across all mobile carriers)
+        // Initialize Map with Google Hybrid Satellite as default layer
         map = L.map('map', {
             center: [10.7561, 78.6513],
             zoom: 17,
             zoomControl: true,
-            layers: [streetLayer]
+            layers: [googleHybrid]
         });
 
-        // Add Layer Control (Switch between 2D Street Map, Satellite View, and Voyager Map)
+        // Add Layer Control (Switch between Google Hybrid, Google 2D Map, and OpenStreetMap)
         const baseMaps = {
-            "🗺️ 2D Street Map": streetLayer,
-            "🛰️ Satellite View": satelliteLayer,
-            "🌐 Voyager Map": voyagerLayer
+            "🛰️ Satellite View": googleHybrid,
+            "🗺️ Google 2D Map": googleRoadmap,
+            "🌐 OpenStreetMap": streetLayer
         };
         L.control.layers(baseMaps).addTo(map);
+
+        // Add static building markers to map
+        Object.keys(locations).forEach(key => {
+            const loc = locations[key];
+            const marker = L.marker(loc.coords).addTo(map);
+            marker.bindPopup(`<b>${loc.name}</b><br>${loc.details}`);
+            marker.on('click', () => flyToLocation(key));
+        });
 
         // Force Leaflet to recalculate container viewport dimensions and redraw tiles on mobile load & resize
         [100, 300, 600, 1200].forEach(delay => {
             setTimeout(() => { if (map) map.invalidateSize(true); }, delay);
         });
-        window.addEventListener('resize', () => { if (map) map.invalidateSize(); });
+        window.addEventListener('resize', () => { if (map) map.invalidateSize(true); });
 
         // Click listener to print coordinates in developer console for fine-tuning
         map.on('click', (e) => {
