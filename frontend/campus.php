@@ -468,17 +468,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
     document.addEventListener('DOMContentLoaded', () => {
         renderDestinationsList();
 
-        // Initialize Free Leaflet Satellite Map (ArcGIS Esri Satellite Imagery - No tokens required!)
-        map = L.map('map', {
-            center: [10.7561, 78.6513],
-            zoom: 17.5,
-            zoomControl: true
-        });
-
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        // Base Tile Layers (No tokens required!)
+        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             attribution: '&copy; Esri Satellite',
             maxZoom: 19
-        }).addTo(map);
+        });
+
+        const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap',
+            maxZoom: 19
+        });
+
+        const voyagerLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; CartoDB',
+            maxZoom: 19
+        });
+
+        // Initialize Map with Integer Zoom Level (17) to prevent float tile URL 404/400 errors
+        map = L.map('map', {
+            center: [10.7561, 78.6513],
+            zoom: 17,
+            zoomControl: true,
+            layers: [satelliteLayer]
+        });
+
+        // Add Layer Control (Switch between Satellite, Street Map, and Voyager Map)
+        const baseMaps = {
+            "🛰️ Satellite View": satelliteLayer,
+            "🗺️ 2D Street Map": streetLayer,
+            "🌐 Voyager Map": voyagerLayer
+        };
+        L.control.layers(baseMaps).addTo(map);
 
         // Force Leaflet to recalculate container viewport dimensions on mobile load & resize
         setTimeout(() => { if (map) map.invalidateSize(); }, 200);
