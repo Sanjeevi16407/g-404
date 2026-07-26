@@ -281,11 +281,29 @@
         justify-content: center !important;
     }
 
-    img {
+    img:not(.leaflet-tile) {
         width: 100% !important;
         height: auto !important;
         object-fit: cover !important;
         border-radius: 16px !important;
+    }
+
+    /* Reset Leaflet map tile image properties on mobile */
+    .leaflet-container img,
+    .leaflet-container img.leaflet-tile,
+    .leaflet-tile-pane img,
+    img.leaflet-tile {
+        width: auto !important;
+        height: auto !important;
+        max-width: none !important;
+        max-height: none !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
+        object-fit: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        mix-blend-mode: normal !important;
+        filter: none !important;
     }
 
     /* Page Layout Collapses */
