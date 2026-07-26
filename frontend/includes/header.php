@@ -421,10 +421,7 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
     <div class="mobile-only" style="display: none;">
         <!-- Mobile Top Header Bar -->
         <header class="mobile-top-header">
-            <button class="mobile-icon-btn" onclick="toggleMobileDrawer()" title="Menu">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-            <div class="mobile-top-title">Saranathan</div>
+            <div class="mobile-top-title">Saranathan Digital Senior</div>
             <a href="profile.php#notifications" class="mobile-icon-btn" title="Notifications">
                 <i class="fa-solid fa-bell"></i>
                 <?php if ($notif_count > 0): ?>
@@ -436,57 +433,65 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
             </a>
         </header>
 
-        <!-- Mobile Sidebar Backdrop -->
-        <div class="mobile-backdrop" id="mobile-drawer-backdrop"></div>
+        <!-- Sticky Quick Access Toggle Bar -->
+        <div class="mobile-quick-access-bar" id="quick-access-toggle-bar" onclick="toggleQuickAccessGrid()">
+            <span><i class="fa-solid fa-bars"></i> Quick Access</span>
+            <i class="fa-solid fa-chevron-up" id="quick-access-chevron"></i>
+        </div>
 
-        <!-- Mobile Sidebar Drawer -->
-        <aside class="mobile-drawer" id="mobile-sidebar-drawer">
-            <div class="mobile-drawer-brand">
-                <img src="../<?php echo sanitize_input($college_logo); ?>" alt="College Logo" style="width: 36px; height: 36px; border-radius: 50%;">
-                <div style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700; color: var(--text-primary); line-height: 1.2;">
-                    Saranathan
-                    <span style="display: block; font-size: 0.7rem; font-weight: 500; color: var(--text-secondary); text-transform: uppercase;">Digital Senior</span>
-                </div>
+        <!-- Collapsible Quick Access Navigation Dropdown -->
+        <div class="mobile-quick-access-grid-container" id="quick-access-grid-container">
+            <div class="quick-nav-grid">
+                <a href="dashboard.php" class="quick-nav-item <?php echo $active_page === 'dashboard.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="buddy.php" class="quick-nav-item <?php echo $active_page === 'buddy.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-brain"></i>
+                    <span>Buddy AI</span>
+                </a>
+                <a href="orientation.php" class="quick-nav-item <?php echo $active_page === 'orientation.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>Orientation</span>
+                </a>
+                <a href="campus.php" class="quick-nav-item <?php echo $active_page === 'campus.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                    <span>Campus Guide</span>
+                </a>
+                <a href="faculty.php" class="quick-nav-item <?php echo $active_page === 'faculty.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-user-tie"></i>
+                    <span>Faculty</span>
+                </a>
+                <a href="timetable.php" class="quick-nav-item <?php echo $active_page === 'timetable.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span>Timetable</span>
+                </a>
+                <a href="clubs.php" class="quick-nav-item <?php echo $active_page === 'clubs.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-people-group"></i>
+                    <span>Clubs</span>
+                </a>
+                <a href="events.php" class="quick-nav-item <?php echo $active_page === 'events.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>Events</span>
+                </a>
+                <a href="documents.php" class="quick-nav-item <?php echo $active_page === 'documents.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    <span>Documents</span>
+                </a>
+                <a href="profile.php" class="quick-nav-item <?php echo $active_page === 'profile.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="settings.php" class="quick-nav-item <?php echo $active_page === 'settings.php' ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="logout.php" class="quick-nav-item logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Sign Out</span>
+                </a>
             </div>
-            <nav class="mobile-drawer-list">
-                <a href="dashboard.php" class="mobile-drawer-link <?php echo $active_page === 'dashboard.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-gauge-high"></i> Dashboard
-                </a>
-                <a href="buddy.php" class="mobile-drawer-link <?php echo $active_page === 'buddy.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-brain"></i> Ask Buddy AI
-                </a>
-                <a href="orientation.php" class="mobile-drawer-link <?php echo $active_page === 'orientation.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-graduation-cap"></i> Orientation
-                </a>
-                <a href="campus.php" class="mobile-drawer-link <?php echo $active_page === 'campus.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-map-location-dot"></i> Campus Guide
-                </a>
-                <a href="faculty.php" class="mobile-drawer-link <?php echo $active_page === 'faculty.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-user-tie"></i> Faculty
-                </a>
-                <a href="timetable.php" class="mobile-drawer-link <?php echo $active_page === 'timetable.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-calendar-days"></i> Timetable
-                </a>
-                <a href="clubs.php" class="mobile-drawer-link <?php echo $active_page === 'clubs.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-people-group"></i> Clubs Directory
-                </a>
-                <a href="events.php" class="mobile-drawer-link <?php echo $active_page === 'events.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-calendar-check"></i> Campus Events
-                </a>
-                <a href="documents.php" class="mobile-drawer-link <?php echo $active_page === 'documents.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-file-pdf"></i> Academic Documents
-                </a>
-                <a href="profile.php" class="mobile-drawer-link <?php echo $active_page === 'profile.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-circle-user"></i> My Profile
-                </a>
-                <a href="settings.php" class="mobile-drawer-link <?php echo $active_page === 'settings.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-sliders"></i> Settings
-                </a>
-                <a href="logout.php" class="mobile-drawer-link" style="color: #ef4444; margin-top: 16px;">
-                    <i class="fa-solid fa-right-from-bracket"></i> Sign Out
-                </a>
-            </nav>
-        </aside>
+        </div>
     </div>
 
     <!-- LineWaves Background Canvas -->

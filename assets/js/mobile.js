@@ -3,61 +3,48 @@
  * Dedicated Mobile Javascript Handler
  */
 
-function toggleMobileDrawer() {
-    if (window.innerWidth > 768) return;
-    const drawer = document.getElementById('mobile-sidebar-drawer');
-    const backdrop = document.getElementById('mobile-drawer-backdrop');
-    if (drawer && backdrop) {
-        drawer.classList.toggle('active');
-        backdrop.classList.toggle('active');
-    }
-}
+if (window.innerWidth > 768) {
+    // Exit immediately on desktop
+} else {
+    let userToggled = false;
 
-function openCampusSelectorMobile() {
-    if (window.innerWidth > 768) return;
-    const sheet = document.getElementById('campus-bottom-sheet');
-    const backdrop = document.getElementById('campus-sheet-backdrop');
-    if (sheet && backdrop) {
-        sheet.classList.add('active');
-        backdrop.classList.add('active');
-    }
-}
+    window.addEventListener('scroll', () => {
+        const grid = document.getElementById('quick-access-grid-container');
+        const chevron = document.getElementById('quick-access-chevron');
+        if (!grid) return;
 
-function closeCampusSelectorMobile() {
-    if (window.innerWidth > 768) return;
-    const sheet = document.getElementById('campus-bottom-sheet');
-    const backdrop = document.getElementById('campus-sheet-backdrop');
-    if (sheet && backdrop) {
-        sheet.classList.remove('active');
-        backdrop.classList.remove('active');
-    }
-}
+        const currentScroll = window.scrollY;
 
-document.addEventListener('DOMContentLoaded', function() {
-    if (window.innerWidth > 768) {
-        return;
-    }
-
-    // 1. Close mobile drawer on backdrop click
-    const drawerBackdrop = document.getElementById('mobile-drawer-backdrop');
-    if (drawerBackdrop) {
-        drawerBackdrop.addEventListener('click', toggleMobileDrawer);
-    }
-
-    // 2. Close campus selector sheet on backdrop click
-    const campusBackdrop = document.getElementById('campus-sheet-backdrop');
-    if (campusBackdrop) {
-        campusBackdrop.addEventListener('click', closeCampusSelectorMobile);
-    }
-
-    // 3. Close drawer on links click
-    const drawerLinks = document.querySelectorAll('.mobile-drawer-link');
-    drawerLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            const drawer = document.getElementById('mobile-sidebar-drawer');
-            if (drawer && drawer.classList.contains('active')) {
-                toggleMobileDrawer();
+        // Auto collapse on scroll down
+        if (currentScroll > 40 && !grid.classList.contains('collapsed') && !userToggled) {
+            grid.classList.add('collapsed');
+            if (chevron) {
+                chevron.className = 'fa-solid fa-chevron-down';
             }
-        });
+        } 
+        // Auto expand when scrolling back to the very top
+        else if (currentScroll <= 10 && grid.classList.contains('collapsed') && !userToggled) {
+            grid.classList.remove('collapsed');
+            if (chevron) {
+                chevron.className = 'fa-solid fa-chevron-up';
+            }
+        }
     });
-});
+
+    window.toggleQuickAccessGrid = function() {
+        const grid = document.getElementById('quick-access-grid-container');
+        const chevron = document.getElementById('quick-access-chevron');
+        if (!grid) return;
+
+        userToggled = true;
+        const isCollapsed = grid.classList.toggle('collapsed');
+        if (chevron) {
+            chevron.className = isCollapsed ? 'fa-solid fa-chevron-down' : 'fa-solid fa-chevron-up';
+        }
+
+        // Reset toggle flag after transition finishes
+        setTimeout(() => {
+            userToggled = false;
+        }, 500);
+    };
+}
