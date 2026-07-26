@@ -355,7 +355,7 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
                     
                     <div class="flex gap-2">
                         <button class="btn-ar btn-ar-stop" onclick="stopARVision()"><i class="fa-solid fa-circle-stop"></i> Close</button>
-                        <button class="btn-ar btn-ar-nav" id="navigate-btn" style="display: none;" onclick="navigateToSelection()"><i class="fa-solid fa-location-arrow"></i> 3D Map</button>
+                        <button class="btn-ar btn-ar-nav" id="navigate-btn" onclick="navigateToSelection()"><i class="fa-solid fa-map-location-dot"></i> Campus Map</button>
                     </div>
                 </div>
             </div>
@@ -488,11 +488,10 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
             return;
         }
 
-        // Show/hide 3D Map navigation button based on whether a target is active
-        if (currentNavTarget && locations[currentNavTarget]) {
-            document.getElementById('navigate-btn').style.display = 'inline-flex';
-        } else {
-            document.getElementById('navigate-btn').style.display = 'none';
+        // Ensure Campus Map navigation button stays visible
+        const navBtn = document.getElementById('navigate-btn');
+        if (navBtn) {
+            navBtn.style.display = 'inline-flex';
         }
 
         const fovHorizontal = 80; // Field of View angle threshold in degrees
@@ -697,10 +696,12 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
         window.location.href = 'buddy.php';
     }
 
-    // Jump to Leaflet 3D Sat navigator focus page
+    // Jump to 2D/Satellite interactive Campus Map page
     function navigateToSelection() {
         if (currentNavTarget) {
             window.location.href = `campus.php?fly=${currentNavTarget}`;
+        } else {
+            window.location.href = `campus.php`;
         }
     }
 
