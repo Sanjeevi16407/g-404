@@ -99,6 +99,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         justify-content: center;
     }
 
+    .building-map-badge {
+        background: rgba(10, 15, 30, 0.88);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(0, 242, 254, 0.5);
+        color: #ffffff;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 10px;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .building-map-badge i {
+        color: #00f2fe;
+        font-size: 0.75rem;
+    }
+    .building-map-badge:hover, .building-map-badge:active {
+        transform: scale(1.08);
+        border-color: #00f2fe;
+        box-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
+    }
+
     /* Custom Mapbox Info card overlay */
     .map-info-card {
         position: absolute;
@@ -274,8 +301,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
     </div>
 
     <!-- Map Viewport Area -->
-    <div id="map-container" style="position: relative; width: 100%; height: 100%;">
-        <div id="map"></div>
+    <div id="map-container" style="position: relative; width: 100%; height: 100%; min-height: 420px;">
+        <div id="map" style="width: 100%; height: 100%; min-height: 420px; border-radius: 16px;"></div>
 
         <!-- Glowing Information Card overlay -->
         <div class="map-info-card" id="location-info-card">
@@ -521,7 +548,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         };
         reloadControl.addTo(map);
 
-        // Clean satellite map view without default blue pin markers
+        // Render custom glass building badges on map for clean, modern mobile & desktop view
+        Object.keys(locations).forEach(key => {
+            const loc = locations[key];
+            const shortName = loc.name.split(' (')[0];
+            const badgeIcon = L.divIcon({
+                html: `<div class="building-map-badge"><i class="${loc.icon}"></i> ${shortName}</div>`,
+                className: 'custom-div-icon',
+                iconSize: [100, 26],
+                iconAnchor: [50, 13]
+            });
+            const marker = L.marker(loc.coords, { icon: badgeIcon }).addTo(map);
+            marker.on('click', () => flyToLocation(key));
+        });
 
         // Force Leaflet to recalculate container viewport dimensions and redraw tiles on mobile load & resize
         [100, 300, 600, 1200].forEach(delay => {

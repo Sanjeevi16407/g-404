@@ -497,7 +497,7 @@
         display: block !important;
     }
 
-    #map {
+    #map, .leaflet-container {
         width: 100% !important;
         height: 100% !important;
         min-height: 420px !important;
