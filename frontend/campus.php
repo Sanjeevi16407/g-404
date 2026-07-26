@@ -471,37 +471,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         renderDestinationsList();
 
         // Base Tile Layers (CartoDB Voyager, OpenStreetMap, & Google Satellite)
-        const voyagerLayer = L.tileLayer('https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; CartoDB &copy; OpenStreetMap',
-            maxZoom: 19,
-            subdomains: 'abcd'
-        });
+        // Official OpenStreetMap Test Layer (Google Hybrid, Google Satellite, CartoDB, Voyager disabled)
+        const testLayer = L.tileLayer(
+            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap contributors',
+                crossOrigin: true
+            }
+        );
 
-        const osmLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap',
-            maxZoom: 19
-        });
-
-        const googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-            attribution: '&copy; Google Maps',
-            maxZoom: 20
-        });
-
-        // Initialize Map with Voyager 2D map as ultra-fast, fail-proof default layer
         map = L.map('map', {
             center: [10.7561, 78.6513],
             zoom: 17,
             zoomControl: true,
-            layers: [voyagerLayer]
+            layers: [testLayer]
         });
-
-        // Add Layer Control (Switch between 2D Voyager Map, Satellite View, and OpenStreetMap)
-        const baseMaps = {
-            "🌐 2D Voyager Map": voyagerLayer,
-            "🛰️ Satellite View": googleHybrid,
-            "🗺️ OpenStreetMap": osmLayer
-        };
-        L.control.layers(baseMaps).addTo(map);
 
         // Add Floating "Reload Map" Button Control for instant mobile tile refresh
         const reloadControl = L.control({ position: 'topright' });
