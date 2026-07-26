@@ -470,22 +470,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
     document.addEventListener('DOMContentLoaded', () => {
         renderDestinationsList();
 
-        // Base Tile Layers (CartoDB Voyager, OpenStreetMap, & Google Satellite)
-        // Official OpenStreetMap Test Layer (Google Hybrid, Google Satellite, CartoDB, Voyager disabled)
-        const testLayer = L.tileLayer(
-            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            {
-                maxZoom: 19,
-                attribution: '&copy; OpenStreetMap contributors',
-                crossOrigin: true
-            }
-        );
+        // 1. Primary Default Layer: CartoDB Voyager 2D Map (Ultra-fast, 100% reliable)
+        const voyagerLayer = L.tileLayer('https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; CartoDB &copy; OpenStreetMap',
+            maxZoom: 19,
+            subdomains: 'abcd'
+        });
 
+        // 2. OpenStreetMap Layer
+        const osmLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors',
+            maxZoom: 19
+        });
+
+        // 3. Experimental Google Satellite Layer with mt0–mt3 Subdomain Rotator
+        const googleSatellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+            attribution: '&copy; Google Maps',
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        });
+
+        // Initialize Map with CartoDB Voyager 2D as primary default layer
         map = L.map('map', {
             center: [10.7561, 78.6513],
             zoom: 17,
             zoomControl: true,
-            layers: [testLayer]
+            layers: [voyagerLayer]
+        });
+
+        // Add Layer Switcher Control
+        const baseMaps = {
+            "🌐 Standard Map": voyagerLayer,
+            "🗺️ OpenStreetMap": osmLayer,
+            "🛰️ Satellite View (Experimental)": googleSatellite
+        };
+        L.control.layers(baseMaps).addTo(map);
+
+        // Fallback Toast Notification Helper
+        function showSatelliteFallbackToast() {
+            let toast = document.getElementById('satellite-fallback-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'satellite-fallback-toast';
+                toast.style.cssText = 'position: absolute; top: 14px; left: 50%; transform: translateX(-50%); z-index: 9999; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4); padding: 8px 16px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.5); pointer-events: none; text-align: center; width: max-content; max-width: 90vw; transition: opacity 0.4s ease;';
+                toast.innerHTML = '⚠️ Satellite view is unavailable on this device. Switched to standard map.';
+                const mapContainer = document.getElementById('map-container');
+                if (mapContainer) mapContainer.appendChild(toast);
+            }
+            toast.style.opacity = '1';
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => { toast.style.display = 'none'; }, 400);
+            }, 4500);
+        }
+
+        // Automatic Mobile Fallback Handler if Google Satellite tiles fail to load
+        let tileErrorCount = 0;
+        googleSatellite.on('tileerror', function() {
+            tileErrorCount++;
+            if (tileErrorCount >= 2 && map.hasLayer(googleSatellite)) {
+                map.removeLayer(googleSatellite);
+                if (!map.hasLayer(voyagerLayer)) {
+                    map.addLayer(voyagerLayer);
+                }
+                showSatelliteFallbackToast();
+                tileErrorCount = 0;
+            }
+        });
+
+        // Reset error counter when user manually switches layers
+        map.on('baselayerchange', function() {
+            tileErrorCount = 0;
         });
 
         // Add Floating "Reload Map" Button Control for instant mobile tile refresh
