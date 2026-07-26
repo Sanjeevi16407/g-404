@@ -102,7 +102,12 @@ $active_tab = sanitize_input($_GET['tab'] ?? 'upcoming');
                     $is_registered = in_array($ev['id'], $registered_event_ids);
                 ?>
                     <div class="glass-card" style="display: flex; flex-direction: row; gap: 24px; padding: 24px; align-items: center; flex-wrap: wrap;">
-                        <img src="../<?php echo sanitize_input($ev['image_url']); ?>" alt="Event Poster" style="width: 180px; height: 120px; border-radius: 12px; object-fit: cover; border: 1px solid var(--border-glass); flex-shrink: 0;">
+                        <div style="position: relative; cursor: pointer; flex-shrink: 0;" onclick='openGlobalImageLightbox("../<?php echo sanitize_input($ev['image_url']); ?>", "<?php echo addslashes(sanitize_input($ev['title'])); ?>")' title="Click to view full event poster">
+                            <img src="../<?php echo sanitize_input($ev['image_url']); ?>" alt="Event Poster" style="width: 180px; height: 120px; border-radius: 12px; object-fit: cover; border: 1px solid var(--border-glass); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                            <div style="position: absolute; bottom: 8px; right: 8px; background: rgba(10, 15, 30, 0.75); color: #00f2fe; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; border: 1px solid rgba(255,255,255,0.2);">
+                                <i class="fa-solid fa-expand"></i>
+                            </div>
+                        </div>
                         
                         <div style="flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 6px;">
                             <h4 style="font-weight: 700; color: var(--text-primary); font-size: 1.25rem;"><?php echo sanitize_input($ev['title']); ?></h4>

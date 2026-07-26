@@ -74,7 +74,7 @@ $registered_club_ids = $reg_stmt->fetchAll(PDO::FETCH_COLUMN);
                 <div class="glass-card" style="padding: 24px; display: flex; flex-direction: column; gap: 16px; position: relative;">
                     
                     <div style="display: flex; align-items: center; gap: 16px;">
-                        <img src="../<?php echo sanitize_input($club['logo_url']); ?>" alt="Club Logo" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-glass);">
+                        <img src="../<?php echo sanitize_input($club['logo_url']); ?>" alt="Club Logo" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-glass); cursor: pointer; transition: transform 0.2s;" onclick='openGlobalImageLightbox("../<?php echo sanitize_input($club['logo_url']); ?>", "<?php echo addslashes(sanitize_input($club['name'])); ?>")' title="Click to view full image" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
                         <div>
                             <h4 style="font-weight: 700; color: var(--text-primary); font-size: 1.05rem;"><?php echo sanitize_input($club['name']); ?></h4>
                             <span style="font-size: 0.75rem; color: var(--text-secondary);">Mentor: <?php echo sanitize_input($club['faculty_coordinator']); ?></span>

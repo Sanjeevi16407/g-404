@@ -58,10 +58,14 @@ $documents = $db->query("
                     </div>
 
                     <div style="margin-top: 20px; border-top: 1px solid var(--border-light); padding-top: 16px; display: flex; justify-content: space-between; align-items: center; gap: 8px;">
-                        <a href="../<?php echo $doc['file_path']; ?>" target="_blank" class="btn-glass btn-secondary" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; padding: 8px 14px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <?php 
+                            $rel_path = ltrim($doc['file_path'], '/');
+                            $view_url = (strpos($rel_path, 'http') === 0) ? $rel_path : '../' . $rel_path;
+                        ?>
+                        <a href="<?php echo $view_url; ?>" target="_blank" class="btn-glass btn-secondary" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; padding: 8px 14px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; border: 1px solid rgba(255, 255, 255, 0.1);">
                             <i class="fa-solid fa-eye"></i> View PDF
                         </a>
-                        <a href="../<?php echo $doc['file_path']; ?>" download="<?php echo sanitize_input($doc['title']); ?>.pdf" class="btn-glass btn-primary" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; padding: 8px 14px; border-radius: 8px; font-size: 0.75rem; font-weight: 600;">
+                        <a href="download_doc.php?id=<?php echo (int)$doc['id']; ?>" class="btn-glass btn-primary" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; padding: 8px 14px; border-radius: 8px; font-size: 0.75rem; font-weight: 600;">
                             <i class="fa-solid fa-download"></i> Download
                         </a>
                     </div>

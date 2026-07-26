@@ -216,6 +216,35 @@
         });
     </script>
     <?php endif; ?>
+
+    <!-- Global Image Lightbox Modal for Events, Announcements & Posters -->
+    <div id="global-image-lightbox" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 99999; display: none; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;" onclick="closeGlobalImageLightbox()">
+        <div style="position: relative; max-width: 90vw; max-height: 90vh; display: flex; flex-direction: column; align-items: center;" onclick="event.stopPropagation()">
+            <button type="button" onclick="closeGlobalImageLightbox()" style="position: absolute; top: -45px; right: -10px; background: rgba(255, 255, 255, 0.2); border: none; color: #fff; border-radius: 50%; width: 36px; height: 36px; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <img id="lightbox-image-src" src="" alt="Full Preview" style="max-width: 100%; max-height: 80vh; border-radius: 16px; border: 1px solid rgba(255,255,255,0.2); object-fit: contain; box-shadow: 0 20px 50px rgba(0,0,0,0.8);">
+            <div id="lightbox-image-title" style="margin-top: 14px; font-size: 0.95rem; font-weight: 700; color: #ffffff; text-align: center; background: rgba(10, 15, 30, 0.8); padding: 8px 18px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);"></div>
+        </div>
+    </div>
+
+    <script>
+    function openGlobalImageLightbox(src, title) {
+        if (!src) return;
+        const lightbox = document.getElementById('global-image-lightbox');
+        const img = document.getElementById('lightbox-image-src');
+        const caption = document.getElementById('lightbox-image-title');
+        img.src = src;
+        caption.innerText = title || 'Image Preview';
+        lightbox.style.display = 'flex';
+    }
+
+    function closeGlobalImageLightbox() {
+        const lightbox = document.getElementById('global-image-lightbox');
+        if (lightbox) lightbox.style.display = 'none';
+    }
+    </script>
+
     <?php if ($active_page !== 'login.php' && $active_page !== 'welcome.php'): ?>
     <!-- Mobile-only Script Loader -->
     <script src="../assets/js/mobile.js?v=<?php echo time(); ?>" defer></script>
