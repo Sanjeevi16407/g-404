@@ -421,7 +421,10 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
     <div class="mobile-only" style="display: none;">
         <!-- Mobile Top Header Bar -->
         <header class="mobile-top-header">
-            <div class="mobile-top-title">Saranathan Digital Senior</div>
+            <div class="mobile-top-title" onclick="toggleQuickAccessGrid()" style="cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                Saranathan Digital Senior 
+                <i class="fa-solid fa-chevron-up" id="quick-access-chevron" style="font-size: 0.8rem; color: var(--glow-primary); transition: transform 0.25s;"></i>
+            </div>
             <a href="profile.php#notifications" class="mobile-icon-btn" title="Notifications">
                 <i class="fa-solid fa-bell"></i>
                 <?php if ($notif_count > 0): ?>
@@ -432,11 +435,6 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
                 <img src="../<?php echo !empty($student_settings['avatar_url']) ? sanitize_input($student_settings['avatar_url']) : 'assets/images/default-avatar.png'; ?>" alt="Avatar" class="mobile-badge-avatar">
             </a>
         </header>
-
-        <!-- Sticky Quick Access Toggle Bar -->
-        <div class="mobile-quick-access-bar" id="quick-access-toggle-bar" onclick="toggleQuickAccessGrid()">
-            <span>Quick Access <i class="fa-solid fa-chevron-up" id="quick-access-chevron"></i></span>
-        </div>
 
         <!-- Collapsible Quick Access Navigation Dropdown -->
         <div class="mobile-quick-access-grid-container" id="quick-access-grid-container">
