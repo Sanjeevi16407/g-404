@@ -1,0 +1,577 @@
+/**
+ * Saranathan Digital Senior (Buddy)
+ * Dedicated Mobile Stylesheet (max-width: 768px only)
+ */
+
+/* 1. Global Reset & Spacing Overrides */
+html, body {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    font-size: 16px !important; /* Base font size increase */
+}
+
+.app-layout {
+    display: block !important; /* Disable flex sidebar layout */
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+}
+
+/* Hide desktop frame items */
+.sidebar, 
+.top-navbar, 
+.buddy-ambient-container, 
+#buddy-ambient-widget {
+    display: none !important;
+}
+
+/* Main Content Wrapper Adjustments */
+.main-content {
+    margin-left: 0 !important;
+    padding: 80px 16px 88px 16px !important; /* Top app bar + Bottom navigation bar breathing padding */
+    width: 100% !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+}
+
+/* Page Header Alignment */
+.page-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    margin-bottom: 0 !important;
+}
+.page-title {
+    font-size: 1.35rem !important; /* 22px heading */
+    font-weight: 800 !important;
+    color: var(--text-primary) !important;
+}
+
+/* 2. Top App Bar Layout */
+.mobile-top-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 64px;
+    background: rgba(10, 15, 30, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 20000;
+    box-sizing: border-box;
+}
+
+.mobile-top-title {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    flex: 1;
+    margin-left: 12px;
+}
+
+.mobile-icon-btn {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    position: relative;
+}
+.mobile-icon-btn:active {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.mobile-badge-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    object-fit: cover;
+}
+
+/* 3. Navigation Drawer Layout */
+.mobile-drawer {
+    position: fixed;
+    top: 0;
+    left: -85%;
+    width: 80%;
+    height: 100vh;
+    background: rgba(10, 15, 30, 0.96);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 25000;
+    transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.mobile-drawer.active {
+    left: 0;
+}
+
+.mobile-drawer-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding-left: 8px;
+}
+
+.mobile-drawer-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mobile-drawer-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    min-height: 48px; /* Touch target */
+    box-sizing: border-box;
+    transition: background 0.2s;
+}
+
+.mobile-drawer-link:active,
+.mobile-drawer-link.active {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.mobile-drawer-link.active {
+    border-left: 3px solid var(--glow-primary);
+    background: var(--glow-primary-alpha);
+}
+
+.mobile-drawer-link.active i {
+    color: var(--glow-primary);
+}
+
+/* Backdrop for Drawer & Sheets */
+.mobile-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 24000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* 4. Bottom Navigation Bar */
+.mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 72px;
+    background: rgba(10, 15, 30, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 8px 12px 8px; /* Bottom inset breathing room for mobile handles */
+    z-index: 20000;
+    box-sizing: border-box;
+}
+
+.mobile-bottom-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.72rem;
+    font-weight: 500;
+    flex: 1;
+    height: 56px;
+    border-radius: 12px;
+    gap: 4px;
+    transition: color 0.2s;
+}
+
+.mobile-bottom-item i {
+    font-size: 1.25rem;
+    height: 24px;
+    display: flex;
+    align-items: center;
+}
+
+.mobile-bottom-item.active {
+    color: var(--glow-primary);
+}
+
+/* 5. Universal Mobile Card Override */
+.glass-panel, 
+.card, 
+.buddy-profile-card,
+.activity-card,
+.glass-card,
+.document-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px !important;
+    margin: 0 0 16px 0 !important;
+    border-radius: 18px !important; /* MD3 radius */
+    box-sizing: border-box !important;
+    background: rgba(13, 18, 35, 0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* 6. Form & Buttons Accessibility targets */
+input, select, textarea, button, .btn-glass, .badge-pill {
+    min-height: 48px !important; /* Touch target */
+    font-size: 1rem !important;
+    box-sizing: border-box !important;
+}
+
+.btn-glass {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important; /* Full width mobile buttons */
+    border-radius: 12px !important;
+    padding: 12px 20px !important;
+}
+
+/* 7. Page Specific Layout Overrides (Non-Disruptive) */
+
+/* Dashboard Layout */
+.main-content > div[style*="grid-template-columns: 2fr 1fr"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+}
+
+.main-content > div[style*="grid-template-columns: 2fr 1fr"] > div {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    width: 100% !important;
+}
+
+/* Greeting tip & quote horizontal split */
+.glass-panel div[style*="grid-template-columns: 1fr 1fr"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+}
+
+/* Dashboard Today's Schedule period slots */
+.glass-panel div[style*="grid-template-columns: repeat"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+}
+
+/* Faculty layout */
+.faculty-grid, 
+div[style*="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr))"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+}
+.faculty-card {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 12px !important;
+}
+.faculty-avatar {
+    width: 80px !important;
+    height: 80px !important;
+    margin-bottom: 4px !important;
+}
+
+/* Documents Directory Grid & Button Stack */
+#documents-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+}
+.document-card div[style*="display: flex; justify-content: space-between"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+}
+.document-card .btn-glass {
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+/* Profile and Settings Layouts */
+.profile-layout, 
+.settings-grid,
+.main-content > div[style*="grid-template-columns: 1fr 2fr"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+}
+.main-content > div[style*="grid-template-columns: 1fr 2fr"] > div {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+}
+
+/* 8. Campus Guide Selector Bottom Sheet */
+.campus-bottom-sheet {
+    position: fixed;
+    bottom: -100%;
+    left: 0;
+    width: 100vw;
+    background: rgba(10, 15, 30, 0.98);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    z-index: 25000;
+    transition: bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 24px 16px 36px 16px;
+    box-sizing: border-box;
+}
+
+.campus-bottom-sheet.active {
+    bottom: 0;
+}
+
+.campus-sheet-title {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.campus-sheet-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.campus-sheet-card {
+    padding: 16px 20px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+    color: inherit;
+}
+
+.campus-sheet-card:active {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.campus-sheet-card i {
+    font-size: 1.4rem;
+    color: var(--glow-primary);
+}
+
+.campus-sheet-card-info h4 {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+.campus-sheet-card-info p {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+/* 9. Page-Specific Markup Layout Overrides */
+
+/* buddy.php Chat Fullscreen Layout */
+.chat-hub-container {
+    display: block !important;
+    width: 100% !important;
+}
+.widgets-column {
+    display: none !important; /* Hide model/profile widgets on mobile */
+}
+.chat-hub-workspace {
+    width: 100% !important;
+    border-radius: 18px !important;
+    min-height: calc(100vh - 180px) !important;
+}
+
+/* campus.php Navigator Overrides */
+.navigator-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    height: auto !important;
+    min-height: auto !important;
+}
+
+/* Make destinations sidebar behave as contents list */
+.navigator-layout > .glass-panel {
+    display: contents !important;
+}
+
+/* Hide non-essential sidebar headings/navigation buttons */
+.navigator-layout > .glass-panel > h3,
+.navigator-layout > .glass-panel > a,
+.navigator-layout > .glass-panel > form {
+    display: none !important;
+}
+
+#search-destinations {
+    order: 1 !important;
+    width: 100% !important;
+    margin-bottom: 12px !important;
+    display: block !important;
+}
+
+.navigator-layout > div:nth-child(2) {
+    order: 2 !important;
+    width: 100% !important;
+    height: 300px !important;
+    border-radius: 18px !important;
+    margin-bottom: 12px !important;
+    position: relative !important;
+}
+
+#map {
+    height: 100% !important;
+    border-radius: 18px !important;
+}
+
+#destinations-list {
+    order: 3 !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    max-height: none !important;
+    overflow-y: visible !important;
+}
+
+.location-item {
+    width: 100% !important;
+    padding: 16px !important;
+    border-radius: 18px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+}
+
+/* Leaflet Info Card Overlay becomes a Bottom Sheet */
+.map-info-card {
+    position: fixed !important;
+    bottom: -100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    width: 100vw !important;
+    border-top-left-radius: 24px !important;
+    border-top-right-radius: 24px !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    z-index: 25000 !important;
+    background: rgba(10, 15, 30, 0.98) !important;
+    backdrop-filter: blur(25px) !important;
+    -webkit-backdrop-filter: blur(25px) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: none !important;
+    margin: 0 !important;
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.4) !important;
+    transition: bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    display: block !important;
+}
+
+.map-info-card.active {
+    bottom: 0 !important;
+}
+
+.buddy-nav-drawer {
+    display: none !important; /* Hide floating chat drawer on map guide */
+}
+
+/* 10. helper elements display selectors */
+.mobile-only {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .desktop-only {
+        display: none !important;
+    }
+    .mobile-only {
+        display: block !important;
+    }
+    .mobile-only.day-content-panel {
+        display: flex !important;
+    }
+}
+
+/* Light Theme Compatibility Overrides */
+html[data-theme="Light"] .mobile-top-header {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+html[data-theme="Light"] .mobile-bottom-nav {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+html[data-theme="Light"] .mobile-drawer {
+    background: rgba(255, 255, 255, 0.98);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+html[data-theme="Light"] .campus-bottom-sheet {
+    background: rgba(255, 255, 255, 0.98);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+html[data-theme="Light"] .campus-sheet-card {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.05);
+}

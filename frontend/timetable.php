@@ -64,8 +64,8 @@ $period_times = [
 
 <div style="margin-top: 16px;">
     
-    <!-- Timetable Matrix Grid -->
-    <div class="glass-panel" style="padding: 24px; overflow-x: auto;">
+    <!-- Timetable Matrix Grid (Desktop Only) -->
+    <div class="glass-panel desktop-only" style="padding: 24px; overflow-x: auto;">
         <table class="custom-table" style="min-width: 800px;">
             <thead>
                 <tr>
@@ -103,6 +103,75 @@ $period_times = [
             </tbody>
         </table>
     </div>
+
+    <!-- Mobile Day Orders Tabs Selector (Mobile Only) -->
+    <div class="mobile-only" style="margin-bottom: 16px;">
+        <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; -ms-overflow-style: none;">
+            <?php foreach ($weekdays as $index => $day): ?>
+                <button onclick="switchMobileDayOrder(<?php echo $index; ?>)" id="day-tab-<?php echo $index; ?>" class="day-tab-btn" style="flex-shrink: 0; padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; border: 1px solid rgba(255,255,255,0.08); background: <?php echo $index === 0 ? 'var(--glow-primary-alpha)' : 'rgba(255,255,255,0.02)'; ?>; color: <?php echo $index === 0 ? 'var(--text-primary)' : 'var(--text-secondary)'; ?>; border-color: <?php echo $index === 0 ? 'var(--glow-primary)' : 'rgba(255,255,255,0.08)'; ?>; box-shadow: <?php echo $index === 0 ? '0 0 10px var(--glow-primary-alpha)' : 'none'; ?>; cursor: pointer; transition: all 0.2s; min-height: auto !important;">
+                    <?php echo $day; ?>
+                </button>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <!-- Mobile Timetable Lists (Mobile Only) -->
+    <div class="mobile-only">
+        <?php foreach ($weekdays as $index => $day): ?>
+            <div id="day-content-<?php echo $index; ?>" class="day-content-panel" style="<?php echo $index === 0 ? 'display: flex;' : 'display: none;'; ?> flex-direction: column; gap: 12px;">
+                <?php for ($p = 1; $p <= 8; $p++): ?>
+                    <div class="glass-panel" style="margin: 0 !important; padding: 14px 18px !important; display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <div style="width: 42px; height: 42px; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass); display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--glow-primary); flex-shrink: 0; min-height: auto !important;">
+                                <span style="font-size: 0.75rem; font-weight: 700; line-height: 1;">P<?php echo $p; ?></span>
+                                <span style="font-size: 0.55rem; color: var(--text-tertiary); margin-top: 2px; text-align: center;"><?php echo explode('-', $period_times[$p])[0]; ?></span>
+                            </div>
+                            <div style="text-align: left;">
+                                <?php if (isset($schedule[$day][$p])): ?>
+                                    <div style="font-weight: 700; color: var(--text-primary); font-size: 0.95rem;"><?php echo sanitize_input($schedule[$day][$p]['subject_name']); ?></div>
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 3px;"><?php echo sanitize_input($schedule[$day][$p]['faculty_name']); ?></div>
+                                <?php else: ?>
+                                    <div style="color: var(--text-tertiary); font-style: italic; font-size: 0.9rem;">Free Slot</div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <?php if (isset($schedule[$day][$p])): ?>
+                            <span class="badge-pill badge-low" style="font-size: 0.75rem; padding: 4px 8px; min-height: auto !important; flex-shrink: 0;">
+                                Room <?php echo sanitize_input($schedule[$day][$p]['room_number']); ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                <?php endfor; ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- Script to toggle tabs -->
+    <script>
+        function switchMobileDayOrder(index) {
+            // Hide all panels
+            document.querySelectorAll('.day-content-panel').forEach(p => p.style.display = 'none');
+            // Show selected panel
+            const activePanel = document.getElementById('day-content-' + index);
+            if (activePanel) activePanel.style.display = 'flex';
+
+            // Deactivate all tab buttons
+            document.querySelectorAll('.day-tab-btn').forEach(b => {
+                b.style.background = 'rgba(255,255,255,0.02)';
+                b.style.color = 'var(--text-secondary)';
+                b.style.borderColor = 'rgba(255,255,255,0.08)';
+                b.style.boxShadow = 'none';
+            });
+            // Activate selected tab button
+            const activeBtn = document.getElementById('day-tab-' + index);
+            if (activeBtn) {
+                activeBtn.style.background = 'var(--glow-primary-alpha)';
+                activeBtn.style.color = 'var(--text-primary)';
+                activeBtn.style.borderColor = 'var(--glow-primary)';
+                activeBtn.style.boxShadow = '0 0 10px var(--glow-primary-alpha)';
+            }
+        }
+    </script>
 
 </div>
 

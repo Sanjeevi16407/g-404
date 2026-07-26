@@ -395,6 +395,24 @@ $buddy_name = $buddy['buddy_name'] ?? 'Buddy';
             </div>
         </div>
 
+        <!-- Suggested Prompt Chips (Mobile Only) -->
+        <div class="mobile-only" style="padding: 10px 16px; border-top: 1px solid rgba(255,255,255,0.06); background: rgba(0,0,0,0.15); overflow-x: auto; white-space: nowrap; scrollbar-width: none; -ms-overflow-style: none;">
+            <div style="display: flex; gap: 8px;">
+                <button onclick="triggerSuggestion('<?php echo addslashes($buddy['suggest_q1_query'] ?? 'Where is the campus library?'); ?>')" style="padding: 6px 14px; border-radius: 16px; font-size: 0.8rem; font-weight: 500; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); color: var(--text-secondary); cursor: pointer; flex-shrink: 0; min-height: auto !important;">
+                    <?php echo sanitize_input($buddy['suggest_q1_text'] ?? 'Library Location'); ?>
+                </button>
+                <button onclick="triggerSuggestion('<?php echo addslashes($buddy['suggest_q2_query'] ?? 'canteen timings?'); ?>')" style="padding: 6px 14px; border-radius: 16px; font-size: 0.8rem; font-weight: 500; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); color: var(--text-secondary); cursor: pointer; flex-shrink: 0; min-height: auto !important;">
+                    <?php echo sanitize_input($buddy['suggest_q2_text'] ?? 'Canteen Timings'); ?>
+                </button>
+                <button onclick="triggerSuggestion('<?php echo addslashes($buddy['suggest_q3_query'] ?? 'Where is Natarajan maths cabin?'); ?>')" style="padding: 6px 14px; border-radius: 16px; font-size: 0.8rem; font-weight: 500; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); color: var(--text-secondary); cursor: pointer; flex-shrink: 0; min-height: auto !important;">
+                    <?php echo sanitize_input($buddy['suggest_q3_text'] ?? 'Dr. Natarajan Cabin'); ?>
+                </button>
+                <button onclick="triggerSuggestion('<?php echo addslashes($buddy['suggest_q4_query'] ?? 'library yenga iruku details pathu sollu'); ?>')" style="padding: 6px 14px; border-radius: 16px; font-size: 0.8rem; font-weight: 500; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); color: var(--text-secondary); cursor: pointer; flex-shrink: 0; min-height: auto !important;">
+                    <?php echo sanitize_input($buddy['suggest_q4_text'] ?? 'Library (Tamil)'); ?>
+                </button>
+            </div>
+        </div>
+
         <!-- Chat Input Form Footer -->
         <footer class="chat-hub-footer">
             <?php if ($student_settings['notifications_enabled'] ?? 1): ?>

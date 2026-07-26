@@ -573,10 +573,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         document.getElementById('info-card-hours').textContent = loc.hours;
         document.getElementById('info-card-desc').textContent = loc.description;
         card.style.display = 'block';
+        setTimeout(() => { card.classList.add('active'); }, 10);
     }
 
     function closeInfoCard() {
-        document.getElementById('location-info-card').style.display = 'none';
+        const card = document.getElementById('location-info-card');
+        card.classList.remove('active');
+        if (window.innerWidth <= 768) {
+            setTimeout(() => { card.style.display = 'none'; }, 300);
+        } else {
+            card.style.display = 'none';
+        }
     }
 
     // Buddy drawer UI controls
