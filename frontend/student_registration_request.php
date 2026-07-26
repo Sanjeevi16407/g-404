@@ -5,6 +5,31 @@
  */
 require_once __DIR__ . '/../backend/db.php';
 
+// Auto-heal / Ensure student_registration_requests table exists on cloud DB (Railway / Production)
+try {
+    $db->exec("
+        CREATE TABLE IF NOT EXISTS student_registration_requests (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            student_name VARCHAR(150) NOT NULL,
+            register_number VARCHAR(50) NOT NULL,
+            department_id INT NOT NULL,
+            year_level INT NOT NULL DEFAULT 1,
+            section_id INT NOT NULL,
+            college_email VARCHAR(150) DEFAULT NULL,
+            personal_email VARCHAR(150) NOT NULL,
+            mobile_number VARCHAR(20) NOT NULL,
+            message TEXT DEFAULT NULL,
+            status ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending',
+            rejection_reason TEXT DEFAULT NULL,
+            reviewed_by VARCHAR(100) DEFAULT NULL,
+            request_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+            reviewed_date DATETIME DEFAULT NULL,
+            INDEX (register_number),
+            INDEX (status)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    ");
+} catch (PDOException $e) {}
+
 $error_msg = "";
 $success_msg = "";
 
