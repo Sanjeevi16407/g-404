@@ -341,9 +341,132 @@ $active_page = basename($_SERVER['PHP_SELF']);
             border: 2px solid var(--glow-primary);
             box-shadow: 0 0 15px var(--glow-primary-alpha);
         }
+
+        /* Mobile Responsive Admin Portal Rules (<= 768px) */
+        #admin-sidebar-backdrop {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 99998;
+            transition: opacity 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column !important;
+                padding: 0 !important;
+            }
+
+            /* Off-canvas Slide-out Mobile Sidebar Drawer */
+            .sidebar {
+                position: fixed !important;
+                top: 0 !important;
+                left: -100% !important;
+                bottom: 0 !important;
+                width: 280px !important;
+                height: 100vh !important;
+                z-index: 99999 !important;
+                background: rgba(10, 15, 30, 0.98) !important;
+                backdrop-filter: blur(25px) !important;
+                -webkit-backdrop-filter: blur(25px) !important;
+                border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
+                box-shadow: 10px 0 30px rgba(0, 0, 0, 0.6) !important;
+                transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+                margin: 0 !important;
+                border-radius: 0 !important;
+                padding: 24px 16px !important;
+            }
+
+            .sidebar.active {
+                left: 0 !important;
+            }
+
+            #admin-sidebar-backdrop.active {
+                display: block !important;
+            }
+
+            .sidebar-close-btn-mobile {
+                display: block !important;
+            }
+
+            /* Main Workspace full screen layout */
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+                padding: 14px !important;
+                gap: 16px !important;
+                box-sizing: border-box !important;
+            }
+
+            /* Top Header Bar */
+            .top-navbar {
+                padding: 12px 14px !important;
+                gap: 10px !important;
+            }
+
+            .admin-mobile-toggle-btn {
+                display: flex !important;
+            }
+
+            .nav-title h1 {
+                font-size: 1.15rem !important;
+            }
+
+            .nav-title p {
+                font-size: 0.72rem !important;
+            }
+
+            .badge-name {
+                font-size: 0.8rem !important;
+            }
+
+            .badge-role {
+                display: none !important;
+            }
+
+            /* Data Tables & Glass Panels touch scrolling */
+            .data-table-container,
+            .glass-panel {
+                padding: 14px !important;
+                border-radius: 16px !important;
+                overflow-x: auto !important;
+            }
+
+            .table-header-row {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 12px !important;
+            }
+
+            .table-header-row form,
+            .table-header-row > div {
+                width: 100% !important;
+            }
+
+            /* Stack grid columns on mobile screens */
+            div[style*="grid-template-columns"],
+            .form-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .action-btns {
+                flex-wrap: wrap !important;
+            }
+
+            .custom-table th, .custom-table td {
+                padding: 10px 12px !important;
+                font-size: 0.82rem !important;
+            }
+        }
     </style>
 </head>
 <body>
+
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div id="admin-sidebar-backdrop" onclick="toggleAdminSidebar()"></div>
 
     <!-- Space Background -->
     <div class="aurora-bg-container">
@@ -359,6 +482,9 @@ $active_page = basename($_SERVER['PHP_SELF']);
                 Saranathan
                 <span>Digital Senior</span>
             </div>
+            <button type="button" onclick="toggleAdminSidebar()" class="sidebar-close-btn-mobile" style="display: none; margin-left: auto; background: none; border: none; color: var(--text-secondary); font-size: 1.3rem; cursor: pointer;" title="Close Menu">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
 
         <nav class="menu-list">
@@ -464,9 +590,15 @@ $active_page = basename($_SERVER['PHP_SELF']);
     <main class="main-content">
         <!-- Top navbar profile area -->
         <header class="glass-panel top-navbar">
-            <div class="nav-title">
-                <h1>Control Panel</h1>
-                <p>Welcome back, <?php echo sanitize_input($_SESSION['admin_username']); ?></p>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button type="button" onclick="toggleAdminSidebar()" class="btn-glass admin-mobile-toggle-btn" style="display: none; width: 40px; height: 40px; padding: 0; align-items: center; justify-content: center; border-radius: 12px; font-size: 1.1rem; color: var(--glow-primary);" title="Toggle Navigation Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                
+                <div class="nav-title">
+                    <h1>Control Panel</h1>
+                    <p>Welcome back, <?php echo sanitize_input($_SESSION['admin_username']); ?></p>
+                </div>
             </div>
             
             <div class="user-badge">
@@ -479,3 +611,12 @@ $active_page = basename($_SERVER['PHP_SELF']);
                 </div>
             </div>
         </header>
+
+        <script>
+        function toggleAdminSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const backdrop = document.getElementById('admin-sidebar-backdrop');
+            if (sidebar) sidebar.classList.toggle('active');
+            if (backdrop) backdrop.classList.toggle('active');
+        }
+        </script>
