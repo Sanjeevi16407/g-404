@@ -1,551 +1,692 @@
 /**
  * Saranathan Digital Senior (Buddy)
- * Dedicated Mobile Stylesheet (max-width: 768px only)
+ * Dedicated Mobile Stylesheet - Compiled Responsive Layout (Desktop Protected)
  */
 
-/* 1. Global Reset & Spacing Overrides */
-html, body {
-    max-width: 100vw !important;
-    overflow-x: hidden !important;
-    font-size: 16px !important; /* Base font size increase */
-}
-
-.app-layout {
-    display: block !important; /* Disable flex sidebar layout */
-    width: 100% !important;
-    max-width: 100vw !important;
-    overflow-x: hidden !important;
-}
-
-/* Hide desktop frame items */
-.sidebar, 
-.top-navbar, 
-.buddy-ambient-container, 
-#buddy-ambient-widget {
-    display: none !important;
-}
-
-/* Main Content Wrapper Adjustments */
-.main-content {
-    margin-left: 0 !important;
-    padding: 80px 16px 88px 16px !important; /* Top app bar + Bottom navigation bar breathing padding */
-    width: 100% !important;
-    max-width: 100vw !important;
-    box-sizing: border-box !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 16px !important;
-}
-
-/* Page Header Alignment */
-.page-header {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 8px !important;
-    margin-bottom: 0 !important;
-}
-.page-title {
-    font-size: 1.35rem !important; /* 22px heading */
-    font-weight: 800 !important;
-    color: var(--text-primary) !important;
-}
-
-/* 2. Top App Bar Layout */
-.mobile-top-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 64px;
-    background: rgba(10, 15, 30, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
-    z-index: 20000;
-    box-sizing: border-box;
-}
-
-.mobile-top-title {
-    font-family: var(--font-heading);
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    flex: 1;
-    margin-left: 12px;
-}
-
-.mobile-icon-btn {
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    color: var(--text-secondary);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2rem;
-    position: relative;
-}
-.mobile-icon-btn:active {
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.mobile-badge-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    object-fit: cover;
-}
-
-/* 3. Navigation Drawer Layout */
-.mobile-drawer {
-    position: fixed;
-    top: 0;
-    left: -85%;
-    width: 80%;
-    height: 100vh;
-    background: rgba(10, 15, 30, 0.96);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    z-index: 25000;
-    transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    display: flex;
-    flex-direction: column;
-    padding: 24px 16px;
-    box-sizing: border-box;
-    overflow-y: auto;
-}
-
-.mobile-drawer.active {
-    left: 0;
-}
-
-.mobile-drawer-brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 28px;
-    padding-left: 8px;
-}
-
-.mobile-drawer-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.mobile-drawer-link {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 16px;
-    border-radius: 12px;
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: 500;
-    min-height: 48px; /* Touch target */
-    box-sizing: border-box;
-    transition: background 0.2s;
-}
-
-.mobile-drawer-link:active,
-.mobile-drawer-link.active {
-    color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.06);
-}
-
-.mobile-drawer-link.active {
-    border-left: 3px solid var(--glow-primary);
-    background: var(--glow-primary-alpha);
-}
-
-.mobile-drawer-link.active i {
-    color: var(--glow-primary);
-}
-
-/* Backdrop for Drawer & Sheets */
-.mobile-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 24000;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-.mobile-backdrop.active {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-/* 4. Bottom Navigation Bar */
-.mobile-bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100vw;
-    height: 72px;
-    background: rgba(10, 15, 30, 0.9);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 0 8px 12px 8px; /* Bottom inset breathing room for mobile handles */
-    z-index: 20000;
-    box-sizing: border-box;
-}
-
-.mobile-bottom-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-size: 0.72rem;
-    font-weight: 500;
-    flex: 1;
-    height: 56px;
-    border-radius: 12px;
-    gap: 4px;
-    transition: color 0.2s;
-}
-
-.mobile-bottom-item i {
-    font-size: 1.25rem;
-    height: 24px;
-    display: flex;
-    align-items: center;
-}
-
-.mobile-bottom-item.active {
-    color: var(--glow-primary);
-}
-
-/* 5. Universal Mobile Card Override */
-.glass-panel, 
-.card, 
-.buddy-profile-card,
-.activity-card,
-.glass-card,
-.document-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 16px !important;
-    margin: 0 0 16px 0 !important;
-    border-radius: 18px !important; /* MD3 radius */
-    box-sizing: border-box !important;
-    background: rgba(13, 18, 35, 0.5) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    backdrop-filter: blur(15px) !important;
-    -webkit-backdrop-filter: blur(15px) !important;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
-}
-
-/* 6. Form & Buttons Accessibility targets */
-input, select, textarea, button, .btn-glass, .badge-pill {
-    min-height: 48px !important; /* Touch target */
-    font-size: 1rem !important;
-    box-sizing: border-box !important;
-}
-
-.btn-glass {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 100% !important; /* Full width mobile buttons */
-    border-radius: 12px !important;
-    padding: 12px 20px !important;
-}
-
-/* 7. Page Specific Layout Overrides (Non-Disruptive) */
-
-/* Dashboard Layout */
-.main-content > div[style*="grid-template-columns: 2fr 1fr"] {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 16px !important;
-}
-
-.main-content > div[style*="grid-template-columns: 2fr 1fr"] > div {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 16px !important;
-    width: 100% !important;
-}
-
-/* Greeting tip & quote horizontal split */
-.glass-panel div[style*="grid-template-columns: 1fr 1fr"] {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 16px !important;
-}
-
-/* Dashboard Today's Schedule period slots */
-.glass-panel div[style*="grid-template-columns: repeat"] {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-}
-
-/* Faculty layout */
-.faculty-grid, 
-div[style*="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr))"] {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 16px !important;
-}
-.faculty-card {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    text-align: center !important;
-    gap: 12px !important;
-}
-.faculty-avatar {
-    width: 80px !important;
-    height: 80px !important;
-    margin-bottom: 4px !important;
-}
-
-/* Documents Directory Grid & Button Stack */
-#documents-grid {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 16px !important;
-}
-.document-card div[style*="display: flex; justify-content: space-between"] {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-    width: 100% !important;
-}
-.document-card .btn-glass {
-    width: 100% !important;
-    margin: 0 !important;
-}
-
-/* Profile and Settings Layouts */
-.profile-layout, 
-.settings-grid,
-.main-content > div[style*="grid-template-columns: 1fr 2fr"] {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 16px !important;
-}
-.main-content > div[style*="grid-template-columns: 1fr 2fr"] > div {
-    width: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 16px !important;
-}
-
-/* 8. Campus Guide Selector Bottom Sheet */
-.campus-bottom-sheet {
-    position: fixed;
-    bottom: -100%;
-    left: 0;
-    width: 100vw;
-    background: rgba(10, 15, 30, 0.98);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-    border-top-left-radius: 24px;
-    border-top-right-radius: 24px;
-    z-index: 25000;
-    transition: bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    padding: 24px 16px 36px 16px;
-    box-sizing: border-box;
-}
-
-.campus-bottom-sheet.active {
-    bottom: 0;
-}
-
-.campus-sheet-title {
-    font-family: var(--font-heading);
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.campus-sheet-options {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.campus-sheet-card {
-    padding: 16px 20px;
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    cursor: pointer;
-    transition: background 0.2s;
-    text-decoration: none;
-    color: inherit;
-}
-
-.campus-sheet-card:active {
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.campus-sheet-card i {
-    font-size: 1.4rem;
-    color: var(--glow-primary);
-}
-
-.campus-sheet-card-info h4 {
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: var(--text-primary);
-}
-
-.campus-sheet-card-info p {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    margin-top: 2px;
-}
-
-/* 9. Page-Specific Markup Layout Overrides */
-
-/* buddy.php Chat Fullscreen Layout */
-.chat-hub-container {
-    display: block !important;
-    width: 100% !important;
-}
-.widgets-column {
-    display: none !important; /* Hide model/profile widgets on mobile */
-}
-.chat-hub-workspace {
-    width: 100% !important;
-    border-radius: 18px !important;
-    min-height: calc(100vh - 180px) !important;
-}
-
-/* campus.php Navigator Overrides */
-.navigator-layout {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 16px !important;
-    height: auto !important;
-    min-height: auto !important;
-}
-
-/* Make destinations sidebar behave as contents list */
-.navigator-layout > .glass-panel {
-    display: contents !important;
-}
-
-/* Hide non-essential sidebar headings/navigation buttons */
-.navigator-layout > .glass-panel > h3,
-.navigator-layout > .glass-panel > a,
-.navigator-layout > .glass-panel > form {
-    display: none !important;
-}
-
-#search-destinations {
-    order: 1 !important;
-    width: 100% !important;
-    margin-bottom: 12px !important;
-    display: block !important;
-}
-
-.navigator-layout > div:nth-child(2) {
-    order: 2 !important;
-    width: 100% !important;
-    height: 300px !important;
-    border-radius: 18px !important;
-    margin-bottom: 12px !important;
-    position: relative !important;
-}
-
-#map {
-    height: 100% !important;
-    border-radius: 18px !important;
-}
-
-#destinations-list {
-    order: 3 !important;
-    width: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-    max-height: none !important;
-    overflow-y: visible !important;
-}
-
-.location-item {
-    width: 100% !important;
-    padding: 16px !important;
-    border-radius: 18px !important;
-    box-sizing: border-box !important;
-    margin: 0 !important;
-}
-
-/* Leaflet Info Card Overlay becomes a Bottom Sheet */
-.map-info-card {
-    position: fixed !important;
-    bottom: -100% !important;
-    left: 0 !important;
-    right: 0 !important;
-    top: auto !important;
-    width: 100vw !important;
-    border-top-left-radius: 24px !important;
-    border-top-right-radius: 24px !important;
-    border-bottom-left-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
-    z-index: 25000 !important;
-    background: rgba(10, 15, 30, 0.98) !important;
-    backdrop-filter: blur(25px) !important;
-    -webkit-backdrop-filter: blur(25px) !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
-    border-left: none !important;
-    border-right: none !important;
-    border-bottom: none !important;
-    margin: 0 !important;
-    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.4) !important;
-    transition: bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    display: block !important;
-}
-
-.map-info-card.active {
-    bottom: 0 !important;
-}
-
-.buddy-nav-drawer {
-    display: none !important; /* Hide floating chat drawer on map guide */
-}
-
-/* 10. helper elements display selectors */
-.mobile-only {
-    display: none !important;
-}
-
-@media (max-width: 768px) {
-    .desktop-only {
+/* ==========================================================================
+   1. Desktop Viewport Isolation (min-width: 769px)
+   ========================================================================== */
+@media (min-width: 769px) {
+    .mobile-top-header,
+    .mobile-bottom-nav,
+    .mobile-drawer,
+    .mobile-backdrop,
+    .campus-bottom-sheet,
+    .mobile-only,
+    .mobile-sidebar-drawer,
+    .mobile-overlay {
         display: none !important;
     }
+    
+    #student-sidebar {
+        display: flex !important;
+    }
+    
+    .top-navbar {
+        display: flex !important;
+    }
+    
+    .main-content {
+        display: block !important;
+    }
+}
+
+/* ==========================================================================
+   2. Mobile Viewport Layout & Overrides (max-width: 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* Global Viewport Constraints */
+    html, body {
+        width: 100vw !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+        font-size: 16px !important;
+        line-height: 1.6 !important;
+        background: #080b16 !important;
+    }
+
+    /* Wrap all text naturally and prevent overflow */
+    h1, h2, h3, h4, h5, h6, p, span, div, a, li, td, th, strong, button, label {
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+        white-space: normal !important;
+    }
+
+    /* Hide desktop frame items */
+    .sidebar, 
+    .top-navbar, 
+    .buddy-ambient-container, 
+    #buddy-ambient-widget {
+        display: none !important;
+    }
+
+    /* Flex structure collapse */
+    .app-layout {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+    }
+
+    /* Main Container Padding */
+    .main-content {
+        margin-left: 0 !important;
+        padding: 80px 16px 88px 16px !important; /* Top app bar + Bottom nav breathing room */
+        width: 100% !important;
+        max-content: none !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 24px !important; /* Section spacing */
+    }
+
+    /* Header sizing overrides */
+    .page-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+        margin-bottom: 0 !important;
+    }
+    .page-title {
+        font-size: 1.45rem !important; /* 22px-24px */
+        font-weight: 800 !important;
+        color: var(--text-primary) !important;
+    }
+
+    /* 3. Top App Bar Styles */
+    .mobile-top-header {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 64px !important;
+        background: rgba(10, 15, 30, 0.85) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 0 16px !important;
+        z-index: 20000 !important;
+        box-sizing: border-box !important;
+    }
+
+    .mobile-top-title {
+        font-family: var(--font-heading) !important;
+        font-size: 1.15rem !important;
+        font-weight: 700 !important;
+        color: var(--text-primary) !important;
+        flex: 1 !important;
+        margin-left: 12px !important;
+    }
+
+    .mobile-icon-btn {
+        width: 44px !important;
+        height: 44px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 50% !important;
+        color: var(--text-secondary) !important;
+        background: transparent !important;
+        border: none !important;
+        cursor: pointer !important;
+        font-size: 1.2rem !important;
+        position: relative !important;
+        min-height: auto !important;
+    }
+
+    .mobile-badge-avatar {
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 50% !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        object-fit: cover !important;
+    }
+
+    /* 4. Sliding Sidebar Drawer Styles */
+    .mobile-drawer {
+        position: fixed !important;
+        top: 0 !important;
+        left: -85% !important;
+        width: 80% !important;
+        height: 100vh !important;
+        background: rgba(10, 15, 30, 0.96) !important;
+        backdrop-filter: blur(25px) !important;
+        -webkit-backdrop-filter: blur(25px) !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+        z-index: 25000 !important;
+        transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 24px 16px !important;
+        box-sizing: border-box !important;
+        overflow-y: auto !important;
+    }
+
+    .mobile-drawer.active {
+        left: 0 !important;
+    }
+
+    .mobile-drawer-brand {
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        margin-bottom: 28px !important;
+        padding-left: 8px !important;
+    }
+
+    .mobile-drawer-list {
+        list-style: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 4px !important;
+    }
+
+    .mobile-drawer-link {
+        display: flex !important;
+        align-items: center !important;
+        gap: 14px !important;
+        padding: 14px 16px !important;
+        border-radius: 12px !important;
+        color: var(--text-secondary) !important;
+        text-decoration: none !important;
+        font-size: 1rem !important;
+        font-weight: 500 !important;
+        min-height: 48px !important;
+        box-sizing: border-box !important;
+        transition: background 0.2s !important;
+    }
+
+    .mobile-drawer-link:active,
+    .mobile-drawer-link.active {
+        color: var(--text-primary) !important;
+        background: rgba(255, 255, 255, 0.06) !important;
+    }
+
+    .mobile-drawer-link.active {
+        border-left: 3px solid var(--glow-primary) !important;
+        background: var(--glow-primary-alpha) !important;
+    }
+
+    .mobile-drawer-link.active i {
+        color: var(--glow-primary) !important;
+    }
+
+    /* Backdrop element */
+    .mobile-backdrop {
+        position: fixed !important;
+        inset: 0 !important;
+        background: rgba(0, 0, 0, 0.6) !important;
+        z-index: 24000 !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transition: opacity 0.3s ease !important;
+        display: none !important;
+    }
+
+    .mobile-backdrop.active {
+        display: block !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
+
+    /* 5. Fixed Bottom Navigation Bar */
+    .mobile-bottom-nav {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 72px !important;
+        background: rgba(10, 15, 30, 0.95) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+        display: flex !important;
+        justify-content: space-around !important;
+        align-items: center !important;
+        padding: 0 8px 12px 8px !important;
+        z-index: 20000 !important;
+        box-sizing: border-box !important;
+    }
+
+    .mobile-bottom-item {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        color: var(--text-secondary) !important;
+        text-decoration: none !important;
+        font-size: 0.72rem !important;
+        font-weight: 500 !important;
+        flex: 1 !important;
+        height: 56px !important;
+        border-radius: 12px !important;
+        gap: 4px !important;
+        min-height: auto !important;
+    }
+
+    .mobile-bottom-item i {
+        font-size: 1.25rem !important;
+        height: 24px !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .mobile-bottom-item.active {
+        color: var(--glow-primary) !important;
+    }
+
+    /* 6. Universal Mobile Card Override */
+    .glass-panel, 
+    .card, 
+    .buddy-profile-card,
+    .activity-card,
+    .glass-card,
+    .document-card,
+    .faculty-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 16px !important;
+        margin: 0 0 16px 0 !important;
+        border-radius: 18px !important; /* MD3 radius */
+        box-sizing: border-box !important;
+        background: rgba(13, 18, 35, 0.55) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
+        height: auto !important;
+        min-height: 180px !important;
+    }
+
+    /* Header text inside cards */
+    .glass-panel h3, .glass-card h3, .glass-card h4, .document-card h4 {
+        font-size: 1.2rem !important; /* 20px */
+        font-weight: 700 !important;
+        line-height: 1.4 !important;
+        color: var(--text-primary) !important;
+    }
+
+    /* Paragraph elements */
+    p, span, div, strong, li, a, td, th {
+        font-size: 1rem !important; /* 16px body copy */
+        line-height: 1.6 !important;
+    }
+
+    /* 7. Forms, Buttons, & Touch Targets */
+    input, select, textarea {
+        width: 100% !important;
+        height: 52px !important;
+        font-size: 16px !important;
+        border-radius: 12px !important;
+        box-sizing: border-box !important;
+        min-height: 52px !important;
+    }
+
+    button, .btn-glass {
+        min-height: 52px !important;
+        font-size: 1rem !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 12px !important;
+        padding: 12px 20px !important;
+        margin: 0 !important;
+    }
+
+    .badge-pill {
+        min-height: auto !important;
+        height: 28px !important;
+        width: auto !important;
+        display: inline-flex !important;
+        padding: 2px 8px !important;
+        font-size: 0.75rem !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    /* 8. Images styling */
+    img {
+        width: 100% !important;
+        height: auto !important;
+        object-fit: cover !important;
+        border-radius: 16px !important;
+    }
+
+    /* 9. Page-Specific Collapses & Overrides */
+
+    /* Dashboard grids */
+    .main-content > div[style*="grid-template-columns: 2fr 1fr"] {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+
+    .main-content > div[style*="grid-template-columns: 2fr 1fr"] > div {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+        width: 100% !important;
+    }
+
+    /* Greeting tip & quote horizontal split */
+    .glass-panel div[style*="grid-template-columns: 1fr 1fr"] {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+
+    /* Schedule slots wrap */
+    .glass-panel div[style*="grid-template-columns: repeat"] {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    /* Faculty directory card list */
+    .faculty-grid, 
+    div[style*="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr))"] {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+
+    .faculty-card {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        padding: 20px !important;
+        gap: 12px !important;
+    }
+
+    .faculty-avatar {
+        width: 96px !important;
+        height: 96px !important;
+        border-radius: 50% !important;
+        object-fit: cover !important;
+        margin-bottom: 4px !important;
+    }
+
+    /* Clubs directory items & buttons */
+    .glass-card img {
+        width: 64px !important;
+        height: 64px !important;
+        border-radius: 50% !important;
+        object-fit: cover !important;
+    }
+
+    .glass-card form {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Documents directory items & buttons */
+    #documents-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+
+    .document-card div[style*="display: flex; justify-content: space-between"] {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        width: 100% !important;
+    }
+
+    .document-card .btn-glass {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    /* Profile & Settings page panels */
+    .profile-layout, 
+    .settings-grid,
+    .main-content > div[style*="grid-template-columns: 1fr 2fr"] {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+
+    .main-content > div[style*="grid-template-columns: 1fr 2fr"] > div {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+
+    /* 10. Page-Specific Exception Overrides */
+
+    /* buddy.php Chat Fullscreen Layout */
+    .chat-hub-container {
+        display: flex !important;
+        flex-direction: column !important;
+        height: calc(100vh - 160px) !important;
+        gap: 0 !important;
+        width: 100% !important;
+    }
+
+    .widgets-column {
+        display: none !important; /* Hide model parameters panel */
+    }
+
+    .chat-hub-workspace {
+        flex-grow: 1 !important;
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100% !important;
+        border-radius: 18px !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+
+    .chat-hub-body {
+        flex-grow: 1 !important;
+        overflow-y: auto !important;
+        padding: 16px !important;
+    }
+
+    .chat-hub-footer {
+        position: sticky !important;
+        bottom: 0 !important;
+        background: rgba(10, 15, 30, 0.95) !important;
+        padding: 12px 16px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        z-index: 1000 !important;
+    }
+
+    .chat-hub-footer input {
+        flex-grow: 1 !important;
+        min-height: 48px !important;
+        height: 48px !important;
+        margin: 0 !important;
+    }
+
+    .chat-hub-footer button {
+        min-height: 48px !important;
+        height: 48px !important;
+        width: 48px !important;
+        padding: 0 !important;
+        border-radius: 50% !important;
+        margin: 0 !important;
+    }
+
+    /* campus.php Map Navigator layouts */
+    .navigator-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+        height: auto !important;
+        min-height: auto !important;
+    }
+
+    .navigator-layout > .glass-panel {
+        display: contents !important;
+    }
+
+    .navigator-layout > .glass-panel > h3,
+    .navigator-layout > .glass-panel > a,
+    .navigator-layout > .glass-panel > form {
+        display: none !important;
+    }
+
+    #search-destinations {
+        order: 1 !important;
+        width: 100% !important;
+        margin-bottom: 12px !important;
+        display: block !important;
+    }
+
+    .navigator-layout > div:nth-child(2) {
+        order: 2 !important;
+        width: 100% !important;
+        height: 300px !important;
+        border-radius: 18px !important;
+        margin-bottom: 12px !important;
+        position: relative !important;
+    }
+
+    #map {
+        height: 100% !important;
+        border-radius: 18px !important;
+    }
+
+    #destinations-list {
+        order: 3 !important;
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        max-height: none !important;
+        overflow-y: visible !important;
+    }
+
+    .location-item {
+        width: 100% !important;
+        padding: 16px !important;
+        border-radius: 18px !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+    }
+
+    /* Map info card popup overlay bottom-sheet */
+    .map-info-card {
+        position: fixed !important;
+        bottom: -100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        top: auto !important;
+        width: 100vw !important;
+        border-top-left-radius: 24px !important;
+        border-top-right-radius: 24px !important;
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        z-index: 25000 !important;
+        background: rgba(10, 15, 30, 0.98) !important;
+        backdrop-filter: blur(25px) !important;
+        -webkit-backdrop-filter: blur(25px) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-bottom: none !important;
+        margin: 0 !important;
+        box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.4) !important;
+        transition: bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        display: block !important;
+    }
+
+    .map-info-card.active {
+        bottom: 0 !important;
+    }
+
+    .buddy-nav-drawer {
+        display: none !important; /* Hide map guide helper chatbot drawer */
+    }
+
+    /* 11. Campus Selector Bottom Sheet dialog style */
+    .campus-bottom-sheet {
+        position: fixed !important;
+        bottom: -100% !important;
+        left: 0 !important;
+        width: 100vw !important;
+        background: rgba(10, 15, 30, 0.98) !important;
+        backdrop-filter: blur(25px) !important;
+        -webkit-backdrop-filter: blur(25px) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-top-left-radius: 24px !important;
+        border-top-right-radius: 24px !important;
+        z-index: 25000 !important;
+        transition: bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        padding: 24px 16px 36px 16px !important;
+        box-sizing: border-box !important;
+        display: block !important;
+    }
+
+    .campus-bottom-sheet.active {
+        bottom: 0 !important;
+    }
+
+    .campus-sheet-title {
+        font-family: var(--font-heading) !important;
+        font-size: 1.15rem !important;
+        font-weight: 700 !important;
+        color: var(--text-primary) !important;
+        margin-bottom: 20px !important;
+        text-align: center !important;
+    }
+
+    .campus-sheet-options {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    .campus-sheet-card {
+        padding: 16px 20px !important;
+        border-radius: 16px !important;
+        background: rgba(255, 255, 255, 0.03) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 16px !important;
+        cursor: pointer !important;
+        transition: background 0.2s !important;
+        text-decoration: none !important;
+        color: inherit !important;
+    }
+
+    .campus-sheet-card i {
+        font-size: 1.4rem !important;
+        color: var(--glow-primary) !important;
+    }
+
+    .campus-sheet-card-info h4 {
+        font-weight: 700 !important;
+        font-size: 0.95rem !important;
+        color: var(--text-primary) !important;
+    }
+
+    .campus-sheet-card-info p {
+        font-size: 0.8rem !important;
+        color: var(--text-secondary) !important;
+        margin-top: 2px !important;
+    }
+
+    /* 12. Helper classes visibility selector */
     .mobile-only {
         display: block !important;
     }
@@ -556,22 +697,22 @@ div[style*="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr))"] {
 
 /* Light Theme Compatibility Overrides */
 html[data-theme="Light"] .mobile-top-header {
-    background: rgba(255, 255, 255, 0.9);
-    border-color: rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
 }
 html[data-theme="Light"] .mobile-bottom-nav {
-    background: rgba(255, 255, 255, 0.95);
-    border-color: rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
 }
 html[data-theme="Light"] .mobile-drawer {
-    background: rgba(255, 255, 255, 0.98);
-    border-color: rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.98) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
 }
 html[data-theme="Light"] .campus-bottom-sheet {
-    background: rgba(255, 255, 255, 0.98);
-    border-color: rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.98) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
 }
 html[data-theme="Light"] .campus-sheet-card {
-    background: rgba(0, 0, 0, 0.02);
-    border-color: rgba(0, 0, 0, 0.05);
+    background: rgba(0, 0, 0, 0.02) !important;
+    border-color: rgba(0, 0, 0, 0.05) !important;
 }

@@ -46,7 +46,7 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
     <!-- Core styles -->
     <link rel="stylesheet" href="../assets/css/style.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="../assets/themes/themes.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="../assets/css/mobile.css?v=<?php echo time(); ?>" media="screen and (max-width: 768px)">
+    <link rel="stylesheet" href="../assets/css/mobile.css?v=<?php echo time(); ?>">
     <!-- FontAwesome Vector Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Tailwind CSS Engine -->
@@ -351,18 +351,6 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
         }
         .aurora-bg-container {
             transition: opacity 0.8s ease;
-        }
-
-        /* Hide mobile layout elements on screens wider than 768px */
-        @media (min-width: 769px) {
-            .mobile-top-header,
-            .mobile-drawer,
-            .mobile-backdrop,
-            .mobile-bottom-nav,
-            .campus-bottom-sheet,
-            .mobile-only {
-                display: none !important;
-            }
         }
     </style>
     <script>

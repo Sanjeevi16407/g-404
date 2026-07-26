@@ -4,6 +4,7 @@
  */
 
 function toggleMobileDrawer() {
+    if (window.innerWidth > 768) return;
     const drawer = document.getElementById('mobile-sidebar-drawer');
     const backdrop = document.getElementById('mobile-drawer-backdrop');
     if (drawer && backdrop) {
@@ -13,6 +14,7 @@ function toggleMobileDrawer() {
 }
 
 function openCampusSelectorMobile() {
+    if (window.innerWidth > 768) return;
     const sheet = document.getElementById('campus-bottom-sheet');
     const backdrop = document.getElementById('campus-sheet-backdrop');
     if (sheet && backdrop) {
@@ -22,6 +24,7 @@ function openCampusSelectorMobile() {
 }
 
 function closeCampusSelectorMobile() {
+    if (window.innerWidth > 768) return;
     const sheet = document.getElementById('campus-bottom-sheet');
     const backdrop = document.getElementById('campus-sheet-backdrop');
     if (sheet && backdrop) {
@@ -31,6 +34,10 @@ function closeCampusSelectorMobile() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    if (window.innerWidth > 768) {
+        return;
+    }
+
     // 1. Close mobile drawer on backdrop click
     const drawerBackdrop = document.getElementById('mobile-drawer-backdrop');
     if (drawerBackdrop) {
