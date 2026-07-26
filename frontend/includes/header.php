@@ -435,8 +435,7 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
 
         <!-- Sticky Quick Access Toggle Bar -->
         <div class="mobile-quick-access-bar" id="quick-access-toggle-bar" onclick="toggleQuickAccessGrid()">
-            <span><i class="fa-solid fa-bars"></i> Quick Access</span>
-            <i class="fa-solid fa-chevron-up" id="quick-access-chevron"></i>
+            <span>Quick Access <i class="fa-solid fa-chevron-up" id="quick-access-chevron"></i></span>
         </div>
 
         <!-- Collapsible Quick Access Navigation Dropdown -->

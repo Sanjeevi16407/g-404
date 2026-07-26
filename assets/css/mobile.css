@@ -44,10 +44,10 @@
         max-width: 100vw !important;
     }
 
-    /* Scrollable Content Wrapper Padding (Offsetting fixed top app bar + quick access bar) */
+    /* Scrollable Content Wrapper Padding (Clears only fixed 64px header. Sticky bar flows naturally inside) */
     .main-content {
         margin-left: 0 !important;
-        padding: 128px 16px 24px 16px !important; /* 64px header + 48px bar + 16px buffer (top) | 24px default (bottom) */
+        padding: 64px 16px 24px 16px !important; /* 64px fixed header offset */
         width: 100% !important;
         max-width: 100vw !important;
         box-sizing: border-box !important;
@@ -120,59 +120,72 @@
         object-fit: cover !important;
     }
 
-    /* Sticky Quick Access Toggle Bar (48px) */
+    /* Sticky Compact Quick Access Toggle Bar (44px) */
     .mobile-quick-access-bar {
-        position: fixed !important;
+        position: sticky !important;
         top: 64px !important;
         left: 0 !important;
-        width: 100vw !important;
-        height: 48px !important;
+        width: 100% !important;
+        height: 44px !important;
         background: rgba(10, 15, 30, 0.9) !important;
         backdrop-filter: blur(15px) !important;
         -webkit-backdrop-filter: blur(15px) !important;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
         display: flex !important;
         align-items: center !important;
-        justify-content: space-between !important;
+        justify-content: center !important; /* Centered */
         padding: 0 16px !important;
         box-sizing: border-box !important;
         z-index: 19000 !important;
         cursor: pointer !important;
-        color: var(--text-primary) !important;
+        color: var(--text-secondary) !important;
         font-weight: 600 !important;
-        font-size: 0.95rem !important;
-        transition: all 0.3s ease !important;
+        font-size: 0.9rem !important;
+        transition: all 0.25s ease-in-out !important;
+        margin-bottom: 4px !important;
+        border-radius: 8px !important;
+    }
+
+    .mobile-quick-access-bar:active {
+        background: rgba(255, 255, 255, 0.04) !important;
     }
 
     .mobile-quick-access-bar span i {
-        margin-right: 8px !important;
+        margin-left: 8px !important;
         color: var(--glow-primary) !important;
+        transition: transform 0.25s ease !important;
     }
 
-    /* Collapsible Quick Access Navigation Dropdown */
+    /* Collapsible Navigation Dropdown inside Normal Flow */
     .mobile-quick-access-grid-container {
-        position: fixed !important;
-        top: 112px !important; /* 64px + 48px */
-        left: 0 !important;
-        width: 100vw !important;
-        background: rgba(10, 15, 30, 0.98) !important;
-        backdrop-filter: blur(25px) !important;
-        -webkit-backdrop-filter: blur(25px) !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+        display: block !important;
+        position: relative !important;
+        width: 100% !important;
+        max-height: 500px !important;
+        opacity: 1 !important;
+        overflow: hidden !important;
         padding: 16px !important;
+        margin-bottom: 8px !important;
+        background: rgba(13, 18, 35, 0.45) !important;
+        border-radius: 18px !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
         box-sizing: border-box !important;
         z-index: 18000 !important;
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-        max-height: calc(100vh - 120px) !important;
-        overflow-y: auto !important;
-        opacity: 1 !important;
-        transform: translateY(0) !important;
-        pointer-events: auto !important;
+        transition: max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
+                    opacity 0.3s ease, 
+                    padding 0.3s ease, 
+                    margin-bottom 0.3s ease !important;
     }
 
     .mobile-quick-access-grid-container.collapsed {
-        transform: translateY(-100%) !important;
+        max-height: 0 !important;
         opacity: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
+        border-color: transparent !important;
         pointer-events: none !important;
     }
 
@@ -214,10 +227,16 @@
         text-align: center !important;
     }
 
+    /* Subtle Active Page Link Highlight */
     .quick-nav-item.active {
-        background: var(--glow-primary-alpha) !important;
+        background: rgba(255, 255, 255, 0.08) !important;
         border-color: var(--glow-primary) !important;
+        box-shadow: 0 0 10px rgba(0, 242, 254, 0.15) !important;
         color: var(--text-primary) !important;
+    }
+
+    .quick-nav-item.active i {
+        color: var(--glow-primary) !important;
     }
 
     .quick-nav-item.logout i {
@@ -305,6 +324,12 @@
 
     /* Dashboard: Stacks widgets to clean single column */
     .main-content > div[style*="grid-template-columns: 2fr 1fr"] {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+
+    .main-content > div[style*="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr))"] {
         display: flex !important;
         flex-direction: column !important;
         gap: 16px !important;

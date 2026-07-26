@@ -6,7 +6,7 @@
 if (window.innerWidth > 768) {
     // Exit immediately on desktop
 } else {
-    let userToggled = false;
+    let hasCollapsedOnce = false;
 
     window.addEventListener('scroll', () => {
         const grid = document.getElementById('quick-access-grid-container');
@@ -15,18 +15,12 @@ if (window.innerWidth > 768) {
 
         const currentScroll = window.scrollY;
 
-        // Auto collapse on scroll down
-        if (currentScroll > 40 && !grid.classList.contains('collapsed') && !userToggled) {
+        // Auto collapse on first scroll down only once
+        if (currentScroll > 40 && !grid.classList.contains('collapsed') && !hasCollapsedOnce) {
             grid.classList.add('collapsed');
+            hasCollapsedOnce = true; // prevent further auto-collapses or auto-expands
             if (chevron) {
                 chevron.className = 'fa-solid fa-chevron-down';
-            }
-        } 
-        // Auto expand when scrolling back to the very top
-        else if (currentScroll <= 10 && grid.classList.contains('collapsed') && !userToggled) {
-            grid.classList.remove('collapsed');
-            if (chevron) {
-                chevron.className = 'fa-solid fa-chevron-up';
             }
         }
     });
@@ -36,15 +30,12 @@ if (window.innerWidth > 768) {
         const chevron = document.getElementById('quick-access-chevron');
         if (!grid) return;
 
-        userToggled = true;
+        // User took manual action, stop any future auto scroll behaviors
+        hasCollapsedOnce = true;
+        
         const isCollapsed = grid.classList.toggle('collapsed');
         if (chevron) {
             chevron.className = isCollapsed ? 'fa-solid fa-chevron-down' : 'fa-solid fa-chevron-up';
         }
-
-        // Reset toggle flag after transition finishes
-        setTimeout(() => {
-            userToggled = false;
-        }, 500);
     };
 }
