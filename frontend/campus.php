@@ -469,13 +469,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         renderDestinationsList();
 
         // Base Tile Layers (No tokens required!)
-        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: '&copy; Esri Satellite',
+        const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap',
             maxZoom: 19
         });
 
-        const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap',
+        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: '&copy; Esri Satellite',
             maxZoom: 19
         });
 
@@ -484,25 +484,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
             maxZoom: 19
         });
 
-        // Initialize Map with Integer Zoom Level (17) to prevent float tile URL 404/400 errors
+        // Initialize Map with 2D Street Map as default layer (guarantees 100% tile loading across all mobile carriers)
         map = L.map('map', {
             center: [10.7561, 78.6513],
             zoom: 17,
             zoomControl: true,
-            layers: [satelliteLayer]
+            layers: [streetLayer]
         });
 
-        // Add Layer Control (Switch between Satellite, Street Map, and Voyager Map)
+        // Add Layer Control (Switch between 2D Street Map, Satellite View, and Voyager Map)
         const baseMaps = {
-            "🛰️ Satellite View": satelliteLayer,
             "🗺️ 2D Street Map": streetLayer,
+            "🛰️ Satellite View": satelliteLayer,
             "🌐 Voyager Map": voyagerLayer
         };
         L.control.layers(baseMaps).addTo(map);
 
-        // Force Leaflet to recalculate container viewport dimensions on mobile load & resize
-        setTimeout(() => { if (map) map.invalidateSize(); }, 200);
-        setTimeout(() => { if (map) map.invalidateSize(); }, 600);
+        // Force Leaflet to recalculate container viewport dimensions and redraw tiles on mobile load & resize
+        [100, 300, 600, 1200].forEach(delay => {
+            setTimeout(() => { if (map) map.invalidateSize(true); }, delay);
+        });
         window.addEventListener('resize', () => { if (map) map.invalidateSize(); });
 
         // Click listener to print coordinates in developer console for fine-tuning
