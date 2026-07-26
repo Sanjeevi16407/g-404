@@ -620,6 +620,59 @@
         color: var(--text-secondary) !important;
         margin-top: 2px !important;
     }
+
+    /* Immersive AR Live View Layout Refinements */
+    .ar-chat-panel {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 12px !important;
+        padding: 16px !important;
+        width: calc(100% - 32px) !important;
+    }
+
+    .ar-chat-content {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    .ar-chat-text {
+        font-size: 0.85rem !important;
+        line-height: 1.4 !important;
+        text-align: center !important;
+        max-height: none !important;
+    }
+
+    .ar-chat-actions {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+        gap: 8px !important;
+        margin-top: 0 !important;
+    }
+
+    .ar-status-text {
+        align-items: flex-start !important;
+        text-align: left !important;
+        font-size: 0.75rem !important;
+        white-space: nowrap !important; /* Prevent text wrapping */
+        gap: 2px !important;
+    }
+
+    .ar-status-text div {
+        white-space: nowrap !important;
+    }
+
+    .btn-ar {
+        padding: 8px 14px !important;
+        font-size: 0.75rem !important;
+        white-space: nowrap !important; /* Keep buttons single line */
+    }
 }
 
 /* Light Theme Compatibility Overrides */
