@@ -468,37 +468,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
     document.addEventListener('DOMContentLoaded', () => {
         renderDestinationsList();
 
-        // Base Tile Layers (Universal Google & OpenStreetMap tiles - 100% reliable on mobile!)
-        const googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-            attribution: '&copy; Google Maps Satellite',
-            maxZoom: 20
+        // Base Tile Layers (CartoDB & OpenStreetMap FR - Mobile Carrier Friendly with Retina support!)
+        const voyagerLayer = L.tileLayer('https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; CartoDB &copy; OpenStreetMap',
+            maxZoom: 19,
+            detectRetina: true,
+            crossOrigin: true
         });
 
-        const googleRoadmap = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-            attribution: '&copy; Google Maps 2D',
-            maxZoom: 20
+        const osmFrLayer = L.tileLayer('https://tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap France',
+            maxZoom: 19,
+            detectRetina: true,
+            crossOrigin: true
         });
 
-        const streetLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap',
-            maxZoom: 19
+        const esriTopo = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+            attribution: '&copy; Esri Topo',
+            maxZoom: 19,
+            detectRetina: true
         });
 
-        // Initialize Map with Google Hybrid Satellite as default layer
+        // Initialize Map with CartoDB Voyager as default layer (100% CORS & mobile carrier compatible)
         map = L.map('map', {
             center: [10.7561, 78.6513],
             zoom: 17,
             zoomControl: true,
-            layers: [googleHybrid]
+            layers: [voyagerLayer]
         });
 
-        // Add Layer Control (Switch between Google Hybrid, Google 2D Map, and OpenStreetMap)
+        // Add Layer Control (Switch between 2D Voyager, OpenStreetMap, and Topo Map)
         const baseMaps = {
-            "🛰️ Satellite View": googleHybrid,
-            "🗺️ Google 2D Map": googleRoadmap,
-            "🌐 OpenStreetMap": streetLayer
+            "🌐 2D Voyager Map": voyagerLayer,
+            "🗺️ OpenStreetMap": osmFrLayer,
+            "⛰️ Topo Map": esriTopo
         };
         L.control.layers(baseMaps).addTo(map);
+
+        // Add Floating "Reload Map" Button Control for instant mobile tile refresh
+        const reloadControl = L.control({ position: 'topright' });
+        reloadControl.onAdd = function() {
+            const div = L.DomUtil.create('div', 'leaflet-bar leaflet-control-custom-reload');
+            div.innerHTML = '<button type="button" title="Reload Map Tiles" style="background: rgba(10, 15, 30, 0.85); color: #00f2fe; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 6px 10px; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; pointer-events: auto;"><i class="fa-solid fa-rotate-right"></i> Reload Map</button>';
+            div.onclick = function(e) {
+                e.stopPropagation();
+                if (map) {
+                    map.invalidateSize(true);
+                }
+            };
+            return div;
+        };
+        reloadControl.addTo(map);
 
         // Add static building markers to map
         Object.keys(locations).forEach(key => {
