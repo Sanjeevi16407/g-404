@@ -468,7 +468,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
     document.addEventListener('DOMContentLoaded', () => {
         renderDestinationsList();
 
-        // Base Tile Layers (CartoDB & OpenStreetMap FR - Mobile Carrier Friendly with Retina support!)
+        // Base Tile Layers (Google Hybrid Satellite, CartoDB Voyager, & OpenStreetMap FR)
+        const googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            attribution: '&copy; Google Maps Satellite',
+            maxZoom: 20,
+            detectRetina: true,
+            crossOrigin: true
+        });
+
         const voyagerLayer = L.tileLayer('https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; CartoDB &copy; OpenStreetMap',
             maxZoom: 19,
@@ -477,31 +484,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         });
 
         const osmFrLayer = L.tileLayer('https://tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap France',
+            attribution: '&copy; OpenStreetMap',
             maxZoom: 19,
             detectRetina: true,
             crossOrigin: true
         });
 
-        const esriTopo = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-            attribution: '&copy; Esri Topo',
-            maxZoom: 19,
-            detectRetina: true
-        });
-
-        // Initialize Map with CartoDB Voyager as default layer (100% CORS & mobile carrier compatible)
+        // Initialize Map with Google Hybrid Satellite as default active layer
         map = L.map('map', {
             center: [10.7561, 78.6513],
             zoom: 17,
             zoomControl: true,
-            layers: [voyagerLayer]
+            layers: [googleHybrid]
         });
 
-        // Add Layer Control (Switch between 2D Voyager, OpenStreetMap, and Topo Map)
+        // Add Layer Control (Switch between Satellite View, 2D Voyager Map, and OpenStreetMap)
         const baseMaps = {
+            "🛰️ Satellite View": googleHybrid,
             "🌐 2D Voyager Map": voyagerLayer,
-            "🗺️ OpenStreetMap": osmFrLayer,
-            "⛰️ Topo Map": esriTopo
+            "🗺️ OpenStreetMap": osmFrLayer
         };
         L.control.layers(baseMaps).addTo(map);
 
