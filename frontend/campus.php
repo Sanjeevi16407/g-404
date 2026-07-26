@@ -276,8 +276,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
     </div>
 
     <!-- Map Viewport Area -->
-    <div id="map-container" style="position: relative; width: 100%; height: 100%; min-height: 420px;">
-        <div id="map" style="width: 100%; height: 100%; min-height: 420px; border-radius: 16px;"></div>
+    <div id="map-container" style="position: relative; width: 100%; height: 70vh; min-height: 450px; border-radius: 18px;">
+        <div id="map" style="width: 100%; height: 100%; min-height: 450px; border-radius: 18px; position: relative;"></div>
 
         <!-- Glowing Information Card overlay -->
         <div class="map-info-card" id="location-info-card">
@@ -520,11 +520,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
 
         // Clean map view without static markers
 
-        // Force Leaflet to recalculate container viewport dimensions and redraw tiles on mobile load & resize
-        [100, 300, 600, 1200].forEach(delay => {
-            setTimeout(() => { if (map) map.invalidateSize(true); }, delay);
-        });
-        window.addEventListener('resize', () => { if (map) map.invalidateSize(true); });
+        // Force Leaflet to recalculate container viewport dimensions and redraw tiles on mobile load, resize & orientation
+        const invalidateMap = () => { if (map) map.invalidateSize(true); };
+        [100, 250, 500, 1000, 2000].forEach(delay => setTimeout(invalidateMap, delay));
+        window.addEventListener('resize', invalidateMap);
+        window.addEventListener('orientationchange', () => setTimeout(invalidateMap, 250));
+        window.addEventListener('load', invalidateMap);
+        document.addEventListener('touchstart', invalidateMap, { passive: true, once: true });
 
         // Click listener to print coordinates in developer console for fine-tuning
         map.on('click', (e) => {
