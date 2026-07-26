@@ -10,7 +10,7 @@ $success_msg = "";
 
 // Fetch departments and sections for dropdowns
 $departments = $db->query("SELECT * FROM departments ORDER BY code ASC")->fetchAll();
-$sections = $db->query("SELECT * FROM sections ORDER BY section_name ASC")->fetchAll();
+$sections = $db->query("SELECT s.*, d.code as dept_code FROM sections s JOIN departments d ON s.department_id = d.id ORDER BY d.code ASC, s.name ASC")->fetchAll();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $student_name = sanitize_input($_POST['student_name'] ?? '');
@@ -259,7 +259,7 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
                         <select id="section_id" name="section_id" class="form-control" required>
                             <option value="">-- Select Section --</option>
                             <?php foreach ($sections as $sec): ?>
-                                <option value="<?php echo (int)$sec['id']; ?>"><?php echo sanitize_input($sec['section_name']); ?></option>
+                                <option value="<?php echo (int)$sec['id']; ?>"><?php echo sanitize_input($sec['dept_code'] . ' - Section ' . $sec['name']); ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

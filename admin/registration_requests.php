@@ -99,7 +99,7 @@ if (!in_array($active_tab, ['Pending', 'Approved', 'Rejected'])) {
 
 $search_term = sanitize_input($_GET['search'] ?? '');
 $query_sql = "
-    SELECT r.*, d.code as dept_code, d.name as dept_name, s.section_name 
+    SELECT r.*, d.code as dept_code, d.name as dept_name, s.name as section_name 
     FROM student_registration_requests r
     LEFT JOIN departments d ON r.department_id = d.id
     LEFT JOIN sections s ON r.section_id = s.id
