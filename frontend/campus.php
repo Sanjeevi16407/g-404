@@ -274,7 +274,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
     </div>
 
     <!-- Map Viewport Area -->
-    <div style="position: relative; width: 100%; height: 100%;">
+    <div id="map-container" style="position: relative; width: 100%; height: 100%;">
         <div id="map"></div>
 
         <!-- Glowing Information Card overlay -->
