@@ -29,11 +29,11 @@
         white-space: normal !important;
     }
 
-    /* Hide desktop frame items */
-    .sidebar, 
-    .top-navbar, 
-    .buddy-ambient-container, 
-    #buddy-ambient-widget {
+    /* Hide desktop frame items with high specificity to override inline style blocks */
+    body .sidebar, 
+    body .top-navbar, 
+    body .buddy-ambient-container, 
+    body #buddy-ambient-widget {
         display: none !important;
     }
 
@@ -44,10 +44,10 @@
         max-width: 100vw !important;
     }
 
-    /* Scrollable Content Wrapper Padding (Clears fixed 64px header with 16px bottom buffer space) */
-    .main-content {
+    /* Scrollable Content Wrapper Padding (Clears fixed 64px header + 32px spacious gap) */
+    body .main-content {
         margin-left: 0 !important;
-        padding: 80px 16px 24px 16px !important; /* 64px header + 16px gap */
+        padding: 96px 16px 24px 16px !important; /* 64px header + 32px spacious gap */
         width: 100% !important;
         max-width: 100vw !important;
         box-sizing: border-box !important;
