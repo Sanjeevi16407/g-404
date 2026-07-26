@@ -53,9 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
         z-index: 1; /* Keep map below overlays */
     }
 
-    /* Apply futuristic dark satellite filters for space theme compatibility */
+    /* Space theme map container styling */
     [data-theme="Dark"] #map, [data-theme="Spatial"] #map, [data-theme="Liquid Glass"] #map {
-        filter: brightness(0.7) contrast(1.15) saturate(1.1) hue-rotate(350deg);
+        background: #0d1223;
     }
 
     .location-item {
@@ -495,41 +495,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['complete_campus'])) {
     document.addEventListener('DOMContentLoaded', () => {
         renderDestinationsList();
 
-        // Base Tile Layers (Google Hybrid Satellite, CartoDB Voyager, & OpenStreetMap FR)
-        const googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-            attribution: '&copy; Google Maps Satellite',
-            maxZoom: 20,
-            detectRetina: true,
-            crossOrigin: true
-        });
-
+        // Base Tile Layers (CartoDB Voyager, OpenStreetMap, & Google Satellite)
         const voyagerLayer = L.tileLayer('https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; CartoDB &copy; OpenStreetMap',
             maxZoom: 19,
-            detectRetina: true,
-            crossOrigin: true
+            subdomains: 'abcd'
         });
 
-        const osmFrLayer = L.tileLayer('https://tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+        const osmLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap',
-            maxZoom: 19,
-            detectRetina: true,
-            crossOrigin: true
+            maxZoom: 19
         });
 
-        // Initialize Map with Google Hybrid Satellite as default active layer
+        const googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            attribution: '&copy; Google Maps',
+            maxZoom: 20
+        });
+
+        // Initialize Map with Voyager 2D map as ultra-fast, fail-proof default layer
         map = L.map('map', {
             center: [10.7561, 78.6513],
             zoom: 17,
             zoomControl: true,
-            layers: [googleHybrid]
+            layers: [voyagerLayer]
         });
 
-        // Add Layer Control (Switch between Satellite View, 2D Voyager Map, and OpenStreetMap)
+        // Add Layer Control (Switch between 2D Voyager Map, Satellite View, and OpenStreetMap)
         const baseMaps = {
-            "🛰️ Satellite View": googleHybrid,
             "🌐 2D Voyager Map": voyagerLayer,
-            "🗺️ OpenStreetMap": osmFrLayer
+            "🛰️ Satellite View": googleHybrid,
+            "🗺️ OpenStreetMap": osmLayer
         };
         L.control.layers(baseMaps).addTo(map);
 
