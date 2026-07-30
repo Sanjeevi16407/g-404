@@ -125,7 +125,7 @@
         }
     </style>
 
-    <div class="buddy-ambient-container" id="buddy-ambient-widget">
+    <div class="buddy-ambient-container" id="buddy-ambient-widget" style="position: fixed !important; bottom: 24px !important; right: 18px !important; z-index: 9999999 !important; display: flex !important; opacity: 1 !important; visibility: visible !important; pointer-events: auto !important;">
         <!-- Ambient tip speech bubble -->
         <div class="buddy-ambient-bubble" id="buddy-ambient-tooltip">
             Need anything? Touch me to chat! 💬
@@ -147,6 +147,12 @@
         }
 
         document.addEventListener("DOMContentLoaded", function() {
+            // Guarantee shortcut widget is attached directly to document.body so it is always visible without scrolling
+            const widget = document.getElementById('buddy-ambient-widget');
+            if (widget && widget.parentElement !== document.body) {
+                document.body.appendChild(widget);
+            }
+
             // Initialize Lucide Icons
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();

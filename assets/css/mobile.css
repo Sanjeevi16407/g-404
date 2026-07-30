@@ -34,16 +34,20 @@
         display: none !important;
     }
 
-    /* Floating AI Buddy Mobile Shortcut Orb */
+    /* Floating AI Buddy Mobile Shortcut Orb - Always Visible Without Scrolling */
     body .buddy-ambient-container, 
     body #buddy-ambient-widget {
         display: flex !important;
         position: fixed !important;
         bottom: 24px !important;
-        right: 20px !important;
+        right: 18px !important;
         left: auto !important;
-        z-index: 999999 !important;
+        top: auto !important;
+        z-index: 9999999 !important;
+        opacity: 1 !important;
+        visibility: visible !important;
         pointer-events: auto !important;
+        transform: none !important;
     }
 
     /* Collapse flex layouts */
