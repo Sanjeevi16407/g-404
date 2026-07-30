@@ -30,10 +30,20 @@
 
     /* Hide desktop frame items with high specificity to override inline style blocks */
     body .sidebar, 
-    body .top-navbar, 
+    body .top-navbar {
+        display: none !important;
+    }
+
+    /* Floating AI Buddy Mobile Shortcut Orb */
     body .buddy-ambient-container, 
     body #buddy-ambient-widget {
-        display: none !important;
+        display: flex !important;
+        position: fixed !important;
+        bottom: 24px !important;
+        right: 20px !important;
+        left: auto !important;
+        z-index: 999999 !important;
+        pointer-events: auto !important;
     }
 
     /* Collapse flex layouts */

@@ -128,16 +128,24 @@
     <div class="buddy-ambient-container" id="buddy-ambient-widget">
         <!-- Ambient tip speech bubble -->
         <div class="buddy-ambient-bubble" id="buddy-ambient-tooltip">
-            Need anything? Click me to chat! 💬
+            Need anything? Touch me to chat! 💬
         </div>
         
-        <!-- Interactive 3D orb -->
-        <div class="buddy-ambient-orb-wrapper" onclick="window.location.href='buddy.php'" title="Click to Chat with Buddy">
+        <!-- Interactive 3D orb shortcut -->
+        <div class="buddy-ambient-orb-wrapper" id="buddy-mobile-shortcut-btn" onclick="openBuddyChatbot(event)" ontouchend="openBuddyChatbot(event)" title="Touch to Chat with AI Buddy">
             <canvas id="buddy-ambient-canvas" class="buddy-ambient-canvas"></canvas>
         </div>
     </div>
 
     <script>
+        function openBuddyChatbot(e) {
+            if (e) {
+                if (e.cancelable) e.preventDefault();
+                e.stopPropagation();
+            }
+            window.location.href = 'buddy.php';
+        }
+
         document.addEventListener("DOMContentLoaded", function() {
             // Initialize Lucide Icons
             if (typeof lucide !== 'undefined') {
