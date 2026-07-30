@@ -447,7 +447,10 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
         
         <!-- Interactive 3D orb shortcut -->
         <div class="buddy-ambient-orb-wrapper" id="buddy-mobile-shortcut-btn" onclick="openBuddyChatbot(event)" ontouchend="openBuddyChatbot(event)" title="Touch to Chat with AI Buddy">
-            <canvas id="buddy-ambient-canvas" class="buddy-ambient-canvas"></canvas>
+            <canvas id="buddy-ambient-canvas" class="buddy-ambient-canvas" width="72" height="72"></canvas>
+            <div class="buddy-orb-icon-fallback" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.35rem; color: #00f2fe; pointer-events: none; z-index: 1; text-shadow: 0 0 10px rgba(0, 242, 254, 0.8); display: flex; align-items: center; justify-content: center;">
+                <i class="fa-solid fa-brain"></i>
+            </div>
         </div>
     </div>
     <?php endif; ?>

@@ -9,8 +9,8 @@ class Buddy3DParticles {
         this.canvas = document.getElementById(canvasId);
         if (!this.canvas || typeof THREE === 'undefined') return;
 
-        this.width = this.canvas.clientWidth;
-        this.height = this.canvas.clientHeight;
+        this.width = (this.canvas.clientWidth && this.canvas.clientWidth > 0) ? this.canvas.clientWidth : 72;
+        this.height = (this.canvas.clientHeight && this.canvas.clientHeight > 0) ? this.canvas.clientHeight : 72;
 
         // 1. Initialize WebGL Scene
         this.scene = new THREE.Scene();
@@ -109,7 +109,6 @@ class Buddy3DParticles {
         this.rightEye.position.y = 0.1;
         this.eyesGroup.add(this.rightEye);
 
-
         // Small white pulsing central core
         const coreGeo = new THREE.SphereGeometry(1.0, 16, 16);
         const coreMat = new THREE.MeshBasicMaterial({
@@ -162,7 +161,6 @@ class Buddy3DParticles {
         const time = Date.now();
         const breathingScale = 1 + Math.sin(time * 0.002) * 0.035;
         this.buddyGroup.scale.set(breathingScale, breathingScale, breathingScale);
-
 
         // Pulse central white core
         if (this.pulseCore) {
