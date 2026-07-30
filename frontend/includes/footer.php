@@ -125,18 +125,6 @@
         }
     </style>
 
-    <div class="buddy-ambient-container" id="buddy-ambient-widget" style="position: fixed !important; bottom: 24px !important; right: 18px !important; z-index: 9999999 !important; display: flex !important; opacity: 1 !important; visibility: visible !important; pointer-events: auto !important;">
-        <!-- Ambient tip speech bubble -->
-        <div class="buddy-ambient-bubble" id="buddy-ambient-tooltip">
-            Need anything? Touch me to chat! 💬
-        </div>
-        
-        <!-- Interactive 3D orb shortcut -->
-        <div class="buddy-ambient-orb-wrapper" id="buddy-mobile-shortcut-btn" onclick="openBuddyChatbot(event)" ontouchend="openBuddyChatbot(event)" title="Touch to Chat with AI Buddy">
-            <canvas id="buddy-ambient-canvas" class="buddy-ambient-canvas"></canvas>
-        </div>
-    </div>
-
     <script>
         function openBuddyChatbot(e) {
             if (e) {
@@ -147,7 +135,7 @@
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            // Guarantee shortcut widget is attached directly to document.body so it is always visible without scrolling
+            // Ensure shortcut widget is top-level child of body
             const widget = document.getElementById('buddy-ambient-widget');
             if (widget && widget.parentElement !== document.body) {
                 document.body.appendChild(widget);

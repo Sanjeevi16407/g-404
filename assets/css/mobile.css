@@ -34,7 +34,9 @@
         display: none !important;
     }
 
-    /* Floating AI Buddy Mobile Shortcut Orb - Always Visible Without Scrolling */
+    /* Floating AI Buddy Mobile & Desktop Viewport Fixed Shortcut (WhatsApp Style) */
+    .buddy-ambient-container, 
+    #buddy-ambient-widget,
     body .buddy-ambient-container, 
     body #buddy-ambient-widget {
         display: flex !important;
@@ -43,11 +45,12 @@
         right: 18px !important;
         left: auto !important;
         top: auto !important;
-        z-index: 9999999 !important;
+        z-index: 99999999 !important;
         opacity: 1 !important;
         visibility: visible !important;
         pointer-events: auto !important;
-        transform: none !important;
+        transform: translate3d(0, 0, 0) !important;
+        -webkit-transform: translate3d(0, 0, 0) !important;
     }
 
     /* Collapse flex layouts */
