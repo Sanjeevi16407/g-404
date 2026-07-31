@@ -34,18 +34,18 @@
         display: none !important;
     }
 
-    /* Floating AI Buddy Mobile & Desktop Viewport Fixed Shortcut (WhatsApp Style) */
+    /* Floating Action Button (FAB) Mobile Viewport Placement */
     .buddy-ambient-container, 
     #buddy-ambient-widget,
     body .buddy-ambient-container, 
     body #buddy-ambient-widget {
         display: flex !important;
         position: fixed !important;
-        bottom: 24px !important;
-        right: 18px !important;
+        bottom: 20px !important;
+        right: 20px !important;
         left: auto !important;
         top: auto !important;
-        z-index: 99999999 !important;
+        z-index: 999999999 !important;
         opacity: 1 !important;
         visibility: visible !important;
         pointer-events: auto !important;

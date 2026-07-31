@@ -1,33 +1,43 @@
-    </main>
+</main>
     <?php if ($active_page !== 'login.php' && $active_page !== 'welcome.php' && $active_page !== 'buddy.php'): ?>
     <!-- ==========================================
          BUDDY AMBIENT PRESENCE (GLOBAL FLOATING ORB)
          ========================================== -->
     <style>
-        .buddy-ambient-container {
+        /* Modern Floating Action Button (FAB) Widget for Buddy AI */
+        .buddy-ambient-container,
+        #buddy-ambient-widget {
             position: fixed !important;
             bottom: 30px !important;
             right: 30px !important;
             left: auto !important;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            gap: 16px;
+            top: auto !important;
+            z-index: 999999999 !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 14px !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+            transform: translate3d(0, 0, 0) !important;
+            -webkit-transform: translate3d(0, 0, 0) !important;
+            transition: bottom 0.25s ease, right 0.25s ease !important;
         }
         
-        /* Glassmorphic speech bubble */
+        /* Glassmorphic speech bubble tip */
         .buddy-ambient-bubble {
             position: relative;
-            background: rgba(10, 15, 30, 0.85);
+            background: rgba(10, 15, 30, 0.9);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: var(--text-secondary);
+            border: 1px solid rgba(0, 242, 254, 0.25);
+            color: var(--text-primary);
             padding: 10px 16px;
             border-radius: 16px;
             font-size: 0.82rem;
+            font-weight: 600;
             max-width: 240px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 242, 254, 0.15);
             opacity: 0;
             transform: translateX(15px) scale(0.9);
             pointer-events: none;
@@ -38,7 +48,6 @@
             transform: translateX(0) scale(1);
             pointer-events: auto;
         }
-        /* Triangle indicator for bubble */
         .buddy-ambient-bubble::after {
             content: '';
             position: absolute;
@@ -47,43 +56,48 @@
             transform: translateY(-50%);
             border-width: 6px 0 6px 6px;
             border-style: solid;
-            border-color: transparent transparent transparent rgba(10, 15, 30, 0.85);
+            border-color: transparent transparent transparent rgba(10, 15, 30, 0.9);
         }
         
-        /* Floating mini particle core wrapper with glowing fallback background */
+        /* FAB Button Orb Wrapper - Removed Continuous Bobbing Animation */
         .buddy-ambient-orb-wrapper {
             position: relative;
-            width: 72px;
-            height: 72px;
+            width: 68px;
+            height: 68px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform var(--transition-fast);
-            animation: buddy-ambient-float 4s infinite ease-in-out;
-            background: radial-gradient(circle at center, rgba(0, 242, 254, 0.28) 0%, rgba(10, 15, 30, 0.8) 70%);
-            border: 1.5px solid rgba(0, 242, 254, 0.45);
-            box-shadow: 0 0 25px rgba(0, 242, 254, 0.35), inset 0 0 12px rgba(0, 242, 254, 0.2);
+            background: radial-gradient(circle at center, rgba(0, 242, 254, 0.35) 0%, rgba(10, 15, 30, 0.92) 75%);
+            border: 2px solid rgba(0, 242, 254, 0.55);
+            box-shadow: 0 8px 25px rgba(0, 242, 254, 0.35), 0 4px 15px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
         }
+        
+        /* Desktop Hover State */
         .buddy-ambient-orb-wrapper:hover {
             transform: scale(1.08);
-            box-shadow: 0 0 35px rgba(0, 242, 254, 0.5);
-            border-color: rgba(0, 242, 254, 0.65);
+            box-shadow: 0 12px 35px rgba(0, 242, 254, 0.55), 0 6px 20px rgba(0, 0, 0, 0.6);
+            border-color: rgba(0, 242, 254, 0.85);
         }
+
+        /* Touch Active Tap State */
+        .buddy-ambient-orb-wrapper:active {
+            transform: scale(0.92);
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4);
+        }
+
         .buddy-ambient-canvas {
-            width: 72px;
-            height: 72px;
+            width: 68px;
+            height: 68px;
             background: transparent;
             pointer-events: none;
         }
-        
-        /* Breathing float keyframes */
-        @keyframes buddy-ambient-float {
-            0%, 100% { transform: translateY(0px) scale(1); }
-            50% { transform: translateY(-6px) scale(1.02); }
-        }
-        
+
         /* Light Theme compatibility overrides */
         html[data-theme="Light"] .buddy-ambient-bubble {
             background: rgba(255, 255, 255, 0.95);
@@ -95,32 +109,49 @@
             border-color: transparent transparent transparent rgba(255, 255, 255, 0.95);
         }
         html[data-theme="Light"] .buddy-ambient-orb-wrapper {
-            background: radial-gradient(circle at center, rgba(0, 114, 255, 0.22) 0%, rgba(255, 255, 255, 0.92) 70%) !important;
-            border-color: rgba(0, 114, 255, 0.45) !important;
-            box-shadow: 0 8px 20px rgba(0, 114, 255, 0.25), inset 0 0 10px rgba(0, 114, 255, 0.1) !important;
+            background: radial-gradient(circle at center, rgba(0, 114, 255, 0.28) 0%, rgba(255, 255, 255, 0.95) 75%) !important;
+            border-color: rgba(0, 114, 255, 0.55) !important;
+            box-shadow: 0 8px 20px rgba(0, 114, 255, 0.3), inset 0 0 10px rgba(0, 114, 255, 0.15) !important;
         }
         
-        /* Mobile view structural optimization overrides */
+        /* Tablet view positioning (769px - 1024px) */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .buddy-ambient-container,
+            #buddy-ambient-widget {
+                bottom: 24px !important;
+                right: 24px !important;
+            }
+            .buddy-ambient-orb-wrapper {
+                width: 62px !important;
+                height: 62px !important;
+            }
+            .buddy-ambient-canvas {
+                width: 62px !important;
+                height: 62px !important;
+            }
+        }
+
+        /* Mobile view positioning (<= 768px) */
         @media (max-width: 768px) {
-            .buddy-ambient-container {
+            .buddy-ambient-container,
+            #buddy-ambient-widget {
                 bottom: 20px !important;
                 right: 20px !important;
-                left: auto !important;
                 gap: 0px !important;
             }
             .buddy-ambient-orb-wrapper {
-                width: 56px !important;
-                height: 56px !important;
-                background: radial-gradient(circle at center, rgba(0, 242, 254, 0.32) 0%, rgba(10, 15, 30, 0.9) 70%) !important;
-                border-color: rgba(0, 242, 254, 0.5) !important;
-                box-shadow: 0 4px 18px rgba(0, 242, 254, 0.3) !important;
+                width: 58px !important;
+                height: 58px !important;
+                background: radial-gradient(circle at center, rgba(0, 242, 254, 0.4) 0%, rgba(10, 15, 30, 0.95) 75%) !important;
+                border-color: rgba(0, 242, 254, 0.65) !important;
+                box-shadow: 0 6px 22px rgba(0, 242, 254, 0.4), 0 4px 12px rgba(0, 0, 0, 0.6) !important;
             }
             .buddy-ambient-canvas {
-                width: 56px !important;
-                height: 56px !important;
+                width: 58px !important;
+                height: 58px !important;
             }
             .buddy-ambient-bubble {
-                display: none !important; /* Hide speech bubble on mobile */
+                display: none !important; /* Hide speech bubble on mobile to keep FAB clean */
             }
         }
     </style>
