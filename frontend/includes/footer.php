@@ -6,13 +6,17 @@
     <style>
         .buddy-ambient-container {
             position: fixed !important;
-            bottom: 30px !important;
-            right: 30px !important;
+            bottom: 24px !important;
+            right: 24px !important;
+            top: auto !important;
             left: auto !important;
-            z-index: 9999;
-            display: flex;
+            display:flex !important;
             align-items: center;
-            gap: 16px;
+            justify-content: center;
+            z-index: 214783647 !important;
+            transform:none !important;
+            animation: none !important;
+            pointer-events: auto !important;
         }
         
         /* Glassmorphic speech bubble */
@@ -52,27 +56,24 @@
         
         /* Floating mini particle core wrapper with glowing fallback background */
         .buddy-ambient-orb-wrapper {
-            position: relative;
-            width: 72px;
-            height: 72px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
+            position: relative;
+            display:flex;
+            align-items:center;
+            justify-content:center;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform var(--transition-fast);
-            animation: buddy-ambient-float 4s infinite ease-in-out;
-            background: radial-gradient(circle at center, rgba(0, 242, 254, 0.28) 0%, rgba(10, 15, 30, 0.8) 70%);
-            border: 1.5px solid rgba(0, 242, 254, 0.45);
-            box-shadow: 0 0 25px rgba(0, 242, 254, 0.35), inset 0 0 12px rgba(0, 242, 254, 0.2);
-        }
+            transform:none !important;
+            animation:none !important;
+            }
         .buddy-ambient-orb-wrapper:hover {
-            transform: scale(1.08);
+            transform: scale(1.08) !important;
             box-shadow: 0 0 35px rgba(0, 242, 254, 0.5);
             border-color: rgba(0, 242, 254, 0.65);
         }
         .buddy-ambient-canvas {
-            width: 72px;
+            width: 72px; 
             height: 72px;
             background: transparent;
             pointer-events: none;
