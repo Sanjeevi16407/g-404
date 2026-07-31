@@ -437,17 +437,17 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
         </header>
     </div>
 
-    <!-- Global Floating Action Button (FAB) Widget for Buddy AI -->
+    <!-- Global Floating WhatsApp-Style AI Buddy Shortcut Orb (Top-level Body Child for Instant Viewport Fixed Position) -->
     <?php if ($active_page !== 'login.php' && $active_page !== 'welcome.php' && $active_page !== 'buddy.php'): ?>
-    <div class="buddy-ambient-container" id="buddy-ambient-widget" role="button" aria-label="Chat with Buddy AI">
+    <div class="buddy-ambient-container" id="buddy-ambient-widget">
         <!-- Ambient tip speech bubble -->
         <div class="buddy-ambient-bubble" id="buddy-ambient-tooltip">
             Need anything? Touch me to chat! 💬
         </div>
         
-        <!-- FAB Button Orb Wrapper -->
-        <div class="buddy-ambient-orb-wrapper" id="buddy-mobile-shortcut-btn" onclick="openBuddyChatbot(event)" ontouchend="openBuddyChatbot(event)" title="Chat with Buddy AI">
-            <canvas id="buddy-ambient-canvas" class="buddy-ambient-canvas" width="68" height="68"></canvas>
+        <!-- Interactive 3D orb shortcut -->
+        <div class="buddy-ambient-orb-wrapper" id="buddy-mobile-shortcut-btn" onclick="openBuddyChatbot(event)" ontouchend="openBuddyChatbot(event)" title="Touch to Chat with AI Buddy">
+            <canvas id="buddy-ambient-canvas" class="buddy-ambient-canvas" width="72" height="72"></canvas>
             <div class="buddy-orb-icon-fallback" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.35rem; color: #00f2fe; pointer-events: none; z-index: 1; text-shadow: 0 0 10px rgba(0, 242, 254, 0.8); display: flex; align-items: center; justify-content: center;">
                 <i class="fa-solid fa-brain"></i>
             </div>
