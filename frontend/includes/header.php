@@ -424,18 +424,18 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
             <button type="button" class="mobile-hamburger-btn" onclick="toggleSidebar()" title="Toggle Navigation Menu">
                 <i class="fa-solid fa-bars"></i>
             </button>
-            <div class="mobile-top-title" style="display: inline-flex; align-items: center; gap: 8px;">
-                <img src="../<?php echo sanitize_input($college_logo); ?>" alt="Logo" style="width: 28px; height: 28px; border-radius: 50%;">
-                <span>Saranathan Senior</span>
+            <div class="mobile-top-title" style="display: inline-flex; align-items: center; gap: 8px; overflow: hidden; flex: 1; margin: 0 8px;">
+                <img src="../<?php echo sanitize_input($college_logo); ?>" alt="Logo" class="mobile-header-logo" style="width: 32px !important; height: 32px !important; max-width: 32px !important; max-height: 32px !important; min-width: 32px !important; min-height: 32px !important; border-radius: 50%; object-fit: contain; flex-shrink: 0;">
+                <span style="font-size: 0.95rem; font-weight: 700; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Saranathan Senior</span>
             </div>
-            <div style="display: flex; align-items: center; gap: 6px;">
+            <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
                 <a href="profile.php#notifications" class="mobile-icon-btn" title="Notifications">
                     <i class="fa-solid fa-bell"></i>
                     <?php if ($notif_count > 0): ?>
                         <span style="position: absolute; top: 4px; right: 4px; background: #ef4444; color: white; font-size: 0.65rem; font-weight: bold; border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 5px rgba(239, 68, 68, 0.5);"><?php echo $notif_count; ?></span>
                     <?php endif; ?>
                 </a>
-                <a href="profile.php" style="margin-left: 4px;">
+                <a href="profile.php" style="margin-left: 2px;">
                     <img src="../<?php echo !empty($student_settings['avatar_url']) ? sanitize_input($student_settings['avatar_url']) : 'assets/images/default-avatar.png'; ?>" alt="Avatar" class="mobile-badge-avatar">
                 </a>
             </div>

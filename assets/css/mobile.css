@@ -51,6 +51,21 @@
         display: block !important;
     }
 
+    /* Strict Logo Sizing Locks to prevent giant high-res image overflow */
+    .mobile-header-logo,
+    .mobile-top-title img,
+    body .mobile-top-header img:not(.mobile-badge-avatar) {
+        width: 32px !important;
+        height: 32px !important;
+        max-width: 32px !important;
+        max-height: 32px !important;
+        min-width: 32px !important;
+        min-height: 32px !important;
+        object-fit: contain !important;
+        border-radius: 50% !important;
+        flex-shrink: 0 !important;
+    }
+
     /* Off-Canvas Slide-Out Mobile Sidebar Glass Drawer */
     body .sidebar,
     body #student-sidebar {
@@ -73,6 +88,7 @@
         display: flex !important;
         flex-direction: column !important;
         overflow-y: auto !important;
+        box-sizing: border-box !important;
     }
 
     body .sidebar.active,
@@ -89,6 +105,89 @@
         color: var(--text-secondary) !important;
         cursor: pointer !important;
         z-index: 10 !important;
+    }
+
+    /* Sidebar Header & Logo Locks */
+    body .sidebar-brand {
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        padding-bottom: 16px !important;
+        margin-bottom: 16px !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        width: 100% !important;
+    }
+
+    body .sidebar-brand .brand-logo {
+        width: 36px !important;
+        height: 36px !important;
+        max-width: 36px !important;
+        max-height: 36px !important;
+        min-width: 36px !important;
+        min-height: 36px !important;
+        object-fit: contain !important;
+        border-radius: 50% !important;
+        flex-shrink: 0 !important;
+    }
+
+    body .sidebar-brand .brand-name {
+        font-family: var(--font-heading) !important;
+        font-size: 1.1rem !important;
+        font-weight: 700 !important;
+        color: var(--text-primary) !important;
+        line-height: 1.2 !important;
+    }
+
+    body .sidebar-brand .brand-name span {
+        display: block !important;
+        font-size: 0.75rem !important;
+        color: var(--glow-primary) !important;
+        font-weight: 500 !important;
+    }
+
+    /* Menu List Formatting in Mobile Drawer */
+    body .menu-list {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        list-style: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+    }
+
+    body .menu-list li {
+        width: 100% !important;
+        display: block !important;
+    }
+
+    body .menu-item-link {
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        padding: 12px 14px !important;
+        border-radius: 12px !important;
+        color: var(--text-secondary) !important;
+        text-decoration: none !important;
+        font-size: 0.95rem !important;
+        font-weight: 500 !important;
+        transition: all 0.2s ease !important;
+        background: transparent !important;
+        box-sizing: border-box !important;
+    }
+
+    body .menu-item-link.active,
+    body .menu-item-link:hover {
+        background: rgba(0, 242, 254, 0.12) !important;
+        color: var(--glow-primary) !important;
+        border-left: 3px solid var(--glow-primary) !important;
+    }
+
+    body .menu-item-link i {
+        font-size: 1.1rem !important;
+        width: 20px !important;
+        text-align: center !important;
+        color: var(--glow-primary) !important;
     }
 
     /* Floating AI Buddy Mobile & Desktop Viewport Fixed Shortcut (WhatsApp Style) */
