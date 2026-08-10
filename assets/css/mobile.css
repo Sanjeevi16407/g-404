@@ -101,8 +101,11 @@
     }
 
     body .sidebar.active,
-    body #student-sidebar.active {
+    body #student-sidebar.active,
+    #student-sidebar.active {
         left: 0 !important;
+        transform: translate3d(0, 0, 0) !important;
+        -webkit-transform: translate3d(0, 0, 0) !important;
     }
 
     .sidebar-close-btn {

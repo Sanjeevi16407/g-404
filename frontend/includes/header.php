@@ -436,7 +436,7 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
     <div class="mobile-only" style="display: none;">
         <!-- Mobile Top Header Bar with Hamburger Toggle -->
         <header class="mobile-top-header">
-            <button type="button" class="mobile-hamburger-btn" onclick="toggleSidebar(event)" ontouchend="toggleSidebar(event)" title="Toggle Navigation Menu">
+            <button type="button" class="mobile-hamburger-btn" onclick="toggleSidebar(event)" title="Toggle Navigation Menu">
                 <i class="fa-solid fa-bars"></i>
             </button>
             <div class="mobile-top-title" style="display: inline-flex; align-items: center; gap: 8px; overflow: hidden; flex: 1; margin: 0 8px;">
