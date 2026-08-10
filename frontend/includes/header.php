@@ -419,23 +419,31 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
 
     <!-- Mobile Shell Wrapper -->
     <div class="mobile-only" style="display: none;">
-        <!-- Mobile Top Header Bar -->
+        <!-- Mobile Top Header Bar with Hamburger Toggle -->
         <header class="mobile-top-header">
-            <div class="mobile-top-title" onclick="toggleQuickAccessGrid()" style="cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-                Saranathan Digital Senior 
-                <i class="fa-solid fa-chevron-up" id="quick-access-chevron" style="font-size: 0.8rem; color: var(--glow-primary); transition: transform 0.25s;"></i>
+            <button type="button" class="mobile-hamburger-btn" onclick="toggleSidebar()" title="Toggle Navigation Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="mobile-top-title" style="display: inline-flex; align-items: center; gap: 8px;">
+                <img src="../<?php echo sanitize_input($college_logo); ?>" alt="Logo" style="width: 28px; height: 28px; border-radius: 50%;">
+                <span>Saranathan Senior</span>
             </div>
-            <a href="profile.php#notifications" class="mobile-icon-btn" title="Notifications">
-                <i class="fa-solid fa-bell"></i>
-                <?php if ($notif_count > 0): ?>
-                    <span style="position: absolute; top: 4px; right: 4px; background: #ef4444; color: white; font-size: 0.65rem; font-weight: bold; border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 5px rgba(239, 68, 68, 0.5);"><?php echo $notif_count; ?></span>
-                <?php endif; ?>
-            </a>
-            <a href="profile.php" style="margin-left: 8px;">
-                <img src="../<?php echo !empty($student_settings['avatar_url']) ? sanitize_input($student_settings['avatar_url']) : 'assets/images/default-avatar.png'; ?>" alt="Avatar" class="mobile-badge-avatar">
-            </a>
+            <div style="display: flex; align-items: center; gap: 6px;">
+                <a href="profile.php#notifications" class="mobile-icon-btn" title="Notifications">
+                    <i class="fa-solid fa-bell"></i>
+                    <?php if ($notif_count > 0): ?>
+                        <span style="position: absolute; top: 4px; right: 4px; background: #ef4444; color: white; font-size: 0.65rem; font-weight: bold; border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 5px rgba(239, 68, 68, 0.5);"><?php echo $notif_count; ?></span>
+                    <?php endif; ?>
+                </a>
+                <a href="profile.php" style="margin-left: 4px;">
+                    <img src="../<?php echo !empty($student_settings['avatar_url']) ? sanitize_input($student_settings['avatar_url']) : 'assets/images/default-avatar.png'; ?>" alt="Avatar" class="mobile-badge-avatar">
+                </a>
+            </div>
         </header>
     </div>
+
+    <!-- Mobile Sidebar Dark Backdrop Overlay -->
+    <div id="student-sidebar-backdrop" class="sidebar-backdrop" onclick="toggleSidebar()"></div>
 
     <!-- Global Floating WhatsApp-Style AI Buddy Shortcut Orb (Top-level Body Child for Instant Viewport Fixed Position) -->
     <?php if ($active_page !== 'login.php' && $active_page !== 'welcome.php' && $active_page !== 'buddy.php'): ?>
@@ -543,59 +551,6 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
 
     <!-- Main Workspace Area -->
     <main class="main-content">
-        <!-- Collapsible Quick Access Navigation Dropdown (Mobile Only) -->
-        <div class="mobile-only mobile-quick-access-grid-container" id="quick-access-grid-container" style="display: none;">
-            <div class="quick-nav-grid">
-                <a href="dashboard.php" class="quick-nav-item <?php echo $active_page === 'dashboard.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-gauge-high"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="buddy.php" class="quick-nav-item <?php echo $active_page === 'buddy.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-brain"></i>
-                    <span>Buddy AI</span>
-                </a>
-                <a href="orientation.php" class="quick-nav-item <?php echo $active_page === 'orientation.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                    <span>Orientation</span>
-                </a>
-                <a href="campus.php" class="quick-nav-item <?php echo $active_page === 'campus.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-map-location-dot"></i>
-                    <span>Campus Guide</span>
-                </a>
-                <a href="faculty.php" class="quick-nav-item <?php echo $active_page === 'faculty.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-user-tie"></i>
-                    <span>Faculty</span>
-                </a>
-                <a href="timetable.php" class="quick-nav-item <?php echo $active_page === 'timetable.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-calendar-days"></i>
-                    <span>Timetable</span>
-                </a>
-                <a href="clubs.php" class="quick-nav-item <?php echo $active_page === 'clubs.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-people-group"></i>
-                    <span>Clubs</span>
-                </a>
-                <a href="events.php" class="quick-nav-item <?php echo $active_page === 'events.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-calendar-check"></i>
-                    <span>Events</span>
-                </a>
-                <a href="documents.php" class="quick-nav-item <?php echo $active_page === 'documents.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-file-pdf"></i>
-                    <span>Documents</span>
-                </a>
-                <a href="profile.php" class="quick-nav-item <?php echo $active_page === 'profile.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-circle-user"></i>
-                    <span>Profile</span>
-                </a>
-                <a href="settings.php" class="quick-nav-item <?php echo $active_page === 'settings.php' ? 'active' : ''; ?>">
-                    <i class="fa-solid fa-sliders"></i>
-                    <span>Settings</span>
-                </a>
-                <a href="logout.php" class="quick-nav-item logout">
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                    <span>Sign Out</span>
-                </a>
-            </div>
-        </div>
         <!-- Top navbar profile area -->
         <header class="glass-panel top-navbar">
             <!-- Mobile Sidebar Toggle -->

@@ -28,10 +28,67 @@
         overflow-wrap: break-word !important;
     }
 
-    /* Hide desktop frame items with high specificity to override inline style blocks */
-    body .sidebar, 
+    /* Top Navbar hidden on mobile, replaced by mobile-top-header */
     body .top-navbar {
         display: none !important;
+    }
+
+    /* Mobile Sidebar Backdrop Overlay */
+    .sidebar-backdrop {
+        display: none;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        background: rgba(0, 0, 0, 0.75) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        z-index: 99998 !important;
+        transition: opacity 0.3s ease !important;
+    }
+    .sidebar-backdrop.active {
+        display: block !important;
+    }
+
+    /* Off-Canvas Slide-Out Mobile Sidebar Glass Drawer */
+    body .sidebar,
+    body #student-sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        left: -100% !important;
+        bottom: 0 !important;
+        width: 280px !important;
+        height: 100vh !important;
+        z-index: 99999 !important;
+        background: rgba(10, 15, 30, 0.98) !important;
+        backdrop-filter: blur(25px) !important;
+        -webkit-backdrop-filter: blur(25px) !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.6) !important;
+        transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        padding: 24px 16px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow-y: auto !important;
+    }
+
+    body .sidebar.active,
+    body #student-sidebar.active {
+        left: 0 !important;
+    }
+
+    .sidebar-close-btn {
+        display: block !important;
+        position: absolute !important;
+        top: 20px !important;
+        right: 20px !important;
+        font-size: 1.3rem !important;
+        color: var(--text-secondary) !important;
+        cursor: pointer !important;
+        z-index: 10 !important;
     }
 
     /* Floating AI Buddy Mobile & Desktop Viewport Fixed Shortcut (WhatsApp Style) */
@@ -92,16 +149,31 @@
         left: 0 !important;
         width: 100vw !important;
         height: 64px !important;
-        background: rgba(10, 15, 30, 0.85) !important;
+        background: rgba(10, 15, 30, 0.88) !important;
         backdrop-filter: blur(20px) !important;
         -webkit-backdrop-filter: blur(20px) !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
         display: flex !important;
         align-items: center !important;
         justify-content: space-between !important;
         padding: 0 16px !important;
         z-index: 20000 !important;
         box-sizing: border-box !important;
+    }
+
+    .mobile-hamburger-btn {
+        width: 40px !important;
+        height: 40px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 12px !important;
+        font-size: 1.1rem !important;
+        color: var(--glow-primary) !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        cursor: pointer !important;
+        padding: 0 !important;
     }
 
     .mobile-top-title {
