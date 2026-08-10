@@ -474,7 +474,7 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
 
     <div class="app-layout">
         <!-- Student Navigation Sidebar -->
-        <aside class="glass-panel sidebar" id="student-sidebar">
+        <aside class="sidebar" id="student-sidebar">
         <!-- Close Button (Mobile only) -->
         <i class="fa-solid fa-xmark sidebar-close-btn" onclick="toggleSidebar()"></i>
         <div class="sidebar-brand">
