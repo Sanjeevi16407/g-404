@@ -556,7 +556,7 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
                     <i class="fa-solid fa-sliders"></i> Settings
                 </a>
             </li>
-            <li style="margin-top: auto; padding-top: 20px;">
+            <li class="menu-logout-item">
                 <a href="logout.php" class="menu-item-link" style="color: #ef4444;">
                     <i class="fa-solid fa-right-from-bracket"></i> Sign Out
                 </a>

@@ -159,27 +159,38 @@
         -webkit-text-fill-color: #00f2fe !important;
     }
 
-    /* Menu List Formatting in Mobile Drawer */
+    /* Menu List Formatting in Mobile Drawer - Compact Stack without Empty Space */
     body .menu-list {
         display: flex !important;
         flex-direction: column !important;
-        gap: 8px !important;
+        gap: 6px !important;
         list-style: none !important;
-        padding: 0 !important;
+        padding: 0 0 24px 0 !important;
         margin: 0 !important;
         width: 100% !important;
+        flex: none !important;
+        height: auto !important;
     }
 
     body .menu-list li {
         width: 100% !important;
         display: block !important;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    body .menu-list li.menu-logout-item,
+    body .menu-list li:last-child {
+        margin-top: 12px !important;
+        padding-top: 12px !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
 
     body .menu-item-link {
         display: flex !important;
         align-items: center !important;
         gap: 12px !important;
-        padding: 12px 14px !important;
+        padding: 10px 14px !important;
         border-radius: 12px !important;
         color: #e2e8f0 !important;
         text-decoration: none !important;
