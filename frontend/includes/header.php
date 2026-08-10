@@ -354,17 +354,32 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
         }
     </style>
     <script>
-        function toggleSidebar() {
+        function toggleSidebar(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
             const sidebar = document.getElementById('student-sidebar');
-            sidebar.classList.toggle('active');
+            const backdrop = document.getElementById('student-sidebar-backdrop');
+            if (sidebar) sidebar.classList.toggle('active');
+            if (backdrop) backdrop.classList.toggle('active');
         }
+
         document.addEventListener('DOMContentLoaded', function() {
             document.addEventListener('click', function(event) {
                 const sidebar = document.getElementById('student-sidebar');
-                const toggleBtn = document.getElementById('sidebar-toggle');
-                if (window.innerWidth <= 992 && sidebar && sidebar.classList.contains('active')) {
-                    if (!sidebar.contains(event.target) && !toggleBtn.contains(event.target)) {
+                const backdrop = document.getElementById('student-sidebar-backdrop');
+                const mobileHamburger = document.querySelector('.mobile-hamburger-btn');
+                const desktopToggle = document.getElementById('sidebar-toggle');
+                
+                if (sidebar && sidebar.classList.contains('active')) {
+                    const clickedInsideSidebar = sidebar.contains(event.target);
+                    const clickedHamburger = mobileHamburger && mobileHamburger.contains(event.target);
+                    const clickedDesktopToggle = desktopToggle && desktopToggle.contains(event.target);
+
+                    if (!clickedInsideSidebar && !clickedHamburger && !clickedDesktopToggle) {
                         sidebar.classList.remove('active');
+                        if (backdrop) backdrop.classList.remove('active');
                     }
                 }
             });
@@ -420,8 +435,7 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
     <!-- Mobile Shell Wrapper -->
     <div class="mobile-only" style="display: none;">
         <!-- Mobile Top Header Bar with Hamburger Toggle -->
-        <header class="mobile-top-header">
-            <button type="button" class="mobile-hamburger-btn" onclick="toggleSidebar()" title="Toggle Navigation Menu">
+            <button type="button" class="mobile-hamburger-btn" onclick="toggleSidebar(event)" ontouchend="toggleSidebar(event)" title="Toggle Navigation Menu">
                 <i class="fa-solid fa-bars"></i>
             </button>
             <div class="mobile-top-title" style="display: inline-flex; align-items: center; gap: 8px; overflow: hidden; flex: 1; margin: 0 8px;">
@@ -443,7 +457,7 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
     </div>
 
     <!-- Mobile Sidebar Dark Backdrop Overlay -->
-    <div id="student-sidebar-backdrop" class="sidebar-backdrop" onclick="toggleSidebar()"></div>
+    <div id="student-sidebar-backdrop" class="sidebar-backdrop" onclick="toggleSidebar(event)"></div>
 
     <!-- Global Floating WhatsApp-Style AI Buddy Shortcut Orb (Top-level Body Child for Instant Viewport Fixed Position) -->
     <?php if ($active_page !== 'login.php' && $active_page !== 'welcome.php' && $active_page !== 'buddy.php'): ?>
@@ -476,7 +490,7 @@ $college_logo = $college['college_logo'] ?? 'assets/images/logo.png';
         <!-- Student Navigation Sidebar -->
         <aside class="sidebar" id="student-sidebar">
         <!-- Close Button (Mobile only) -->
-        <i class="fa-solid fa-xmark sidebar-close-btn" onclick="toggleSidebar()"></i>
+        <i class="fa-solid fa-xmark sidebar-close-btn" onclick="toggleSidebar(event)"></i>
         <div class="sidebar-brand">
             <img src="../<?php echo sanitize_input($college_logo); ?>" alt="College Logo" class="brand-logo">
             <div class="brand-name">
