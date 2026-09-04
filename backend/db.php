@@ -11,6 +11,17 @@ if (session_status() == PHP_SESSION_NONE) {
 require_once __DIR__ . '/config.php';
 
 try {
+    $pdo_options = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
+        PDO::ATTR_TIMEOUT => 10,
+    ];
+
+    if (defined('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT')) {
+        $pdo_options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+    }
+
     $db = new PDO(
         "mysql:host=" . DB_HOST . 
         ";port=" . DB_PORT . 
@@ -18,11 +29,7 @@ try {
         ";charset=utf8mb4",
         DB_USER,
         DB_PASS,
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false,
-        ]
+        $pdo_options
     );
 } catch (PDOException $e) {
     die("Database Connection Failed: " . $e->getMessage());
